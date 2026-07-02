@@ -3,431 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oracova. AI agents test your firmware on real hardware.</title>
-<meta name="description" content="Oracova is an AI-run test bench. Real chip, emulated world, injected faults, scored verdicts. It tests firmware the way it will actually be used, automatically, on every change.">
+<title>Oracova site — design iterations</title>
+<meta name="robots" content="noindex">
 <style>
   :root {
-    --bg: #0a0e12;
-    --bg-panel: #0f151c;
-    --bg-card: #121a23;
-    --line: #1e2a36;
-    --text: #d7dee6;
-    --text-dim: #8a97a5;
-    --accent: #ffb454;
+    --bg: #0a0e12; --bg-card: #121a23; --line: #1e2a36;
+    --text: #d7dee6; --text-dim: #8a97a5; --accent: #ffb454;
     --pass: #2ee06f;
-    --fail: #ff5252;
-    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  ::selection { background: rgba(255,180,84,.25); }
-
-  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
-  section { padding: 88px 0; border-top: 1px solid var(--line); }
-  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
-  h2 { font-size: 34px; margin-bottom: 14px; }
-  h3 { font-size: 19px; margin-bottom: 8px; }
-  p  { max-width: 62ch; }
-  .dim { color: var(--text-dim); }
-  .mono { font-family: var(--mono); }
-  .kicker {
-    font-family: var(--mono); font-size: 13px; text-transform: uppercase;
-    letter-spacing: .14em; color: var(--accent); margin-bottom: 16px;
-  }
-
-  nav {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(10,14,18,.85); backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
-  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 26px; align-items: center; }
-  .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 14.5px; }
-  .nav-links a:hover { color: var(--text); }
-
-  .btn {
-    display: inline-block; padding: 12px 22px; border-radius: 6px;
-    font-family: var(--mono); font-size: 15px; font-weight: 600;
-    text-decoration: none; border: 1px solid transparent;
-  }
-  .btn-primary { background: var(--accent); color: #14100a; }
-  .btn-primary:hover { filter: brightness(1.08); }
-  .btn-ghost { border-color: var(--line); color: var(--text); }
-  .btn-ghost:hover { border-color: var(--text-dim); }
-  .btn-sm { padding: 8px 16px; font-size: 13.5px; }
-
-  header.hero {
-    padding: 96px 0 80px;
-    background:
-      linear-gradient(rgba(10,14,18,0) 0%, var(--bg) 85%),
-      repeating-linear-gradient(0deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px),
-      repeating-linear-gradient(90deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px);
-  }
-  .hero h1 { font-size: clamp(38px, 6.2vw, 60px); margin-bottom: 10px; }
-  .hero .hero-second { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; margin-bottom: 24px; }
-  .hero .sub { font-size: 20px; color: var(--text-dim); max-width: 58ch; margin-bottom: 34px; }
-  .hero .sub strong { color: var(--text); font-weight: 600; }
-  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
-
-  .video-frame {
-    border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
-    background: var(--bg-panel);
-  }
-  .video-placeholder {
-    aspect-ratio: 16/9; display: flex; flex-direction: column; gap: 10px;
-    align-items: center; justify-content: center;
-    color: var(--text-dim); font-family: var(--mono); font-size: 14px;
-    background:
-      radial-gradient(ellipse at center, rgba(255,180,84,.06), transparent 70%),
-      var(--bg-panel);
-  }
-  .video-placeholder .rec { color: var(--fail); }
-  .video-caption {
-    border-top: 1px solid var(--line); padding: 12px 18px;
-    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
-  }
-
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
-  .card {
-    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 24px;
-  }
-  .card h3 { color: var(--text); }
-  .card p { font-size: 15.5px; color: var(--text-dim); }
-  .card .num { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; display: block; }
-  .note { margin-top: 26px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
-  .lead { font-size: 18px; color: var(--text-dim); max-width: 66ch; }
-  .lead b { color: var(--text); }
-
-  .whatis {
-    font-size: 21px; line-height: 1.65; max-width: 66ch; color: var(--text-dim);
-  }
-  .whatis b { color: var(--text); font-weight: 600; }
-
-  .run-card {
-    background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
-    font-family: var(--mono); font-size: 14px; margin-top: 40px; overflow: hidden;
-  }
-  .run-head {
-    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    padding: 14px 20px; border-bottom: 1px solid var(--line); color: var(--text-dim);
-  }
-  .run-head .rid { color: var(--text); }
-  .run-meta { padding: 16px 20px; display: grid; gap: 6px; color: var(--text-dim); }
-  .run-meta b { color: var(--text); font-weight: 500; }
-  .run-meta .fault b { color: var(--accent); }
-  .trace-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 20px 6px; background: #0b1016; }
-  .trace-label { font-size: 11.5px; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
-  .verdict-rows { padding: 6px 0; }
-  .verdict-row {
-    display: flex; justify-content: space-between; align-items: center; gap: 14px;
-    padding: 12px 20px;
-  }
-  .verdict-row + .verdict-row { border-top: 1px dashed var(--line); }
-  .badge {
-    padding: 3px 12px; border-radius: 4px; font-weight: 700; font-size: 13px; letter-spacing: .08em;
-  }
-  .badge.fail { background: rgba(255,82,82,.12); color: var(--fail); border: 1px solid rgba(255,82,82,.4); }
-  .badge.pass { background: rgba(46,224,111,.1); color: var(--pass); border: 1px solid rgba(46,224,111,.4); }
-  .run-caption { margin-top: 18px; font-size: 15.5px; color: var(--text-dim); max-width: 68ch; }
-
-  .evidence-list { margin-top: 36px; display: grid; gap: 16px; }
-  .ev {
-    display: grid; grid-template-columns: 200px 1fr; gap: 20px;
-    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px;
-  }
-  .ev .tag { font-family: var(--mono); font-size: 13px; color: var(--accent); }
-  .ev p { font-size: 15.5px; color: var(--text-dim); max-width: none; }
-  .ev p b { color: var(--text); font-weight: 600; }
-  .ev .mono-inline { font-family: var(--mono); font-size: 13.5px; }
-  .ev .v-pass { color: var(--pass); font-family: var(--mono); font-weight: 700; }
-  .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
-
-  .obj { margin-top: 36px; display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .obj-row { display: grid; grid-template-columns: 320px 1fr; }
-  .obj-row + .obj-row { border-top: 1px solid var(--line); }
-  .obj-q { padding: 22px 24px; background: var(--bg-card); font-weight: 600; font-size: 16px; }
-  .obj-a { padding: 22px 24px; color: var(--text-dim); font-size: 15.5px; }
-  .obj-a b { color: var(--text); }
-
-  .founder { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
-  .founder-cta {
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 70px 24px; }
+  h1 { font-size: 30px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .sub { color: var(--text-dim); margin-bottom: 40px; }
+  .logo { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  .iter {
+    display: grid; grid-template-columns: 70px 1fr auto; gap: 18px; align-items: center;
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
-    padding: 30px; text-align: center;
+    padding: 20px 22px; margin-bottom: 14px; text-decoration: none; color: var(--text);
   }
-  .founder-cta .btn { width: 100%; margin-top: 14px; }
-  .founder-cta .mono { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
-
-  footer {
-    border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
-    font-family: var(--mono); font-size: 13px;
-  }
-
-  @media (max-width: 800px) {
-    .grid3 { grid-template-columns: 1fr; }
-    .ev, .obj-row, .founder { grid-template-columns: 1fr; }
-    section { padding: 64px 0; }
-    .nav-links a.link { display: none; }
-  }
+  .iter:hover { border-color: var(--text-dim); }
+  .iter .v { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
+  .iter .d { font-size: 14.5px; color: var(--text-dim); }
+  .iter .t { font-weight: 600; }
+  .iter .links { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: right; }
+  .iter .links span { color: var(--accent); }
+  .badge { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--pass); border: 1px solid rgba(46,224,111,.4);
+    border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
+  .note { margin-top: 36px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h1><span class="logo">oracova_</span> design iterations</h1>
+  <p class="sub">Internal review hub. Each round of the improvement loop is preserved here.
+  Same content in every version; only the presentation changes.</p>
 
-<nav>
-  <div class="wrap">
-    <a class="logo" href="#">oracova<span>_</span></a>
-    <div class="nav-links">
-      <a class="link" href="#how">How it works</a>
-      <a class="link" href="#world">The world</a>
-      <a class="link" href="#evidence">Evidence</a>
-      <a class="btn btn-primary btn-sm" href="#cta">Book 15 minutes</a>
-    </div>
-  </div>
-</nav>
+  <a class="iter" href="v1/index.html">
+    <span class="v">v1</span>
+    <span><span class="t">Baseline<span class="badge">current</span></span><br>
+    <span class="d">Content locked 2026-07-01. Full spine, step-3 mini-rows on onboarding.</span></span>
+    <span class="links">home &rarr;<br><span>v1/onboarding.html</span></span>
+  </a>
 
-<header class="hero">
-  <div class="wrap">
-    <h1>AI agents test your firmware on real&nbsp;hardware.</h1>
-    <div class="hero-second">A hundred iterations, unattended. You review the one that passed.</div>
-    <p class="sub">Flashing, testing, re-testing on the bench needed a human.
-    <strong>Not anymore.</strong></p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="#cta">Book 15 minutes</a>
-      <a class="btn btn-ghost" href="#evidence">See the evidence</a>
-    </div>
-    <div class="video-frame">
-      <div class="video-placeholder">
-        <div><span class="rec">●</span> BETAFLIGHT-LOOP.MP4</div>
-        <div>[ capture from live bench pending ]</div>
-      </div>
-      <div class="video-caption">Unmodified Betaflight flying against the Oracova bench.
-      Gyro and accel served over I2C, 4x motor decode, closed loop at 8 kHz.</div>
-    </div>
-  </div>
-</header>
-
-<section>
-  <div class="wrap">
-    <div class="kicker">What is Oracova</div>
-    <p class="whatis"><b>Oracova is an automated test bench for firmware.</b> Your unmodified
-    binary runs on your real microcontroller. Oracova emulates the world around it with
-    real-time physics, injects faults, and scores every run PASS or FAIL with captured
-    evidence. <b>AI agents drive the bench, so the loop runs unattended.</b></p>
-  </div>
-</section>
-
-<section id="how">
-  <div class="wrap">
-    <div class="kicker">How it works</div>
-    <h2>Every firmware PR gets its own bench and its own agent.</h2>
-    <div class="grid3">
-      <div class="card">
-        <span class="num">01</span>
-        <h3>A change arrives with its own tests</h3>
-        <p>Your engineers or your coding agents write the change. Oracova takes it from there:
-        it writes the tests against the change, separately, and runs them on the bench, not in
-        a mock. You manage outcomes, not benches.</p>
-      </div>
-      <div class="card">
-        <span class="num">02</span>
-        <h3>The loop runs until PASS</h3>
-        <p>Flash the chip, run the tests, read the result, iterate, repeat. Oracova keeps going
-        for as long as it takes. Nobody watches it work.</p>
-      </div>
-      <div class="card">
-        <span class="num">03</span>
-        <h3>Every test keeps running</h3>
-        <p>Every test an agent writes stays in the suite and runs on every future PR.
-        Integration regressions get caught before anyone looks for them.</p>
-      </div>
-    </div>
-    <p class="note">More PRs in flight? Add benches. They are cheap to replicate, and
-    every PR gets its own.</p>
-  </div>
-</section>
-
-<section id="world">
-  <div class="wrap">
-    <div class="kicker">The world</div>
-    <h2>Close your control loop on real-time physics emulation.</h2>
-    <p class="lead">The world around your firmware is live physics: motors spin, packs heat
-    up, pressure builds. <b>Your firmware reaches every test point on its own. The world
-    drives it there: no test hooks, no forced states, no special builds.</b> To test an
-    over-temperature guard, the pack heats up in physics and the firmware hits the fault
-    exactly as it would in the field. Unmodified binary, same code you ship. Common
-    peripherals, a gyro, an LCD, a hall encoder, come as validated models from Oracova's
-    open-source marketplace; what you build, you can contribute back.</p>
-    <div class="grid3">
-      <div class="card">
-        <h3>Motor control</h3>
-        <p>Commutation and hall-sensor faults on real silicon: stuck hall, swapped sectors,
-        skipped sector. All proven on the Oracova bench.</p>
-      </div>
-      <div class="card">
-        <h3>BMS</h3>
-        <p>Cell over-temperature, sensor dropout, protection thresholds. The pack is physics,
-        so protection logic is tested by reaching the fault, not by faking it.</p>
-      </div>
-      <div class="card">
-        <h3>Power and thermal</h3>
-        <p>Heaters, pumps, converters. Closed loops settle, overshoot, and fault against a
-        plant that behaves like the real one.</p>
-      </div>
-    </div>
-    <p class="note">Wondering what it takes to get your board on the bench?
-    <a href="onboarding.html" style="color: var(--accent); text-decoration: none;">See how
-    onboarding works &rarr;</a></p>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="kicker">The verdict</div>
-    <h2>You review the one that passed.</h2>
-    <p class="dim">Every run returns PASS or FAIL with captured traces, event trails, and
-    firmware hashes. Repeatable, diffable, stored in CI. This is a real run from the bench:</p>
-
-    <div class="run-card">
-      <div class="run-head">
-        <span class="rid">RUN 20260618-080733</span>
-        <span>bldc_hall_a_stuck_low</span>
-      </div>
-      <div class="run-meta">
-        <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
-        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on RP2350</b></div>
-        <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
-      </div>
-      <div class="trace-block">
-        <div class="trace-label">phase U / V / W + hall A capture</div>
-        <svg viewBox="0 0 1000 120" width="100%" height="120" preserveAspectRatio="none" aria-label="captured commutation trace">
-          <polyline fill="none" stroke="#ffb454" stroke-width="2" opacity="0.9"
-            points="0,25 80,25 80,8 160,8 160,25 320,25 320,8 400,8 400,25 560,25 560,8 640,8 640,25 800,25 800,8 880,8 880,25 1000,25"/>
-          <polyline fill="none" stroke="#7aa2c4" stroke-width="2" opacity="0.8"
-            points="0,55 40,55 40,38 200,38 200,55 360,55 360,38 480,38 480,55 700,55 700,38 820,38 820,55 1000,55"/>
-          <polyline fill="none" stroke="#9a8cc9" stroke-width="2" opacity="0.8"
-            points="0,85 120,85 120,68 280,68 280,85 440,85 440,68 520,68 520,85 760,85 760,68 940,68 940,85 1000,85"/>
-          <polyline fill="none" stroke="#ff5252" stroke-width="2"
-            points="0,105 200,105 200,112 1000,112"/>
-          <text x="205" y="104" fill="#ff5252" font-size="10" font-family="monospace">HALL_A stuck low</text>
-        </svg>
-      </div>
-      <div class="verdict-rows">
-        <div class="verdict-row">
-          <span class="dim">unguarded firmware &nbsp; mismatch=8 &nbsp; unsafe=4</span>
-          <span class="badge fail">FAIL</span>
-        </div>
-        <div class="verdict-row">
-          <span class="dim">same firmware + guard patch &nbsp; unsafe=0</span>
-          <span class="badge pass">PASS</span>
-        </div>
-      </div>
-    </div>
-    <p class="run-caption">A stuck hall sensor. Unguarded firmware energizes the wrong phase 8
-    times, 4 of them unsafe. The guarded build shuts down clean. Both verdicts came from real
-    hardware, not a simulator.</p>
-  </div>
-</section>
-
-<section id="evidence">
-  <div class="wrap">
-    <div class="kicker">Evidence</div>
-    <h2>What the bench has already done.</h2>
-    <div class="evidence-list">
-      <div class="ev">
-        <span class="tag">betaflight, closed loop</span>
-        <p><b>Unmodified Betaflight flies against the bench.</b> Production flight-controller
-        firmware, no source changes, closed the loop against Oracova's emulated world: gyro and
-        accel served over I2C, 4 motor outputs decoded, physics advanced, ANGLE mode holding
-        attitude at an 8 kHz loop. Third-party firmware we cannot see inside is the hardest
-        case. That is why we lead with it.</p>
-      </div>
-      <div class="ev">
-        <span class="tag">the bug a green build hid</span>
-        <p><b>Zero edges on the wire.</b> During bring-up, Betaflight's DShot motor output
-        produced no edges at all, a DMA allocation failure on the F411. The build was green, the
-        config said DShot600 active, every static check passed. Only the closed loop caught it.
-        That bug class is exactly what Oracova exists for.</p>
-      </div>
-      <div class="ev">
-        <span class="tag">fault library, on silicon</span>
-        <p><b>Real faults, scored verdicts.</b> BLDC commutation faults on a two-MCU rig:
-        <span class="mono-inline">swapped sectors <span class="v-fail">FAIL</span> (mismatch=8, unsafe=8) ·
-        hall stuck low <span class="v-fail">FAIL</span> (unsafe=4) ·
-        skipped sector <span class="v-fail">FAIL</span> (seq_fault=7) ·
-        forced invalid hall bus <span class="v-pass">PASS</span></span>, because the target shuts
-        down safely. Add a guard patch and the stuck-hall case flips to
-        <span class="v-pass">PASS</span> with unsafe=0. Every verdict has stored evidence and
-        firmware hashes.</p>
-      </div>
-      <div class="ev">
-        <span class="tag">and one more</span>
-        <p><b>The same loop pattern drove a Tesla ECU over CAN.</b></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="kicker">Objections</div>
-    <h2>Why nothing else does this.</h2>
-    <div class="obj">
-      <div class="obj-row">
-        <div class="obj-q">"An AI cannot be trusted to judge firmware."</div>
-        <div class="obj-a">Correct. Ours does not. The agent brings up the world and proposes
-        scenarios; a deterministic, AI-free checker scores every run.
-        <b>Every verdict comes from real hardware, not from the model.</b></div>
-      </div>
-      <div class="obj-row">
-        <div class="obj-q">"Simulation already exists."</div>
-        <div class="obj-a">Simulators pass builds that fail on the chip. Static I/O checks say
-        DShot is configured while the output shows zero edges. <b>The loop only closes on real
-        silicon.</b></div>
-      </div>
-      <div class="obj-row">
-        <div class="obj-q">"We have HIL vendors."</div>
-        <div class="obj-a">Real HIL starts at $9,900 and runs to six figures, configured by hand
-        for one program. Below that floor there is nothing but a human and a bench. Oracova is
-        the layer that was never built: <b>agent-drivable, self-serve, per-PR.</b></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="cta">
-  <div class="wrap founder">
-    <div>
-      <div class="kicker">The outcome</div>
-      <h2>Firmware finally develops like software.</h2>
-      <p class="dim">I am a hardware and firmware engineer. I have shipped motor controllers and
-      battery systems, and I have been the human at the bench this page describes. Oracova
-      exists because the tools I wanted never did. If your firmware drives something real and
-      testing it still means a person and an afternoon, I want 15 minutes.</p>
-    </div>
-    <div class="founder-cta">
-      <div class="mono" style="margin-top:0">15 minutes, no deck</div>
-      <a class="btn btn-primary" href="#">Book 15 minutes</a>
-      <div class="mono">calendly event: pending · email: pending domain</div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
-    <span>© 2026 Oracova</span>
-  </div>
-</footer>
-
+  <p class="note">New iterations appear here as the loop runs: restructure &rarr; fresh-eyes
+  judges &rarr; content-contract check &rarr; deploy.</p>
+</div>
 </body>
 </html>
