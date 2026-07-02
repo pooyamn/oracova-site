@@ -175,19 +175,6 @@
   .mini-row .d { font-size: 15px; color: var(--text-dim); }
   .mini-row .d b { color: var(--text); font-weight: 600; }
 
-  details.more { margin-top: 10px; }
-  details.more > summary {
-    list-style: none; cursor: pointer; display: inline-block;
-    font-family: var(--mono); font-size: 12.5px; color: var(--accent); letter-spacing: .05em;
-    border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px;
-  }
-  details.more > summary::-webkit-details-marker { display: none; }
-  details.more > summary::before { content: "+\00a0"; }
-  details.more[open] > summary::before { content: "\2212\00a0"; }
-  details.more > summary:hover { border-color: var(--text-dim); }
-  details.more p { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
-  details.more p b { color: var(--text); }
-
   .run-card {
     background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
     font-family: var(--mono); font-size: 14px; margin-top: 30px; overflow: hidden;
@@ -380,7 +367,8 @@
 <section>
   <div class="wrap">
     <div class="kicker">What is Oracova</div>
-    <div class="fact-grid" style="margin-top:0">
+    <p class="whatis">Oracova is an automated test bench for&nbsp;firmware.</p>
+    <div class="fact-grid">
       <div class="fact">
         <span class="fact-tag">Real silicon</span>
         <p><b>Your unmodified binary</b> runs on your real microcontroller.</p>
@@ -433,9 +421,10 @@
     <h2>Close your control loop on real-time physics emulation.</h2>
     <div class="spec-line">closed loop proven to <b>8 kHz</b> &middot; gyro + accel over I2C &middot; 4x motor
     decode &middot; GPIO / PWM / UART / I2C / SPI / CAN</div>
-    <p class="dim" style="margin-top:18px"><b>Motors spin, packs heat up, pressure builds</b> —
+    <p class="dim" style="margin-top:18px"><b>Motors spin, packs heat up, pressure builds</b>,
     so your unmodified firmware reaches every test point on its own. No test hooks, no forced
-    states, no special builds.</p>
+    states, no special builds. Common peripherals come as validated models from Oracova's
+    open-source marketplace.</p>
     <div class="grid3">
       <div class="card">
         <h3>Motor control</h3>
