@@ -105,14 +105,42 @@
   .card h3 { color: var(--text); }
   .card p { font-size: 15.5px; color: var(--text-dim); }
   .card .num { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; display: block; }
+  .card .faults { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 10px; }
   .note { margin-top: 26px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
-  .lead { font-size: 18px; color: var(--text-dim); max-width: 66ch; }
-  .lead b { color: var(--text); }
 
   .whatis {
-    font-size: 21px; line-height: 1.65; max-width: 66ch; color: var(--text-dim);
+    font-size: 24px; line-height: 1.5; max-width: 66ch; color: var(--text);
+    font-weight: 600; letter-spacing: -0.01em;
   }
-  .whatis b { color: var(--text); font-weight: 600; }
+  .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
+  .fact { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .fact .fact-tag {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 8px;
+  }
+  .fact p { font-size: 16px; color: var(--text-dim); max-width: none; }
+  .fact p b { color: var(--text); font-weight: 600; }
+
+  .mini { display: grid; margin-top: 36px; }
+  .mini-row { display: grid; grid-template-columns: 36px 250px 1fr; gap: 16px; padding: 18px 0; align-items: baseline; }
+  .mini-row + .mini-row { border-top: 1px dashed var(--line); }
+  .mini-row .n { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+  .mini-row .t { font-weight: 600; font-size: 16.5px; color: var(--text); }
+  .mini-row .d { font-size: 15px; color: var(--text-dim); }
+  .mini-row .d b { color: var(--text); font-weight: 600; }
+
+  details.more { margin-top: 10px; }
+  details.more > summary {
+    list-style: none; cursor: pointer; display: inline-block;
+    font-family: var(--mono); font-size: 12.5px; color: var(--accent); letter-spacing: .05em;
+    border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "+\00a0"; }
+  details.more[open] > summary::before { content: "\2212\00a0"; }
+  details.more > summary:hover { border-color: var(--text-dim); }
+  details.more p { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  details.more p b { color: var(--text); }
 
   .run-card {
     background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
@@ -143,15 +171,18 @@
 
   .evidence-list { margin-top: 36px; display: grid; gap: 16px; }
   .ev {
-    display: grid; grid-template-columns: 200px 1fr; gap: 20px;
-    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 22px 24px;
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px;
   }
-  .ev .tag { font-family: var(--mono); font-size: 13px; color: var(--accent); }
-  .ev p { font-size: 15.5px; color: var(--text-dim); max-width: none; }
-  .ev p b { color: var(--text); font-weight: 600; }
-  .ev .mono-inline { font-family: var(--mono); font-size: 13.5px; }
+  .ev .ev-head { display: flex; gap: 8px 20px; align-items: baseline; flex-wrap: wrap; }
+  .ev .tag { font-family: var(--mono); font-size: 12.5px; color: var(--accent); white-space: nowrap; }
+  .ev .claim { font-weight: 600; font-size: 17px; color: var(--text); }
+  .ev .nums { margin-top: 10px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .ev .vlist { margin-top: 10px; display: grid; gap: 5px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
   .ev .v-pass { color: var(--pass); font-family: var(--mono); font-weight: 700; }
   .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
+
+  .ev-note { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  .ev-note b { color: var(--text); }
 
   .obj { margin-top: 36px; display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
   .obj-row { display: grid; grid-template-columns: 320px 1fr; }
@@ -174,8 +205,10 @@
   }
 
   @media (max-width: 800px) {
-    .grid3 { grid-template-columns: 1fr; }
-    .ev, .obj-row, .founder { grid-template-columns: 1fr; }
+    .grid3, .fact-grid { grid-template-columns: 1fr; }
+    .obj-row, .founder { grid-template-columns: 1fr; }
+    .mini-row { grid-template-columns: 36px 1fr; }
+    .mini-row .d { grid-column: 2; }
     section { padding: 64px 0; }
     .nav-links a.link { display: none; }
   }
@@ -220,10 +253,25 @@
 <section>
   <div class="wrap">
     <div class="kicker">What is Oracova</div>
-    <p class="whatis"><b>Oracova is an automated test bench for firmware.</b> Your unmodified
-    binary runs on your real microcontroller. Oracova emulates the world around it with
-    real-time physics, injects faults, and scores every run PASS or FAIL with captured
-    evidence. <b>AI agents drive the bench, so the loop runs unattended.</b></p>
+    <p class="whatis">Oracova is an automated test bench for firmware.</p>
+    <div class="fact-grid">
+      <div class="fact">
+        <span class="fact-tag">Real silicon</span>
+        <p><b>Your unmodified binary</b> runs on your real microcontroller.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Emulated world</span>
+        <p>Oracova emulates the world around it with <b>real-time physics</b> and injects faults.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Scored verdicts</span>
+        <p>Every run scored <b>PASS or FAIL</b> with captured evidence.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Unattended</span>
+        <p><b>AI agents drive the bench</b>, so the loop runs unattended.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -231,25 +279,25 @@
   <div class="wrap">
     <div class="kicker">How it works</div>
     <h2>Every firmware PR gets its own bench and its own agent.</h2>
-    <div class="grid3">
-      <div class="card">
-        <span class="num">01</span>
-        <h3>A change arrives with its own tests</h3>
-        <p>Your engineers or your coding agents write the change. Oracova takes it from there:
-        it writes the tests against the change, separately, and runs them on the bench, not in
-        a mock. You manage outcomes, not benches.</p>
+    <div class="mini">
+      <div class="mini-row">
+        <span class="n">01</span>
+        <div class="t">A change arrives with its own tests</div>
+        <div class="d">Your engineers or your coding agents write the change. <b>Oracova writes
+        the tests separately</b> and runs them on the bench, not in a mock. You manage outcomes,
+        not benches.</div>
       </div>
-      <div class="card">
-        <span class="num">02</span>
-        <h3>The loop runs until PASS</h3>
-        <p>Flash the chip, run the tests, read the result, iterate, repeat. Oracova keeps going
-        for as long as it takes. Nobody watches it work.</p>
+      <div class="mini-row">
+        <span class="n">02</span>
+        <div class="t">The loop runs until PASS</div>
+        <div class="d"><b>Flash, run, read, fix, repeat</b>, for as long as it takes. Nobody
+        watches it work.</div>
       </div>
-      <div class="card">
-        <span class="num">03</span>
-        <h3>Every test keeps running</h3>
-        <p>Every test an agent writes stays in the suite and runs on every future PR.
-        Integration regressions get caught before anyone looks for them.</p>
+      <div class="mini-row">
+        <span class="n">03</span>
+        <div class="t">Every test keeps running</div>
+        <div class="d">Each test stays in the suite and runs on every future PR.
+        <b>Integration regressions get caught</b> before anyone looks for them.</div>
       </div>
     </div>
     <p class="note">More PRs in flight? Add benches. They are cheap to replicate, and
@@ -261,28 +309,52 @@
   <div class="wrap">
     <div class="kicker">The world</div>
     <h2>Close your control loop on real-time physics emulation.</h2>
-    <p class="lead">The world around your firmware is live physics: motors spin, packs heat
-    up, pressure builds. <b>Your firmware reaches every test point on its own. The world
-    drives it there: no test hooks, no forced states, no special builds.</b> To test an
-    over-temperature guard, the pack heats up in physics and the firmware hits the fault
-    exactly as it would in the field. Unmodified binary, same code you ship. Common
-    peripherals, a gyro, an LCD, a hall encoder, come as validated models from Oracova's
-    open-source marketplace; what you build, you can contribute back.</p>
+    <div class="mini">
+      <div class="mini-row">
+        <span class="n">01</span>
+        <div class="t">Live physics</div>
+        <div class="d">The world around your firmware is live physics: <b>motors spin, packs
+        heat up, pressure builds.</b></div>
+      </div>
+      <div class="mini-row">
+        <span class="n">02</span>
+        <div class="t">No forced states</div>
+        <div class="d"><b>Your firmware reaches every test point on its own.</b> The world
+        drives it there: no test hooks, no forced states, no special builds. Unmodified binary,
+        same code you ship.
+          <details class="more">
+            <summary>Example: an over-temperature guard</summary>
+            <p>To test an over-temperature guard, the pack heats up in physics and the firmware
+            hits the fault exactly as it would in the field.</p>
+          </details>
+        </div>
+      </div>
+      <div class="mini-row">
+        <span class="n">03</span>
+        <div class="t">Validated models</div>
+        <div class="d">Common peripherals, a gyro, an LCD, a hall encoder, come as <b>validated
+        models from Oracova's open-source marketplace</b>. What you build, you can contribute
+        back.</div>
+      </div>
+    </div>
     <div class="grid3">
       <div class="card">
         <h3>Motor control</h3>
-        <p>Commutation and hall-sensor faults on real silicon: stuck hall, swapped sectors,
-        skipped sector. All proven on the Oracova bench.</p>
+        <div class="faults">stuck hall &middot; swapped sectors &middot; skipped sector</div>
+        <p>Commutation and hall-sensor faults on real silicon. All proven on the Oracova
+        bench.</p>
       </div>
       <div class="card">
         <h3>BMS</h3>
-        <p>Cell over-temperature, sensor dropout, protection thresholds. The pack is physics,
-        so protection logic is tested by reaching the fault, not by faking it.</p>
+        <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
+        <p>The pack is physics, so protection logic is tested by reaching the fault, not by
+        faking it.</p>
       </div>
       <div class="card">
         <h3>Power and thermal</h3>
-        <p>Heaters, pumps, converters. Closed loops settle, overshoot, and fault against a
-        plant that behaves like the real one.</p>
+        <div class="faults">heaters &middot; pumps &middot; converters</div>
+        <p>Closed loops settle, overshoot, and fault against a plant that behaves like the
+        real one.</p>
       </div>
     </div>
     <p class="note">Wondering what it takes to get your board on the bench?
@@ -345,34 +417,49 @@
     <h2>What the bench has already done.</h2>
     <div class="evidence-list">
       <div class="ev">
-        <span class="tag">betaflight, closed loop</span>
-        <p><b>Unmodified Betaflight flies against the bench.</b> Production flight-controller
-        firmware, no source changes, closed the loop against Oracova's emulated world: gyro and
-        accel served over I2C, 4 motor outputs decoded, physics advanced, ANGLE mode holding
-        attitude at an 8 kHz loop. Third-party firmware we cannot see inside is the hardest
-        case. That is why we lead with it.</p>
+        <div class="ev-head">
+          <span class="tag">betaflight, closed loop</span>
+          <span class="claim">Unmodified Betaflight flies against the bench.</span>
+        </div>
+        <div class="nums">gyro + accel over I2C &middot; 4 motor outputs decoded &middot; ANGLE mode &middot; 8 kHz loop</div>
+        <details class="more">
+          <summary>Full story</summary>
+          <p>Production flight-controller firmware, no source changes, closed the loop against
+          Oracova's emulated world: gyro and accel served over I2C, 4 motor outputs decoded,
+          physics advanced, ANGLE mode holding attitude at an 8 kHz loop. <b>Third-party
+          firmware we cannot see inside is the hardest case. That is why we lead with
+          it.</b></p>
+        </details>
       </div>
       <div class="ev">
-        <span class="tag">the bug a green build hid</span>
-        <p><b>Zero edges on the wire.</b> During bring-up, Betaflight's DShot motor output
-        produced no edges at all, a DMA allocation failure on the F411. The build was green, the
-        config said DShot600 active, every static check passed. Only the closed loop caught it.
-        That bug class is exactly what Oracova exists for.</p>
+        <div class="ev-head">
+          <span class="tag">the bug a green build hid</span>
+          <span class="claim">Zero edges on the wire.</span>
+        </div>
+        <div class="nums">build green &middot; DShot600 configured &middot; static checks passed &middot; output: <span class="v-fail">zero edges</span></div>
+        <p class="ev-note">A DMA allocation failure on the F411. Every static check passed.
+        <b>Only the closed loop caught it.</b> That bug class is exactly what Oracova exists
+        for.</p>
       </div>
       <div class="ev">
-        <span class="tag">fault library, on silicon</span>
-        <p><b>Real faults, scored verdicts.</b> BLDC commutation faults on a two-MCU rig:
-        <span class="mono-inline">swapped sectors <span class="v-fail">FAIL</span> (mismatch=8, unsafe=8) ·
-        hall stuck low <span class="v-fail">FAIL</span> (unsafe=4) ·
-        skipped sector <span class="v-fail">FAIL</span> (seq_fault=7) ·
-        forced invalid hall bus <span class="v-pass">PASS</span></span>, because the target shuts
-        down safely. Add a guard patch and the stuck-hall case flips to
-        <span class="v-pass">PASS</span> with unsafe=0. Every verdict has stored evidence and
-        firmware hashes.</p>
+        <div class="ev-head">
+          <span class="tag">fault library, on silicon</span>
+          <span class="claim">Real faults, scored verdicts.</span>
+        </div>
+        <div class="nums">BLDC commutation faults on a two-MCU rig. Every verdict has stored evidence and firmware hashes.</div>
+        <div class="vlist">
+          <div>swapped sectors &nbsp;<span class="v-fail">FAIL</span>&nbsp; mismatch=8, unsafe=8</div>
+          <div>hall stuck low &nbsp;<span class="v-fail">FAIL</span>&nbsp; unsafe=4</div>
+          <div>skipped sector &nbsp;<span class="v-fail">FAIL</span>&nbsp; seq_fault=7</div>
+          <div>forced invalid hall bus &nbsp;<span class="v-pass">PASS</span>&nbsp; target shuts down safely</div>
+          <div>+ guard patch: stuck hall flips to &nbsp;<span class="v-pass">PASS</span>&nbsp; unsafe=0</div>
+        </div>
       </div>
       <div class="ev">
-        <span class="tag">and one more</span>
-        <p><b>The same loop pattern drove a Tesla ECU over CAN.</b></p>
+        <div class="ev-head">
+          <span class="tag">and one more</span>
+          <span class="claim">The same loop pattern drove a Tesla ECU over CAN.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -386,20 +473,31 @@
       <div class="obj-row">
         <div class="obj-q">"An AI cannot be trusted to judge firmware."</div>
         <div class="obj-a">Correct. Ours does not. The agent brings up the world and proposes
-        scenarios; a deterministic, AI-free checker scores every run.
-        <b>Every verdict comes from real hardware, not from the model.</b></div>
+        scenarios; a <b>deterministic, AI-free checker</b> scores every run. <b>Every verdict
+        comes from real hardware, not from the model.</b></div>
       </div>
       <div class="obj-row">
         <div class="obj-q">"Simulation already exists."</div>
-        <div class="obj-a">Simulators pass builds that fail on the chip. Static I/O checks say
-        DShot is configured while the output shows zero edges. <b>The loop only closes on real
-        silicon.</b></div>
+        <div class="obj-a">Simulators pass builds that fail on the chip. <b>The loop only
+        closes on real silicon.</b>
+          <details class="more">
+            <summary>Example</summary>
+            <p>Static I/O checks say DShot is configured while the output shows zero
+            edges.</p>
+          </details>
+        </div>
       </div>
       <div class="obj-row">
         <div class="obj-q">"We have HIL vendors."</div>
-        <div class="obj-a">Real HIL starts at $9,900 and runs to six figures, configured by hand
-        for one program. Below that floor there is nothing but a human and a bench. Oracova is
-        the layer that was never built: <b>agent-drivable, self-serve, per-PR.</b></div>
+        <div class="obj-a">Real HIL starts at $9,900 and runs to six figures. Oracova is
+        <b>agent-drivable, self-serve, per-PR.</b>
+          <details class="more">
+            <summary>The gap</summary>
+            <p>Those systems are configured by hand for one program. Below that floor there is
+            nothing but a human and a bench. <b>Oracova is the layer that was never
+            built.</b></p>
+          </details>
+        </div>
       </div>
     </div>
   </div>
