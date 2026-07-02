@@ -259,7 +259,7 @@
   .cmp {
     border-collapse: collapse; width: 100%; font-family: var(--mono); font-size: 13.5px;
   }
-  .cmp th, .cmp td { padding: 11px 14px; text-align: left; border-top: 1px solid var(--line); white-space: nowrap; }
+  .cmp th, .cmp td { padding: 11px 14px; text-align: left; border-top: 1px solid var(--line); }
   .cmp tr:first-child th { border-top: none; color: var(--text-dim); font-weight: 500;
     font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
   .cmp td:first-child { color: var(--text); }
@@ -599,19 +599,19 @@
   <div class="wrap">
     <div class="kicker">Straight answers</div>
     <h2>Against the ways you test&nbsp;today.</h2>
+    <p class="dim">"An AI cannot be trusted to judge firmware." Correct. Ours does not: the
+    agent brings up the world and proposes scenarios; a <b>deterministic, AI-free checker</b>
+    scores every run on real hardware. <b>The model never grades your code.</b></p>
     <div class="cmp-scroll">
       <table class="cmp">
-        <tr><th></th><th>manual bench</th><th>simulator</th><th>HIL rig</th><th class="hl">oracova</th></tr>
-        <tr><td>runs on real silicon</td><td class="y">yes</td><td class="n">no</td><td class="y">yes</td><td class="y hl">yes</td></tr>
-        <tr><td>runs unattended</td><td class="n">no</td><td class="y">yes</td><td class="n">no</td><td class="y hl">yes</td></tr>
-        <tr><td>a bench per PR</td><td class="n">no</td><td class="dim">n/a</td><td class="n">no</td><td class="y hl">yes</td></tr>
-        <tr><td>faults reached by physics</td><td class="dim">hand-wired</td><td class="n">faked</td><td class="dim">scripted</td><td class="y hl">yes</td></tr>
-        <tr><td>entry cost</td><td class="dim">engineer-hours</td><td class="dim">"free"</td><td class="dim">$9,900+</td><td class="hl dim">self-serve</td></tr>
+        <tr><th></th><th class="hl">oracova</th><th>manual bench</th><th>simulator</th><th>HIL rig</th></tr>
+        <tr><td>runs on real silicon</td><td class="y hl">yes</td><td class="y">yes</td><td class="n">no</td><td class="y">yes</td></tr>
+        <tr><td>runs unattended</td><td class="y hl">agent-driven</td><td class="n">no</td><td class="y">yes</td><td class="dim">scripted</td></tr>
+        <tr><td>a bench per PR</td><td class="y hl">yes</td><td class="n">no</td><td class="y">yes</td><td class="n">no</td></tr>
+        <tr><td>faults on the chip</td><td class="y hl">by physics</td><td class="dim">hand-wired</td><td class="n">in a model</td><td class="dim">scripted</td></tr>
+        <tr><td>entry cost</td><td class="hl dim">a DUT board + bring-up</td><td class="dim">engineer-hours</td><td class="dim">"free"</td><td class="dim">$9,900+</td></tr>
       </table>
     </div>
-    <p class="note">And the AI question: the agent only brings up the world and proposes
-    scenarios. A <b>deterministic, AI-free checker</b> scores every run on real hardware.
-    The model never grades your code.</p>
     <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
     unmodified Betaflight in closed loop. DUT boards are built per part; new targets are
     bring-up work, not a catalog.</p>
