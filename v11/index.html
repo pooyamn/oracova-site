@@ -375,7 +375,7 @@
 <div class="cred-band">
   <div class="wrap">
     <span><b>Founder-built</b> &middot; shipped motor controllers and battery systems</span>
-    <span><b>The same loop drove a Tesla ECU</b> over CAN</span>
+    <span><b>Real faults on real silicon</b> &middot; every verdict stored with firmware hashes</span>
     <span><b>Unmodified Betaflight</b> closed the loop at 8 kHz</span>
   </div>
 </div>
@@ -541,9 +541,10 @@
     </div>
     <p class="run-caption">A stuck hall sensor. Unguarded firmware energizes the wrong phase 8
     times, 4 of them unsafe. The guarded build shuts down clean. Both verdicts came from real
-    hardware, not a simulator. Same fault library, same rig: swapped sectors
-    <span class="v-fail">FAIL</span>, skipped sector <span class="v-fail">FAIL</span>, forced
-    invalid hall bus <span class="v-pass">PASS</span> (clean shutdown).
+    hardware, not a simulator. Same fault library, same two-MCU rig: swapped sectors
+    <span class="v-fail">FAIL</span> (mismatch=8, unsafe=8), skipped sector
+    <span class="v-fail">FAIL</span> (seq_fault=7), forced invalid hall bus
+    <span class="v-pass">PASS</span> (clean shutdown).
     <a class="run-link" href="runs/bldc-hall-fault-demo.html">Full run report</a>.</p>
     <div class="evidence-list">
       <div class="ev">
