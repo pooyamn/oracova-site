@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracova site — design iterations</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #0a0e12; --bg-card: #121a23; --line: #1e2a36;
+    --text: #d7dee6; --text-dim: #8a97a5; --accent: #ffb454;
+    --pass: #2ee06f;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 70px 24px; }
+  h1 { font-size: 30px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .sub { color: var(--text-dim); margin-bottom: 40px; }
+  .logo { font-family: var(--mono); font-weight: 700; color: var(--accent); }
+  .iter {
+    display: grid; grid-template-columns: 70px 1fr auto; gap: 18px; align-items: center;
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 20px 22px; margin-bottom: 14px; text-decoration: none; color: var(--text);
+  }
+  .iter:hover { border-color: var(--text-dim); }
+  .iter .v { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--accent); }
+  .iter .d { font-size: 14.5px; color: var(--text-dim); }
+  .iter .t { font-weight: 600; }
+  .iter .links { font-family: var(--mono); font-size: 13px; color: var(--text-dim); text-align: right; }
+  .iter .links span { color: var(--accent); }
+  .badge { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--pass); border: 1px solid rgba(46,224,111,.4);
+    border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
+  .note { margin-top: 36px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="logo">oracova_</span> design iterations</h1>
+  <p class="sub">Internal review hub. Each round of the improvement loop is preserved here.
+  Same content in every version; only the presentation changes.</p>
+
+  <a class="iter" href="/v9/index.html">
+    <span class="v">v9</span>
+    <span><span class="t">Round 8: five-cycle judge loop (kept — current)</span><br>
+    <span class="d">Five build-judge-check cycles from v8; every candidate won both judge cards
+    and passed the 49-item contract check. Kept-score trail (firmware lead / skimmer, candidate
+    vs kept): 29-28 / 33-30, 32-29 / 36-32, 31-29 / 34-31, 30.5-28.5 / 33-31, 32-31 / 33-30.
+    Bring-up banner integrated, run threaded as one artifact (replay &rarr; run card &rarr;
+    evidence) with a score key, always-readable replay (no blank state), Tesla demoted to an
+    aside, spec-line under The world, full mobile pass on both pages. Mid-loop mandate: RP2350
+    scrubbed to "base board".</span></span>
+    <span class="links">home &rarr;<br><span>v9/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v8/index.html">
+    <span class="v">v8</span>
+    <span><span class="t">Round 7: "Board bring-up" rename + booking off-ramp (kept)</span><br>
+    <span class="d">Judge panel (firmware lead + skimmer) renamed Onboarding &rarr; "Board bring-up"
+    (unanimous after a reconciliation round; bare "Bring-up" too ambiguous, "Get on the bench"
+    too imperative). New low-commitment path added in the founder card under Book 15 minutes:
+    "Not ready to book? See what board bring-up takes". World-section link reworded to match.</span></span>
+    <span class="links">home &rarr;<br><span>v8/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v7/index.html">
+    <span class="v">v7</span>
+    <span><span class="t">Round 6: final pass (kept)</span><br>
+    <span class="d">Cross-page consistency, honest bring-up timescale line, chip moderation,
+    voice sweep, all 42 contract items verified. Final v1-vs-v7 judgment: firmware lead
+    34 vs 25, skimmer 33 vs 23 — v7 wins on both cards. Shared remaining flaw: the
+    "calendly event: pending" footer.</span></span>
+    <span class="links">home &rarr;<br><span>v7/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v6/index.html">
+    <span class="v">v6</span>
+    <span><span class="t">Round 5: evidence artifact (kept)</span><br>
+    <span class="d">The real June 18 bench report published at v6/runs/; hero run ID and run
+    card now link to it. Marketing adjectives flattened.</span></span>
+    <span class="links">home &rarr;<br><span>v6/runs/bldc-hall-fault-demo.html</span></span>
+  </a>
+
+  <a class="iter" href="/v5/index.html">
+    <span class="v">v5</span>
+    <span><span class="t">Round 4: hero run-replay (kept, judge 23 vs 12)</span><br>
+    <span class="d">Empty video placeholder replaced with an animated replay of stored run
+    20260618-080733 (typed log, FAIL then guarded PASS), honestly labeled. Betaflight caption
+    kept as an explicit filming-next promise.</span></span>
+    <span class="links">home &rarr;<br><span>v5/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v4/index.html">
+    <span class="v">v4</span>
+    <span><span class="t">Round 3: onboarding visual pass (kept, judge 34 vs 26)</span><br>
+    <span class="d">Process-flow strip (hardware &rarr; documents &rarr; bring-up &rarr; verdicts),
+    mono data chips, 3-column boundary cards. Homepage unchanged from v3.</span></span>
+    <span class="links">home &rarr;<br><span>v4/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v3/index.html">
+    <span class="v">v3</span>
+    <span><span class="t">Round 2: judge fixes</span><br>
+    <span class="d">Both judges picked v2 over v1 (24-17, 33-29). Their shared complaint
+    fixed: AI-free checker sentence and the DShot punchline promoted out of expanders.
+    Onboarding link added to nav.</span></span>
+    <span class="links">home &rarr;<br><span>v3/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v2/index.html">
+    <span class="v">v2</span>
+    <span><span class="t">Round 1: homepage de-densified</span><br>
+    <span class="d">What-is fact grid, mini-rows everywhere, evidence as stat cards with
+    expanders. Judges: firmware lead 33 vs 29, skimmer 24 vs 17, both over v1.</span></span>
+    <span class="links">home &rarr;<br><span>v2/onboarding.html</span></span>
+  </a>
+
+  <a class="iter" href="/v1/index.html">
+    <span class="v">v1</span>
+    <span><span class="t">Baseline</span><br>
+    <span class="d">Content locked 2026-07-01. Full spine, step-3 mini-rows on onboarding.</span></span>
+    <span class="links">home &rarr;<br><span>v1/onboarding.html</span></span>
+  </a>
+
+  <p class="note">New iterations appear here as the loop runs: restructure &rarr; fresh-eyes
+  judges &rarr; content-contract check &rarr; deploy.</p>
+</div>
+</body>
+</html>
