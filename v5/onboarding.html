@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracova onboarding. From your PCB to verdicts.</title>
+<meta name="description" content="How a board gets onto the Oracova Bench: a custom DUT board for your microcontroller, the world brought up by AI against your firmware.">
+<style>
+  :root {
+    --bg: #0a0e12;
+    --bg-panel: #0f151c;
+    --bg-card: #121a23;
+    --line: #1e2a36;
+    --text: #d7dee6;
+    --text-dim: #8a97a5;
+    --accent: #ffb454;
+    --pass: #2ee06f;
+    --fail: #ff5252;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(255,180,84,.25); }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  h2 { font-size: 28px; margin-bottom: 14px; }
+  h3 { font-size: 17px; margin-bottom: 8px; }
+  p  { max-width: 68ch; }
+  .dim { color: var(--text-dim); }
+  .kicker {
+    font-family: var(--mono); font-size: 13px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--accent); margin-bottom: 16px;
+  }
+  .stepnum { font-family: var(--mono); color: var(--accent); font-size: 14px; display: block; margin-bottom: 10px; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(10,14,18,.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 14.5px; }
+  .nav-links a:hover { color: var(--text); }
+
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 6px;
+    font-family: var(--mono); font-size: 15px; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #14100a; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-sm { padding: 8px 16px; font-size: 13.5px; }
+
+  header.hero {
+    padding: 84px 0 60px;
+    background:
+      linear-gradient(rgba(10,14,18,0) 0%, var(--bg) 85%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px);
+  }
+  .hero h1 { font-size: clamp(34px, 5.4vw, 52px); margin-bottom: 18px; }
+  .hero .sub { font-size: 19px; color: var(--text-dim); max-width: 62ch; }
+
+  /* process flow strip */
+  .flow { display: flex; align-items: stretch; gap: 10px; margin-top: 42px; }
+  .flow-step {
+    flex: 1; min-width: 0; display: block; text-decoration: none;
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px;
+  }
+  a.flow-step:hover { border-color: var(--text-dim); }
+  .flow-step .fn {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em;
+    color: var(--accent); display: block; margin-bottom: 5px;
+  }
+  .flow-step .fl { display: block; font-weight: 600; font-size: 15.5px; color: var(--text); line-height: 1.3; }
+  .flow-step .fd { display: block; font-size: 12.5px; color: var(--text-dim); margin-top: 3px; line-height: 1.45; }
+  .flow-step.final { border-color: rgba(46,224,111,.35); }
+  .flow-step.final .fn { color: var(--pass); }
+  .flow-arrow {
+    align-self: center; flex: 0 0 auto; display: inline-block;
+    color: var(--text-dim); font-family: var(--mono); font-size: 16px;
+  }
+
+  .boxes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .box {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px;
+  }
+  .box h3 { color: var(--text); }
+  .box p { font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  .box .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
+  .box .tag.ok { color: var(--pass); }
+  .box .tag.off { color: var(--text-dim); }
+  .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin-top: 10px; }
+
+  .note { margin-top: 22px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
+
+  .doc-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .doc {
+    font-family: var(--mono); font-size: 13px; color: var(--text);
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 6px;
+    padding: 8px 14px;
+  }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+  .path-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 26px;
+  }
+  .path-card h2 { font-size: 21px; margin-bottom: 18px; }
+  .path-card p { font-size: 15.5px; color: var(--text-dim); max-width: none; }
+  .path-card p + p { margin-top: 12px; }
+  .mini { display: grid; gap: 0; }
+  .mini-row { display: grid; grid-template-columns: 30px 130px 1fr; gap: 10px; padding: 11px 0; align-items: baseline; }
+  .mini-row + .mini-row { border-top: 1px dashed var(--line); }
+  .mini-row .n { font-family: var(--mono); font-size: 12.5px; color: var(--accent); }
+  .mini-row .t { font-weight: 600; font-size: 14.5px; color: var(--text); }
+  .mini-row .d { font-size: 14px; color: var(--text-dim); }
+
+  details.more { margin-top: 10px; }
+  details.more > summary {
+    list-style: none; cursor: pointer; display: inline-block;
+    font-family: var(--mono); font-size: 12.5px; color: var(--accent); letter-spacing: .05em;
+    border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "+\00a0"; }
+  details.more[open] > summary::before { content: "\2212\00a0"; }
+  details.more > summary:hover { border-color: var(--text-dim); }
+  details.more p { margin-top: 10px; font-size: 14px; color: var(--text-dim); max-width: none; }
+  details.more p b { color: var(--text); }
+
+  .honest {
+    background: var(--bg-panel); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 6px; padding: 20px 24px; margin-top: 26px;
+  }
+  .honest .h { font-family: var(--mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .honest .list { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin: 2px 0 10px; }
+  .honest p b { color: var(--text); }
+
+  .strip-title { font-family: var(--mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-top: 40px; }
+  .strip-title + .boxes { margin-top: 14px; }
+
+  .cta-band { text-align: center; }
+  .cta-band p { margin: 0 auto 22px; }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
+    font-family: var(--mono); font-size: 13px;
+  }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 800px) {
+    .boxes, .grid2 { grid-template-columns: 1fr; }
+    section { padding: 48px 0; }
+  }
+  @media (max-width: 700px) {
+    .flow { flex-direction: column; gap: 8px; }
+    .flow-arrow { transform: rotate(90deg); margin: -3px 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="index.html">oracova<span>_</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a class="btn btn-primary btn-sm" href="#cta">Book 15 minutes</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Onboarding</div>
+    <h1>From your PCB to verdicts.</h1>
+    <p class="sub">What it actually takes to get your board onto the Oracova bench: the
+    hardware, the documents, and the bring-up. Two paths, depending on whether you already
+    have working firmware.</p>
+    <div class="flow" aria-label="The onboarding process">
+      <a class="flow-step" href="#step1">
+        <span class="fn">STEP 1</span>
+        <span class="fl">Hardware</span>
+        <span class="fd">A DUT board for your microcontroller</span>
+      </a>
+      <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+      <a class="flow-step" href="#step2">
+        <span class="fn">STEP 2</span>
+        <span class="fl">Documents</span>
+        <span class="fd">What the bench stands in for</span>
+      </a>
+      <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+      <a class="flow-step" href="#step3">
+        <span class="fn">STEP 3</span>
+        <span class="fl">Bring-up</span>
+        <span class="fd">An AI agent, with your confirmation</span>
+      </a>
+      <span class="flow-arrow" aria-hidden="true">&rarr;</span>
+      <span class="flow-step final">
+        <span class="fn">RESULT</span>
+        <span class="fl">Verdicts</span>
+        <span class="fd">PASS or FAIL on the bench</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<section id="step1">
+  <div class="wrap">
+    <span class="stepnum">STEP 1</span>
+    <h2>The hardware</h2>
+    <p class="dim">A custom DUT board is made for your microcontroller and goes onto the
+    Oracova base board. DUT designs are open source.</p>
+    <div class="boxes">
+      <div class="box">
+        <span class="tag">Oracova base board</span>
+        <h3>The world, in real time</h3>
+        <p>Plays your sensors and loads protocol-exact and runs the physics models. The world
+        responds like the product's world does.</p>
+        <div class="list">protocol-exact &middot; real-time physics</div>
+      </div>
+      <div class="box">
+        <span class="tag">Analog front-end modules</span>
+        <h3>Voltages and currents, first-class</h3>
+        <p>DAC and ADC modules come in different resolutions and speeds; you pick the ones
+        your signals need. Unusual signal? A module can be built for it.</p>
+        <div class="list">DAC &middot; ADC &middot; pick resolution and speed</div>
+      </div>
+      <div class="box">
+        <span class="tag">Custom DUT + debug probe</span>
+        <h3>Your microcontroller's seat</h3>
+        <p>Built for your part, every pin routed to the base board. Your code runs on your
+        real silicon, not a substitute part.</p>
+        <div class="list">flash &middot; reset &middot; inspect</div>
+        <details class="more">
+          <summary>The probe</summary>
+          <p>The debug probe flashes, resets, and inspects the target while it runs.</p>
+        </details>
+      </div>
+    </div>
+    <p class="note">Benches are cheap to replicate. One per PR, one per agent, as many as
+    your team runs in parallel.</p>
+  </div>
+</section>
+
+<section id="step2">
+  <div class="wrap">
+    <span class="stepnum">STEP 2</span>
+    <h2>The documents</h2>
+    <p class="dim">Next is collecting information. This is what the bench will stand in
+    for.</p>
+    <div class="doc-strip">
+      <span class="doc">your actual PCB</span>
+      <span class="doc">schematics</span>
+      <span class="doc">datasheets</span>
+      <span class="doc">pin assignments</span>
+      <span class="doc">how the product works</span>
+    </div>
+  </div>
+</section>
+
+<section id="step3">
+  <div class="wrap">
+    <span class="stepnum">STEP 3</span>
+    <h2>The bring-up</h2>
+    <p class="dim" style="margin-bottom:10px">Now the world comes up. An AI agent does the
+    work, with your confirmation along the way.</p>
+    <p class="dim" style="margin-bottom:26px; font-size:15px">On either path, expect some
+    questions about your hardware and its physics, or documentation that answers them. The
+    agent asks, it does not guess.</p>
+    <div class="grid2">
+      <div class="path-card">
+        <h2>If you have working firmware</h2>
+        <div class="mini">
+          <div class="mini-row"><span class="n">01</span><span class="t">Read the source</span>
+            <span class="d">The AI learns the world your firmware expects: peripherals,
+            protocols, what it drives and senses.</span></div>
+          <div class="mini-row"><span class="n">02</span><span class="t">Write the world</span>
+            <span class="d">It writes the I/O behavior and the physics models.</span></div>
+          <div class="mini-row"><span class="n">03</span><span class="t">Run and compare</span>
+            <span class="d">Your unmodified binary runs on the DUT, the debug probe watching
+            internal state, behavior compared against the field.</span></div>
+          <div class="mini-row"><span class="n">04</span><span class="t">Iterate to golden</span>
+            <span class="d">Until your firmware runs on the bench the way it runs in the
+            product. That recording is golden; the suite builds on it.</span></div>
+        </div>
+      </div>
+      <div class="path-card">
+        <h2>If you do not have working firmware yet</h2>
+        <div class="mini">
+          <div class="mini-row"><span class="n">01</span><span class="t">Peripheral by peripheral</span>
+            <span class="d">The bench and the firmware grow together, interface by
+            interface.</span></div>
+          <div class="mini-row"><span class="n">02</span><span class="t">Both sides together</span>
+            <span class="d">The firmware driver on the DUT and its counterpart in the
+            world, brought up as a pair.</span></div>
+          <div class="mini-row"><span class="n">03</span><span class="t">Proven before the next</span>
+            <span class="d">Each peripheral passes on the bench before the next one is
+            added.</span></div>
+          <div class="mini-row"><span class="n">04</span><span class="t">The suite is the record</span>
+            <span class="d">By the time the firmware is whole, the regression suite already
+            exists. There was never an untested part.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="honest">
+      <div class="h">The open-source marketplace</div>
+      <div class="list">gyro &middot; LCD &middot; hall encoder &middot; and more</div>
+      <p class="dim" style="font-size:15px; max-width:none">The world rarely starts from
+      zero. Common peripherals come as <b>validated models from Oracova's open-source
+      marketplace</b>, already proven against real firmware on other benches. The AI builds
+      what is unique to your product and pulls the rest. And what you build, you can
+      contribute back.</p>
+    </div>
+    <div class="strip-title">Where the boundary sits</div>
+    <div class="boxes">
+      <div class="box">
+        <span class="tag">Emulated</span>
+        <h3>Everything your MCU senses and drives</h3>
+        <p>Digital buses connect directly; analog signals go through front-end modules built
+        for your board.</p>
+        <div class="list">GPIO &middot; PWM &middot; UART &middot; I2C &middot; SPI &middot; CAN</div>
+      </div>
+      <div class="box">
+        <span class="tag off">Not emulated</span>
+        <h3>Your power stage</h3>
+        <p>High voltage and high current stay off the bench. Your firmware still sees the
+        same signals it would see in the product.</p>
+      </div>
+      <div class="box">
+        <span class="tag ok">Proven today</span>
+        <h3>The closed loop runs on real silicon now</h3>
+        <div class="list">motor commutation &middot; servo &middot; pump &middot; thermal &middot; unmodified Betaflight</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band" id="cta">
+  <div class="wrap">
+    <h2>Want to walk through it on your board?</h2>
+    <p class="dim">Bring your schematic to the call. 15 minutes, no deck.</p>
+    <a class="btn btn-primary" href="#">Book 15 minutes</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+    <span>© 2026 Oracova</span>
+  </div>
+</footer>
+
+</body>
+</html>
