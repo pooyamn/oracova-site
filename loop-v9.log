@@ -1,0 +1,8 @@
+# v9 loop log — started 2026-07-02 08:53
+
+CYCLE 1
+build: banner integration (gradient tint, "Board bring-up" kicker, green RESULT step to match onboarding), mobile run-card fix at <=560px (font, padding, wrapping verdict rows, 88px trace), nav link shrink at <=480px both pages, onboarding h2/h3 scale aligned to homepage (34/19px), onboarding flow STEP 2 wording aligned to locked banner wording, hero sub tightened on onboarding.
+judges: firmware lead 29 (cand) vs 28 (v8) -> B; skimmer 33 (cand) vs 30 (v8) -> B.
+contract: PASS (49/49).
+decision: KEPT. v9kept = cycle-1 candidate.
+complaints for next cycle: [fw] Tesla card is a bare name-drop below three documented cards; [fw] founder anonymous + score units undefined (unsafe=4 of what); [skim] index is a 7-section scroll marathon, banner CTA competes mid-page; [skim] hero stack pushes the bench replay below the fold and it is double-disclaimed (header note + filming-next caption).

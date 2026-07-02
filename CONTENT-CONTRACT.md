@@ -84,6 +84,25 @@ lightly reworded only if the claim stays identical. Nothing may be deleted. Voic
     proven today (motor commutation, servo, pump, thermal, Betaflight).
 42. CTA: bring your schematic to the call, 15 minutes, no deck.
 
+## v8 user-mandated additions (LOCKED — substance must survive every round; presentation may be polished)
+
+43. Nav name is "Board bring-up": a plain small text link in the nav (NOT a button). The
+    onboarding page h1 stays "From your PCB to verdicts."
+44. Landing page: 4-step bring-up summary banner at the end of "The world" section:
+    STEP 1 Documents ("What the bench stands in for") → STEP 2 Hardware ("A DUT board from
+    your documents, a base board sized to your power") → STEP 3 Bring-up → RESULT Verdicts,
+    each deep-linking to the matching onboarding.html section, ending with a solid primary
+    "Bring up yours →" button.
+45. Step order everywhere: Documents FIRST, then Hardware (landing banner and onboarding
+    page both).
+46. Documents copy notes that a DUT board PCB counts as a document if you already have one.
+47. Hardware copy notes the DUT board is designed from your documents and the base board is
+    chosen by how much power the system needs.
+48. Founder card keeps the "Not ready to book? See what board bring-up takes →" off-ramp
+    under the Book 15 minutes button.
+49. Founder card line "calendly event: pending · email: pending domain" stays as-is (no fake
+    links).
+
 ## Known placeholders (allowed to remain, not judged)
 - Betaflight video pending capture; Book buttons unlinked until Calendly exists; no founder
   name until Pouya adds it.
