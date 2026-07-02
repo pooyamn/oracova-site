@@ -200,19 +200,19 @@
     <div class="kicker">Board bring-up</div>
     <h1>From your PCB to verdicts.</h1>
     <p class="sub">What it actually takes to get your board onto the Oracova bench: the
-    hardware, the documents, and the bring-up. Two paths, depending on whether you already
+    documents, the hardware, and the bring-up. Two paths, depending on whether you already
     have working firmware.</p>
     <div class="flow" aria-label="The board bring-up process">
       <a class="flow-step" href="#step1">
         <span class="fn">STEP 1</span>
-        <span class="fl">Hardware</span>
-        <span class="fd">A DUT board for your microcontroller</span>
+        <span class="fl">Documents</span>
+        <span class="fd">What the bench stands in for</span>
       </a>
       <span class="flow-arrow" aria-hidden="true">&rarr;</span>
       <a class="flow-step" href="#step2">
         <span class="fn">STEP 2</span>
-        <span class="fl">Documents</span>
-        <span class="fd">What the bench stands in for</span>
+        <span class="fl">Hardware</span>
+        <span class="fd">A DUT board, designed from your documents</span>
       </a>
       <span class="flow-arrow" aria-hidden="true">&rarr;</span>
       <a class="flow-step" href="#step3">
@@ -233,9 +233,26 @@
 <section id="step1">
   <div class="wrap">
     <span class="stepnum">STEP 1</span>
+    <h2>The documents</h2>
+    <p class="dim">First, collecting information. This is what the bench will stand in
+    for. A DUT board PCB counts as a document too, if you already have one.</p>
+    <div class="doc-strip">
+      <span class="doc">your actual PCB</span>
+      <span class="doc">schematics</span>
+      <span class="doc">datasheets</span>
+      <span class="doc">pin assignments</span>
+      <span class="doc">how the product works</span>
+      <span class="doc">DUT board PCB, if you have one</span>
+    </div>
+  </div>
+</section>
+
+<section id="step2">
+  <div class="wrap">
+    <span class="stepnum">STEP 2</span>
     <h2>The hardware</h2>
-    <p class="dim">A custom DUT board is made for your microcontroller and goes onto the
-    Oracova base board. DUT designs are open source.</p>
+    <p class="dim">From your documents, a custom DUT board is designed for your
+    microcontroller and goes onto the Oracova base board. DUT designs are open source.</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -263,22 +280,6 @@
     </div>
     <p class="note">Benches are cheap to replicate. One per PR, one per agent, as many as
     your team runs in parallel.</p>
-  </div>
-</section>
-
-<section id="step2">
-  <div class="wrap">
-    <span class="stepnum">STEP 2</span>
-    <h2>The documents</h2>
-    <p class="dim">Next is collecting information. This is what the bench will stand in
-    for.</p>
-    <div class="doc-strip">
-      <span class="doc">your actual PCB</span>
-      <span class="doc">schematics</span>
-      <span class="doc">datasheets</span>
-      <span class="doc">pin assignments</span>
-      <span class="doc">how the product works</span>
-    </div>
   </div>
 </section>
 
