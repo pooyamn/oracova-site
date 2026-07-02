@@ -340,7 +340,7 @@
         <div class="bench-log" id="bench-log" aria-label="replay of stored bench run 20260618-080733">
           <div class="bl"><span class="k">$</span> oracova run --scenario bldc_hall_a_stuck_low</div>
           <div class="bl">flash    <b>STM32F411, real silicon</b> .............. ok</div>
-          <div class="bl">world    <b>BLDC plant + hall encoder, RP2350</b> .... up</div>
+          <div class="bl">world    <b>BLDC plant + hall encoder, base board</b> .... up</div>
           <div class="bl">fault    <span class="k">HALL_A forced low at t+200 ms</span></div>
           <div class="bl">score    <b>mismatch=8  unsafe=4</b></div>
           <div class="bl">verdict  <span class="fail">FAIL</span>  unguarded firmware</div>
@@ -510,7 +510,7 @@
       </div>
       <div class="run-meta">
         <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
-        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on RP2350</b></div>
+        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on the Oracova base board</b></div>
         <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
       </div>
       <div class="trace-block">

@@ -34,7 +34,7 @@ lightly reworded only if the claim stays identical. Nothing may be deleted. Voic
 17. Verdict header: "You review the one that passed." + Run = PASS/FAIL + traces, event
     trails, firmware hashes, repeatable, diffable, in CI.
 18. Run card, exact data: RUN 20260618-080733, bldc_hall_a_stuck_low, STM32F411 real silicon,
-    BLDC plant + hall encoder on RP2350, HALL_A forced low at t+200 ms, unguarded
+    BLDC plant + hall encoder on the Oracova base board, HALL_A forced low at t+200 ms, unguarded
     mismatch=8 unsafe=4 FAIL, guard patch unsafe=0 PASS + caption (wrong phase 8 times, 4
     unsafe, verdicts from real hardware not a simulator).
 19. Evidence: unmodified Betaflight closed loop (I2C clock-stretch, 4 motors decoded, physics,
