@@ -536,16 +536,25 @@
           <span class="dim">same firmware + guard patch &nbsp; unsafe=0</span>
           <span class="badge pass">PASS</span>
         </div>
+        <div class="verdict-row">
+          <span class="dim">swapped sectors &nbsp; mismatch=8 &nbsp; unsafe=8</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">skipped sector &nbsp; seq_fault=7</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">forced invalid hall bus &nbsp; clean shutdown</span>
+          <span class="badge pass">PASS</span>
+        </div>
       </div>
       <div class="score-key">mismatch counts wrong-phase energizations &middot; unsafe counts the
       ones that could cause damage or harm</div>
     </div>
-    <p class="run-caption">A stuck hall sensor. Unguarded firmware energizes the wrong phase 8
-    times, 4 of them unsafe. The guarded build shuts down clean. Both verdicts came from real
-    hardware, not a simulator. Same fault library, same two-MCU rig: swapped sectors
-    <span class="v-fail">FAIL</span> (mismatch=8, unsafe=8), skipped sector
-    <span class="v-fail">FAIL</span> (seq_fault=7), forced invalid hall bus
-    <span class="v-pass">PASS</span> (clean shutdown).
+    <p class="run-caption">A stuck hall sensor: unguarded firmware energizes the wrong phase,
+    the guarded build shuts down clean. All five verdicts from the same fault library on the
+    same two-MCU rig, real hardware, not a simulator.
     <a class="run-link" href="runs/bldc-hall-fault-demo.html">Full run report</a>.</p>
     <div class="evidence-list">
       <div class="ev">
