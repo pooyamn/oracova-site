@@ -257,8 +257,9 @@
   .bb-step.final .fn { color: var(--pass); }
   .bb-step .fl { font-weight: 600; font-size: 15.5px; }
   .bb-step .fd { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; }
+  .bb-cta { margin-top: 20px; display: flex; justify-content: flex-end; }
   @media (max-width: 800px) { .bb-flow { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 480px) { .bb-flow { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .bb-flow { grid-template-columns: 1fr; } .bb-cta .btn { width: 100%; text-align: center; } }
 
   footer {
     border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
@@ -438,7 +439,6 @@
     <div class="bringup-banner">
       <div class="bb-head">
         <div class="bb-title">What does it take to get your board on the bench?</div>
-        <a class="btn btn-ghost" href="onboarding.html">See the board bring-up &rarr;</a>
       </div>
       <div class="bb-flow">
         <a class="bb-step" href="onboarding.html#step1">
@@ -461,6 +461,9 @@
           <span class="fl">Verdicts</span>
           <span class="fd">PASS or FAIL on the bench</span>
         </span>
+      </div>
+      <div class="bb-cta">
+        <a class="btn btn-primary" href="onboarding.html">Bring up yours &rarr;</a>
       </div>
     </div>
   </div>
