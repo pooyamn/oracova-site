@@ -236,14 +236,29 @@
   .founder-cta .mono { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
 
   .bringup-banner {
-    margin-top: 40px; display: flex; justify-content: space-between; align-items: center;
-    gap: 18px 28px; flex-wrap: wrap;
+    margin-top: 40px;
     background: var(--bg-card); border: 1px solid rgba(255,180,84,.35); border-radius: 8px;
     padding: 26px 28px;
   }
-  .bringup-banner .bb-title { font-weight: 700; font-size: 19px; letter-spacing: -0.01em; }
-  .bringup-banner .bb-sub { margin-top: 6px; font-size: 15px; color: var(--text-dim); max-width: 58ch; }
-  .bringup-banner .btn { white-space: nowrap; }
+  .bb-head {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 14px 28px; flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .bb-head .bb-title { font-weight: 700; font-size: 19px; letter-spacing: -0.01em; }
+  .bb-head .btn { white-space: nowrap; }
+  .bb-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .bb-step {
+    display: grid; gap: 3px; align-content: start;
+    background: var(--bg-panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 14px 16px; text-decoration: none; color: var(--text);
+  }
+  a.bb-step:hover { border-color: var(--text-dim); }
+  .bb-step .fn { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--accent); }
+  .bb-step.final .fn { color: var(--pass); }
+  .bb-step .fl { font-weight: 600; font-size: 15.5px; }
+  .bb-step .fd { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; }
+  @media (max-width: 800px) { .bb-flow { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .bb-flow { grid-template-columns: 1fr; } }
 
   footer {
     border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
@@ -421,12 +436,32 @@
       </div>
     </div>
     <div class="bringup-banner">
-      <div>
+      <div class="bb-head">
         <div class="bb-title">What does it take to get your board on the bench?</div>
-        <div class="bb-sub">Hardware &rarr; documents &rarr; bring-up &rarr; verdicts. The whole
-        process, including what to ship and what we need from you.</div>
+        <a class="btn btn-ghost" href="onboarding.html">See the board bring-up &rarr;</a>
       </div>
-      <a class="btn btn-ghost" href="onboarding.html">See the board bring-up &rarr;</a>
+      <div class="bb-flow">
+        <a class="bb-step" href="onboarding.html#step1">
+          <span class="fn">STEP 1</span>
+          <span class="fl">Hardware</span>
+          <span class="fd">A DUT board for your microcontroller</span>
+        </a>
+        <a class="bb-step" href="onboarding.html#step2">
+          <span class="fn">STEP 2</span>
+          <span class="fl">Documents</span>
+          <span class="fd">What the bench stands in for</span>
+        </a>
+        <a class="bb-step" href="onboarding.html#step3">
+          <span class="fn">STEP 3</span>
+          <span class="fl">Bring-up</span>
+          <span class="fd">An AI agent, with your confirmation</span>
+        </a>
+        <span class="bb-step final">
+          <span class="fn">RESULT</span>
+          <span class="fl">Verdicts</span>
+          <span class="fd">PASS or FAIL on the bench</span>
+        </span>
+      </div>
     </div>
   </div>
 </section>
