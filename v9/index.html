@@ -32,7 +32,7 @@
   ::selection { background: rgba(255,180,84,.25); }
 
   .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
-  section { padding: 88px 0; border-top: 1px solid var(--line); }
+  section { padding: 68px 0; border-top: 1px solid var(--line); }
   h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 34px; margin-bottom: 14px; }
   h3 { font-size: 19px; margin-bottom: 8px; }
@@ -68,17 +68,24 @@
   .btn-sm { padding: 8px 16px; font-size: 13.5px; }
 
   header.hero {
-    padding: 96px 0 80px;
+    padding: 72px 0 64px;
     background:
       linear-gradient(rgba(10,14,18,0) 0%, var(--bg) 85%),
       repeating-linear-gradient(0deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px),
       repeating-linear-gradient(90deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px);
   }
-  .hero h1 { font-size: clamp(38px, 6.2vw, 60px); margin-bottom: 10px; }
-  .hero .hero-second { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; margin-bottom: 24px; }
-  .hero .sub { font-size: 20px; color: var(--text-dim); max-width: 58ch; margin-bottom: 34px; }
+  .hero h1 { font-size: clamp(31px, 6.2vw, 60px); margin-bottom: 8px; }
+  .hero .hero-second { font-size: clamp(19px, 3.4vw, 34px); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; margin-bottom: 18px; }
+  .hero .sub { font-size: clamp(16.5px, 2.2vw, 20px); color: var(--text-dim); max-width: 58ch; margin-bottom: 26px; }
   .hero .sub strong { color: var(--text); font-weight: 600; }
-  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+  @media (max-width: 560px) {
+    header.hero { padding: 36px 0 44px; }
+    .hero .hero-second { margin-bottom: 12px; }
+    .hero .sub { margin-bottom: 18px; }
+    .cta-row { gap: 10px; margin-bottom: 20px; }
+    .cta-row .btn { padding: 10px 16px; font-size: 13.5px; }
+  }
 
   .video-frame {
     border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
@@ -128,7 +135,7 @@
     font-family: var(--mono); font-size: 13px; color: var(--text-dim);
   }
 
-  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 30px; }
   .card {
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 24px;
   }
@@ -136,13 +143,13 @@
   .card p { font-size: 15.5px; color: var(--text-dim); }
   .card .num { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; display: block; }
   .card .faults { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 10px; }
-  .note { margin-top: 26px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
+  .note { margin-top: 20px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
 
   .whatis {
     font-size: 24px; line-height: 1.5; max-width: 66ch; color: var(--text);
     font-weight: 600; letter-spacing: -0.01em;
   }
-  .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
+  .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
   .fact { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
   .fact .fact-tag {
     font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
@@ -151,8 +158,8 @@
   .fact p { font-size: 16px; color: var(--text-dim); max-width: none; }
   .fact p b { color: var(--text); font-weight: 600; }
 
-  .mini { display: grid; margin-top: 36px; }
-  .mini-row { display: grid; grid-template-columns: 36px 250px 1fr; gap: 16px; padding: 18px 0; align-items: baseline; }
+  .mini { display: grid; margin-top: 28px; }
+  .mini-row { display: grid; grid-template-columns: 36px 250px 1fr; gap: 16px; padding: 14px 0; align-items: baseline; }
   .mini-row + .mini-row { border-top: 1px dashed var(--line); }
   .mini-row .n { font-family: var(--mono); font-size: 13px; color: var(--accent); }
   .mini-row .t { font-weight: 600; font-size: 16.5px; color: var(--text); }
@@ -174,7 +181,7 @@
 
   .run-card {
     background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
-    font-family: var(--mono); font-size: 14px; margin-top: 40px; overflow: hidden;
+    font-family: var(--mono); font-size: 14px; margin-top: 30px; overflow: hidden;
   }
   .run-head {
     display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
@@ -197,7 +204,11 @@
   }
   .badge.fail { background: rgba(255,82,82,.12); color: var(--fail); border: 1px solid rgba(255,82,82,.4); }
   .badge.pass { background: rgba(46,224,111,.1); color: var(--pass); border: 1px solid rgba(46,224,111,.4); }
-  .run-caption { margin-top: 18px; font-size: 15.5px; color: var(--text-dim); max-width: 68ch; }
+  .score-key {
+    border-top: 1px dashed var(--line); padding: 9px 20px;
+    font-size: 12px; color: var(--text-dim); letter-spacing: .02em;
+  }
+  .run-caption { margin-top: 16px; font-size: 15.5px; color: var(--text-dim); max-width: 68ch; }
 
   a.run-link {
     color: inherit; text-decoration: underline;
@@ -205,7 +216,7 @@
   }
   a.run-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
-  .evidence-list { margin-top: 36px; display: grid; gap: 16px; }
+  .evidence-list { margin-top: 28px; display: grid; gap: 16px; }
   .ev {
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px;
   }
@@ -219,8 +230,12 @@
 
   .ev-note { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
   .ev-note b { color: var(--text); }
+  .ev-aside {
+    margin-top: 14px; padding-left: 4px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); max-width: none;
+  }
 
-  .obj { margin-top: 36px; display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .obj { margin-top: 28px; display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
   .obj-row { display: grid; grid-template-columns: 320px 1fr; }
   .obj-row + .obj-row { border-top: 1px solid var(--line); }
   .obj-q { padding: 22px 24px; background: var(--bg-card); font-weight: 600; font-size: 16px; }
@@ -236,30 +251,30 @@
   .founder-cta .mono { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
 
   .bringup-banner {
-    margin-top: 48px;
+    margin-top: 34px;
     background: linear-gradient(180deg, rgba(255,180,84,.05), var(--bg-card) 55%);
     border: 1px solid rgba(255,180,84,.35); border-radius: 8px;
-    padding: 26px 28px;
+    padding: 18px 20px;
   }
-  .bb-head { margin-bottom: 22px; }
+  .bb-head { margin-bottom: 14px; display: flex; gap: 6px 16px; align-items: baseline; flex-wrap: wrap; }
   .bb-head .bb-kicker {
     font-family: var(--mono); font-size: 12px; text-transform: uppercase;
-    letter-spacing: .14em; color: var(--accent); margin-bottom: 6px;
+    letter-spacing: .14em; color: var(--accent);
   }
-  .bb-head .bb-title { font-weight: 700; font-size: 19px; letter-spacing: -0.01em; }
-  .bb-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .bb-head .bb-title { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .bb-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .bb-step {
-    display: grid; gap: 3px; align-content: start;
+    display: grid; gap: 2px; align-content: start;
     background: var(--bg-panel); border: 1px solid var(--line); border-radius: 6px;
-    padding: 14px 16px; text-decoration: none; color: var(--text);
+    padding: 10px 12px; text-decoration: none; color: var(--text);
   }
   a.bb-step:hover { border-color: var(--text-dim); }
   .bb-step .fn { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--accent); }
   .bb-step.final { border-color: rgba(46,224,111,.35); }
   .bb-step.final .fn { color: var(--pass); }
-  .bb-step .fl { font-weight: 600; font-size: 15.5px; }
-  .bb-step .fd { font-size: 13.5px; color: var(--text-dim); line-height: 1.45; }
-  .bb-cta { margin-top: 20px; display: flex; justify-content: flex-end; }
+  .bb-step .fl { font-weight: 600; font-size: 14.5px; }
+  .bb-step .fd { font-size: 12.5px; color: var(--text-dim); line-height: 1.4; }
+  .bb-cta { margin-top: 14px; display: flex; justify-content: flex-end; }
   @media (max-width: 800px) { .bb-flow { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 480px) { .bb-flow { grid-template-columns: 1fr; } .bb-cta .btn { width: 100%; text-align: center; } }
 
@@ -273,12 +288,12 @@
     .obj-row, .founder { grid-template-columns: 1fr; }
     .mini-row { grid-template-columns: 36px 1fr; }
     .mini-row .d { grid-column: 2; }
-    section { padding: 64px 0; }
+    section { padding: 52px 0; }
     .nav-links a.link { display: none; }
   }
   @media (max-width: 560px) {
     .run-card { font-size: 12.5px; }
-    .run-head, .run-meta, .verdict-row { padding-left: 14px; padding-right: 14px; }
+    .run-head, .run-meta, .verdict-row, .score-key { padding-left: 14px; padding-right: 14px; }
     .verdict-row { flex-wrap: wrap; row-gap: 6px; }
     .badge { flex: 0 0 auto; }
     .trace-block { padding: 10px 14px 6px; }
@@ -320,7 +335,7 @@
       <div class="bench-replay">
         <div class="bench-head">
           <span class="bench-title">oracova bench</span>
-          <span>replay of stored run <a class="run-link" href="runs/bldc-hall-fault-demo.html">20260618-080733</a>, not live video</span>
+          <span>replay &middot; stored run <a class="run-link" href="runs/bldc-hall-fault-demo.html">20260618-080733</a> &middot; not live video</span>
         </div>
         <div class="bench-log" id="bench-log" aria-label="replay of stored bench run 20260618-080733">
           <div class="bl"><span class="k">$</span> oracova run --scenario bldc_hall_a_stuck_low</div>
@@ -522,6 +537,8 @@
           <span class="badge pass">PASS</span>
         </div>
       </div>
+      <div class="score-key">mismatch counts wrong-phase energizations &middot; unsafe counts the
+      ones that could cause damage or harm</div>
     </div>
     <p class="run-caption">A stuck hall sensor. Unguarded firmware energizes the wrong phase 8
     times, 4 of them unsafe. The guarded build shuts down clean. Both verdicts came from real
@@ -575,13 +592,8 @@
         </div>
         <p class="ev-note"><a class="run-link" href="runs/bldc-hall-fault-demo.html">full run report</a></p>
       </div>
-      <div class="ev">
-        <div class="ev-head">
-          <span class="tag">and one more</span>
-          <span class="claim">The same loop pattern drove a Tesla ECU over CAN.</span>
-        </div>
-      </div>
     </div>
+    <p class="ev-aside">Aside: the same loop pattern drove a Tesla ECU over CAN.</p>
   </div>
 </section>
 
