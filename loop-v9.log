@@ -13,3 +13,10 @@ judges: firmware lead 32 (cand) vs 29 (kept) -> B; skimmer 36 (cand) vs 32 (kept
 contract: PASS (49/49).
 decision: KEPT. Deployed kept state as live /v9/.
 complaints for next cycle: [fw] hero "A hundred iterations, unattended" is the only number with no artifact behind it (shown run = 2 iterations); [fw] zero photographs of the physical bench, everything is stylized CSS/SVG; [skim] bench replay paints empty between animation cycles (best proof asset invisible to a mid-cycle skimmer); [skim] three stacked headline blocks before the CTA on mobile, sub repeats the hero-second idea.
+
+CYCLE 3 (rerun after RP2350/Pico scrub; scrubbed tree was the base)
+build: bench replay no longer blanks (all 9 lines always visible, JS walks a highlight/cursor only, reduced-motion safe), <=560px hero compressed (28px pad, 29px h1, 14px sub) so headline->CTA->replay near one screen, honest "This is the hundred iterations, unattended" callback in how-it-works step 02, onboarding section padding aligned to index rhythm (68px desktop / 52px mobile / 72px hero).
+judges: firmware lead 31 (cand) vs 29 (kept) -> B; skimmer 34 (cand) vs 31 (kept) -> B.
+contract: PASS (all items) + RP2350/Pico ban CLEAN.
+decision: KEPT. Deployed kept state as live /v9/.
+complaints for next cycle: [fw] "hundred iterations" now claimed twice but evidence shows 2 iterations (don't double down); [fw] unsourced $9,900 + no own pricing shape + unverifiable Tesla aside (mostly contract-locked, limited room); [skim] the same run 20260618-080733 is told 3x on index (replay, run card, evidence vlist) and reads as one trick repeated; [skim] onboarding step-2 lead box double-"and" garble ("Plays your sensors and loads protocol-exact and runs..."); [skim nit] 14px dim-gray mobile sub at comfort floor.

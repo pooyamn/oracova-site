@@ -80,10 +80,11 @@
   .hero .sub strong { color: var(--text); font-weight: 600; }
   .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
   @media (max-width: 560px) {
-    header.hero { padding: 36px 0 44px; }
-    .hero .hero-second { margin-bottom: 12px; }
-    .hero .sub { margin-bottom: 18px; }
-    .cta-row { gap: 10px; margin-bottom: 20px; }
+    header.hero { padding: 28px 0 36px; }
+    .hero h1 { font-size: 29px; margin-bottom: 6px; }
+    .hero .hero-second { font-size: 17.5px; margin-bottom: 8px; }
+    .hero .sub { font-size: 14px; line-height: 1.5; margin-bottom: 14px; }
+    .cta-row { gap: 10px; margin-bottom: 18px; }
     .cta-row .btn { padding: 10px 16px; font-size: 13.5px; }
   }
 
@@ -114,15 +115,18 @@
   .bl .k { color: var(--accent); }
   .bl .pass { color: var(--pass); font-weight: 700; }
   .bl .fail { color: var(--fail); font-weight: 700; }
-  .bench-log.js-anim .bl { opacity: 0; transition: opacity .15s linear; }
-  .bench-log.js-anim .bl.on { opacity: 1; }
+  /* All 9 lines are always visible; the animation only walks a highlight down the log. */
+  .bench-log .bl { border-radius: 3px; margin: -2px -8px; padding: 2px 8px; }
+  .bench-log.js-anim .bl { transition: background-color .2s linear; }
+  .bench-log.js-anim .bl.cur { background: rgba(255,180,84,.09); }
   .bench-log.js-anim .bl.cur::after {
     content: "\258C"; color: var(--accent); margin-left: 3px;
     animation: benchblink 1s steps(1) infinite;
   }
   @keyframes benchblink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
-    .bench-log.js-anim .bl { opacity: 1; transition: none; }
+    .bench-log.js-anim .bl { transition: none; }
+    .bench-log.js-anim .bl.cur { background: none; }
     .bench-log.js-anim .bl.cur::after { animation: none; content: none; }
   }
   @media (max-width: 560px) {
@@ -395,8 +399,8 @@
       <div class="mini-row">
         <span class="n">02</span>
         <div class="t">The loop runs until PASS</div>
-        <div class="d"><b>Flash, run, read, fix, repeat</b>, for as long as it takes. Nobody
-        watches it work.</div>
+        <div class="d"><b>Flash, run, read, fix, repeat</b>, for as long as it takes. This is
+        the hundred iterations, unattended. Nobody watches it work.</div>
       </div>
       <div class="mini-row">
         <span class="n">03</span>
@@ -672,14 +676,15 @@
   var delays = [200, 1100, 2000, 3000, 3900, 4500, 5800, 6700, 7300];
   var hold = 5200;
   if (lines.length !== delays.length) return;
+  // The full log stays rendered at all times; only a highlight + cursor walk the lines.
   log.classList.add('js-anim');
+  function mark(i) {
+    for (var j = 0; j < lines.length; j++) lines[j].classList.remove('cur');
+    if (i >= 0) lines[i].classList.add('cur');
+  }
   function cycle() {
-    for (var j = 0; j < lines.length; j++) lines[j].classList.remove('on', 'cur');
     delays.forEach(function (d, i) {
-      setTimeout(function () {
-        if (i > 0) lines[i - 1].classList.remove('cur');
-        lines[i].classList.add('on', 'cur');
-      }, d);
+      setTimeout(function () { mark(i); }, d);
     });
     setTimeout(cycle, delays[delays.length - 1] + hold);
   }
