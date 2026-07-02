@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BLDC Silicon Fault Evidence</title>
+  <style>
+    :root {
+      --ink: #d7dee6;
+      --muted: #8a97a5;
+      --line: #1e2a36;
+      --bg: #0a0e12;
+      --panel: #121a23;
+      --green: #2ee06f;
+      --red: #ff5252;
+      --blue: #7aa2c4;
+      --amber: #ffb454;
+      --violet: #9a8cc9;
+      --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    .site-nav {
+      background: rgba(10,14,18,.85);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 28px;
+      font-family: var(--mono);
+      font-size: 14px;
+    }
+    .site-nav a { color: var(--muted); text-decoration: none; }
+    .site-nav a:hover { color: var(--amber); }
+    header {
+      background: #0f151c;
+      color: #fff;
+      padding: 32px 28px 26px;
+      border-bottom: 4px solid var(--amber);
+    }
+    header h1 { margin: 0 0 8px; font-size: 30px; font-weight: 720; }
+    header p { max-width: 860px; margin: 0; color: #d9e1ea; font-size: 16px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    section { margin: 0 0 24px; }
+    h2 { font-size: 17px; margin: 0 0 12px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric, .case-card, .chart-panel, .table-panel, .hash-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .metric { padding: 16px; }
+    .metric b { display: block; font-size: 28px; }
+    .metric span { color: var(--muted); }
+    .cases {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .case-card { padding: 14px; min-height: 220px; }
+    .case-card.pass { border-top: 4px solid var(--green); }
+    .case-card.fail { border-top: 4px solid var(--red); }
+    .case-top { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+    .case-top h3 { margin: 0; font-size: 15px; }
+    .case-top p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .case-top strong { font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; }
+    .explain { color: #aeb9c5; min-height: 62px; }
+    dl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
+    dt { color: var(--muted); font-size: 12px; }
+    dd { margin: 0; font-weight: 650; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    .ok { color: var(--green); }
+    .bad { color: var(--red); }
+    .chart-panel, .table-panel, .hash-panel { padding: 16px; }
+    .legend { display: flex; gap: 14px; color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+    }
+    .chart-row:first-of-type { border-top: 0; }
+    .chart-label b { display: block; }
+    .chart-label span { color: var(--muted); font-size: 13px; }
+    .bar { position: relative; height: 22px; background: #1b2530; border-radius: 4px; overflow: hidden; }
+    .bar span { position: absolute; inset: 0 auto 0 0; display: block; }
+    .bar b { position: relative; display: block; padding: 2px 7px; font-size: 12px; }
+    .bar.unsafe span { background: #d95d4f; }
+    .bar.mismatch span { background: #4f8ec9; }
+    .bar.sequence span { background: #c58a2d; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 9px 8px; border-top: 1px solid var(--line); text-align: left; white-space: nowrap; }
+    th { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .pill { display: inline-block; min-width: 46px; border-radius: 999px; padding: 2px 7px; color: #fff; font-size: 12px; text-align: center; }
+    .pill.good { background: var(--green); }
+    .pill.bad { background: var(--red); }
+    .hash-panel ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .hash-panel li { border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+    .hash-panel span { display: block; color: var(--muted); font-size: 12px; }
+    @media (max-width: 900px) {
+      .summary, .cases { grid-template-columns: 1fr; }
+      .chart-row { grid-template-columns: 1fr; }
+      .hash-panel ul { grid-template-columns: 1fr; }
+      .table-panel { overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-nav"><a href="../index.html">&larr; oracova_ home</a></div>
+  <header>
+    <h1>BLDC Silicon Fault Evidence</h1>
+    <p>Two MCU hardware-in-the-loop run: STM32 target firmware, Pico/RP2350 plant and fault injector, real phase/hall wiring, RTT evidence captured through probe-rs.</p>
+  </header>
+  <main>
+    <section class="summary" aria-label="Evidence summary">
+      <div class="metric"><b>6</b><span>silicon verdicts</span></div>
+      <div class="metric"><b>4 -> 0</b><span>unsafe drives after Hall A guard</span></div>
+      <div class="metric"><b>FAIL -> PASS</b><span>same fault, guarded target</span></div>
+    </section>
+
+    <section>
+      <h2>Verdict Cards</h2>
+      <div class="cases">
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Nominal commutation</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">Healthy six-step hall sequence selects the expected active phase.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>882f553a6d7b</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Hall A stuck low</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">A stuck Hall A line creates valid-looking wrong sectors; unguarded firmware keeps driving.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>4</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>83f848006ea0</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Hall A stuck low</h3>
+              <p>Guarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">The same fault is converted into a latched no-drive state by the invalid-hall guard.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>c6aa16c7e324</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Hall bus forced 000</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">All hall lines low is treated as invalid input; phases stay off.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>f79987e41d7f</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Skipped hall sector</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">The oracle sees a sequence jump; this remains the next guard to add.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>00641270c1a4</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Swapped commutation sectors</h3>
+              <p>Buggy target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">A copy-paste commutation-table bug drives the wrong phase in two sectors.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>8</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>d1fd03dca377</code></dd></div>
+          </dl>
+        </article>
+        </div>
+    </section>
+
+    <section class="chart-panel">
+      <h2>Fault Counters</h2>
+      <div class="legend">
+        <span><i style="background:#d95d4f"></i>unsafe drive</span>
+        <span><i style="background:#4f8ec9"></i>commutation mismatch</span>
+        <span><i style="background:#c58a2d"></i>sequence fault</span>
+      </div>
+      
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Nominal commutation</b>
+            <span>golden</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall A stuck low</b>
+            <span>golden</span>
+          </div>
+          <div class="bar unsafe"><span style="width:50%"></span><b>4</b></div>
+          <div class="bar mismatch"><span style="width:33%"></span><b>8</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall A stuck low</b>
+            <span>guarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:100%"></span><b>24</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall bus forced 000</b>
+            <span>golden</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:100%"></span><b>24</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Skipped hall sector</b>
+            <span>golden</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar sequence"><span style="width:100%"></span><b>7</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Swapped commutation sectors</b>
+            <span>buggy</span>
+          </div>
+          <div class="bar unsafe"><span style="width:100%"></span><b>8</b></div>
+          <div class="bar mismatch"><span style="width:33%"></span><b>8</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+    </section>
+
+    <section class="table-panel">
+      <h2>Audit Table</h2>
+      <table>
+        <thead><tr><th>Case</th><th>Variant</th><th>Verdict</th><th>Unsafe</th><th>Mismatch</th><th>Invalid shutdown</th><th>Seq fault</th><th>Verdict hash</th></tr></thead>
+        <tbody>
+        <tr>
+          <td>Nominal commutation</td>
+          <td>Unguarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td><code>882f553a6d7b</code></td>
+        </tr>
+        
+        <tr>
+          <td>Hall A stuck low</td>
+          <td>Unguarded target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>4</td>
+          <td>8</td>
+          <td>4</td>
+          <td>0</td>
+          <td><code>83f848006ea0</code></td>
+        </tr>
+        
+        <tr>
+          <td>Hall A stuck low</td>
+          <td>Guarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>24</td>
+          <td>4</td>
+          <td>0</td>
+          <td><code>c6aa16c7e324</code></td>
+        </tr>
+        
+        <tr>
+          <td>Hall bus forced 000</td>
+          <td>Unguarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>24</td>
+          <td>24</td>
+          <td>0</td>
+          <td><code>f79987e41d7f</code></td>
+        </tr>
+        
+        <tr>
+          <td>Skipped hall sector</td>
+          <td>Unguarded target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>7</td>
+          <td><code>00641270c1a4</code></td>
+        </tr>
+        
+        <tr>
+          <td>Swapped commutation sectors</td>
+          <td>Buggy target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>8</td>
+          <td>8</td>
+          <td>0</td>
+          <td>0</td>
+          <td><code>d1fd03dca377</code></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="hash-panel">
+      <h2>Firmware Hashes</h2>
+      <ul><li><span>buggy:emulator</span><code>787e7c0a8021</code></li><li><span>buggy:target</span><code>a95d84130157</code></li><li><span>golden:emulator</span><code>787e7c0a8021</code></li><li><span>golden:target</span><code>99c0485d4f41</code></li><li><span>guarded:emulator</span><code>787e7c0a8021</code></li><li><span>guarded:target</span><code>c7811e600a6d</code></li></ul>
+    </section>
+  </main>
+</body>
+</html>
