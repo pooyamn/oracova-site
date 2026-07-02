@@ -20,3 +20,10 @@ judges: firmware lead 31 (cand) vs 29 (kept) -> B; skimmer 34 (cand) vs 31 (kept
 contract: PASS (all items) + RP2350/Pico ban CLEAN.
 decision: KEPT. Deployed kept state as live /v9/.
 complaints for next cycle: [fw] "hundred iterations" now claimed twice but evidence shows 2 iterations (don't double down); [fw] unsourced $9,900 + no own pricing shape + unverifiable Tesla aside (mostly contract-locked, limited room); [skim] the same run 20260618-080733 is told 3x on index (replay, run card, evidence vlist) and reads as one trick repeated; [skim] onboarding step-2 lead box double-"and" garble ("Plays your sensors and loads protocol-exact and runs..."); [skim nit] 14px dim-gray mobile sub at comfort floor.
+
+CYCLE 4
+build: run threaded as one artifact ("the same one replaying at the top of this page" on the run card, "<- the run card above" vref on the stuck-hall evidence line), removed cycle-3's "This is the hundred iterations, unattended" step-02 callback, fixed onboarding step-2 double-"and" garble, mobile hero sub 14->14.5px brighter (#a4b1bf).
+judges: firmware lead 30.5 (cand) vs 28.5 (kept) -> B; skimmer 33 (cand) vs 31 (kept) -> B.
+contract: PASS (49/49) + RP2350/Pico ban CLEAN.
+decision: KEPT. Deployed kept state as live /v9/.
+complaints for next cycle: [fw] hero "hundred iterations" still has no artifact behind it (n=2 shown; can't fix without real data); [fw] "real-time physics" has no performance envelope — wants a mono spec line under the World h2 reusing existing claims only (8 kHz proven, bus list); [skim] seven sections between hero and booking CTA, "The world" is ~3 phone screens of same-weight grids; [skim] two competing orange primaries ("Bring up yours" vs "Book 15 minutes") — NOTE: solid primary on "Bring up yours" is user-locked, cannot demote.
