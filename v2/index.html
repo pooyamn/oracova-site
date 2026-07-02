@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracova. AI agents test your firmware on real hardware.</title>
+<meta name="description" content="Oracova is an AI-run test bench. Real chip, emulated world, injected faults, scored verdicts. It tests firmware the way it will actually be used, automatically, on every change.">
+<style>
+  :root {
+    --bg: #0a0e12;
+    --bg-panel: #0f151c;
+    --bg-card: #121a23;
+    --line: #1e2a36;
+    --text: #d7dee6;
+    --text-dim: #8a97a5;
+    --accent: #ffb454;
+    --pass: #2ee06f;
+    --fail: #ff5252;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(255,180,84,.25); }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 88px 0; border-top: 1px solid var(--line); }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  h2 { font-size: 34px; margin-bottom: 14px; }
+  h3 { font-size: 19px; margin-bottom: 8px; }
+  p  { max-width: 62ch; }
+  .dim { color: var(--text-dim); }
+  .mono { font-family: var(--mono); }
+  .kicker {
+    font-family: var(--mono); font-size: 13px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--accent); margin-bottom: 16px;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(10,14,18,.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; font-size: 14.5px; }
+  .nav-links a:hover { color: var(--text); }
+
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 6px;
+    font-family: var(--mono); font-size: 15px; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #14100a; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--text-dim); }
+  .btn-sm { padding: 8px 16px; font-size: 13.5px; }
+
+  header.hero {
+    padding: 96px 0 80px;
+    background:
+      linear-gradient(rgba(10,14,18,0) 0%, var(--bg) 85%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px);
+  }
+  .hero h1 { font-size: clamp(38px, 6.2vw, 60px); margin-bottom: 10px; }
+  .hero .hero-second { font-size: clamp(24px, 3.4vw, 34px); font-weight: 700; color: var(--accent); letter-spacing: -0.02em; margin-bottom: 24px; }
+  .hero .sub { font-size: 20px; color: var(--text-dim); max-width: 58ch; margin-bottom: 34px; }
+  .hero .sub strong { color: var(--text); font-weight: 600; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 56px; }
+
+  .video-frame {
+    border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    background: var(--bg-panel);
+  }
+  .video-placeholder {
+    aspect-ratio: 16/9; display: flex; flex-direction: column; gap: 10px;
+    align-items: center; justify-content: center;
+    color: var(--text-dim); font-family: var(--mono); font-size: 14px;
+    background:
+      radial-gradient(ellipse at center, rgba(255,180,84,.06), transparent 70%),
+      var(--bg-panel);
+  }
+  .video-placeholder .rec { color: var(--fail); }
+  .video-caption {
+    border-top: 1px solid var(--line); padding: 12px 18px;
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+  }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 24px;
+  }
+  .card h3 { color: var(--text); }
+  .card p { font-size: 15.5px; color: var(--text-dim); }
+  .card .num { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; display: block; }
+  .card .faults { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 10px; }
+  .note { margin-top: 26px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
+
+  .whatis {
+    font-size: 24px; line-height: 1.5; max-width: 66ch; color: var(--text);
+    font-weight: 600; letter-spacing: -0.01em;
+  }
+  .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
+  .fact { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .fact .fact-tag {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 8px;
+  }
+  .fact p { font-size: 16px; color: var(--text-dim); max-width: none; }
+  .fact p b { color: var(--text); font-weight: 600; }
+
+  .mini { display: grid; margin-top: 36px; }
+  .mini-row { display: grid; grid-template-columns: 36px 250px 1fr; gap: 16px; padding: 18px 0; align-items: baseline; }
+  .mini-row + .mini-row { border-top: 1px dashed var(--line); }
+  .mini-row .n { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+  .mini-row .t { font-weight: 600; font-size: 16.5px; color: var(--text); }
+  .mini-row .d { font-size: 15px; color: var(--text-dim); }
+  .mini-row .d b { color: var(--text); font-weight: 600; }
+
+  details.more { margin-top: 10px; }
+  details.more > summary {
+    list-style: none; cursor: pointer; display: inline-block;
+    font-family: var(--mono); font-size: 12.5px; color: var(--accent); letter-spacing: .05em;
+    border: 1px solid var(--line); border-radius: 4px; padding: 3px 10px;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "+\00a0"; }
+  details.more[open] > summary::before { content: "\2212\00a0"; }
+  details.more > summary:hover { border-color: var(--text-dim); }
+  details.more p { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  details.more p b { color: var(--text); }
+
+  .run-card {
+    background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
+    font-family: var(--mono); font-size: 14px; margin-top: 40px; overflow: hidden;
+  }
+  .run-head {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 14px 20px; border-bottom: 1px solid var(--line); color: var(--text-dim);
+  }
+  .run-head .rid { color: var(--text); }
+  .run-meta { padding: 16px 20px; display: grid; gap: 6px; color: var(--text-dim); }
+  .run-meta b { color: var(--text); font-weight: 500; }
+  .run-meta .fault b { color: var(--accent); }
+  .trace-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 20px 6px; background: #0b1016; }
+  .trace-label { font-size: 11.5px; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  .verdict-rows { padding: 6px 0; }
+  .verdict-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    padding: 12px 20px;
+  }
+  .verdict-row + .verdict-row { border-top: 1px dashed var(--line); }
+  .badge {
+    padding: 3px 12px; border-radius: 4px; font-weight: 700; font-size: 13px; letter-spacing: .08em;
+  }
+  .badge.fail { background: rgba(255,82,82,.12); color: var(--fail); border: 1px solid rgba(255,82,82,.4); }
+  .badge.pass { background: rgba(46,224,111,.1); color: var(--pass); border: 1px solid rgba(46,224,111,.4); }
+  .run-caption { margin-top: 18px; font-size: 15.5px; color: var(--text-dim); max-width: 68ch; }
+
+  .evidence-list { margin-top: 36px; display: grid; gap: 16px; }
+  .ev {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px;
+  }
+  .ev .ev-head { display: flex; gap: 8px 20px; align-items: baseline; flex-wrap: wrap; }
+  .ev .tag { font-family: var(--mono); font-size: 12.5px; color: var(--accent); white-space: nowrap; }
+  .ev .claim { font-weight: 600; font-size: 17px; color: var(--text); }
+  .ev .nums { margin-top: 10px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .ev .vlist { margin-top: 10px; display: grid; gap: 5px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .ev .v-pass { color: var(--pass); font-family: var(--mono); font-weight: 700; }
+  .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
+
+  .obj { margin-top: 36px; display: grid; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .obj-row { display: grid; grid-template-columns: 320px 1fr; }
+  .obj-row + .obj-row { border-top: 1px solid var(--line); }
+  .obj-q { padding: 22px 24px; background: var(--bg-card); font-weight: 600; font-size: 16px; }
+  .obj-a { padding: 22px 24px; color: var(--text-dim); font-size: 15.5px; }
+  .obj-a b { color: var(--text); }
+
+  .founder { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+  .founder-cta {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 30px; text-align: center;
+  }
+  .founder-cta .btn { width: 100%; margin-top: 14px; }
+  .founder-cta .mono { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
+    font-family: var(--mono); font-size: 13px;
+  }
+
+  @media (max-width: 800px) {
+    .grid3, .fact-grid { grid-template-columns: 1fr; }
+    .obj-row, .founder { grid-template-columns: 1fr; }
+    .mini-row { grid-template-columns: 36px 1fr; }
+    .mini-row .d { grid-column: 2; }
+    section { padding: 64px 0; }
+    .nav-links a.link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#">oracova<span>_</span></a>
+    <div class="nav-links">
+      <a class="link" href="#how">How it works</a>
+      <a class="link" href="#world">The world</a>
+      <a class="link" href="#evidence">Evidence</a>
+      <a class="btn btn-primary btn-sm" href="#cta">Book 15 minutes</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>AI agents test your firmware on real&nbsp;hardware.</h1>
+    <div class="hero-second">A hundred iterations, unattended. You review the one that passed.</div>
+    <p class="sub">Flashing, testing, re-testing on the bench needed a human.
+    <strong>Not anymore.</strong></p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#cta">Book 15 minutes</a>
+      <a class="btn btn-ghost" href="#evidence">See the evidence</a>
+    </div>
+    <div class="video-frame">
+      <div class="video-placeholder">
+        <div><span class="rec">●</span> BETAFLIGHT-LOOP.MP4</div>
+        <div>[ capture from live bench pending ]</div>
+      </div>
+      <div class="video-caption">Unmodified Betaflight flying against the Oracova bench.
+      Gyro and accel served over I2C, 4x motor decode, closed loop at 8 kHz.</div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">What is Oracova</div>
+    <p class="whatis">Oracova is an automated test bench for firmware.</p>
+    <div class="fact-grid">
+      <div class="fact">
+        <span class="fact-tag">Real silicon</span>
+        <p><b>Your unmodified binary</b> runs on your real microcontroller.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Emulated world</span>
+        <p>Oracova emulates the world around it with <b>real-time physics</b> and injects faults.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Scored verdicts</span>
+        <p>Every run scored <b>PASS or FAIL</b> with captured evidence.</p>
+      </div>
+      <div class="fact">
+        <span class="fact-tag">Unattended</span>
+        <p><b>AI agents drive the bench</b>, so the loop runs unattended.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2>Every firmware PR gets its own bench and its own agent.</h2>
+    <div class="mini">
+      <div class="mini-row">
+        <span class="n">01</span>
+        <div class="t">A change arrives with its own tests</div>
+        <div class="d">Your engineers or your coding agents write the change. <b>Oracova writes
+        the tests separately</b> and runs them on the bench, not in a mock. You manage outcomes,
+        not benches.</div>
+      </div>
+      <div class="mini-row">
+        <span class="n">02</span>
+        <div class="t">The loop runs until PASS</div>
+        <div class="d"><b>Flash, run, read, fix, repeat</b>, for as long as it takes. Nobody
+        watches it work.</div>
+      </div>
+      <div class="mini-row">
+        <span class="n">03</span>
+        <div class="t">Every test keeps running</div>
+        <div class="d">Each test stays in the suite and runs on every future PR.
+        <b>Integration regressions get caught</b> before anyone looks for them.</div>
+      </div>
+    </div>
+    <p class="note">More PRs in flight? Add benches. They are cheap to replicate, and
+    every PR gets its own.</p>
+  </div>
+</section>
+
+<section id="world">
+  <div class="wrap">
+    <div class="kicker">The world</div>
+    <h2>Close your control loop on real-time physics emulation.</h2>
+    <div class="mini">
+      <div class="mini-row">
+        <span class="n">01</span>
+        <div class="t">Live physics</div>
+        <div class="d">The world around your firmware is live physics: <b>motors spin, packs
+        heat up, pressure builds.</b></div>
+      </div>
+      <div class="mini-row">
+        <span class="n">02</span>
+        <div class="t">No forced states</div>
+        <div class="d"><b>Your firmware reaches every test point on its own.</b> The world
+        drives it there: no test hooks, no forced states, no special builds. Unmodified binary,
+        same code you ship.
+          <details class="more">
+            <summary>Example: an over-temperature guard</summary>
+            <p>To test an over-temperature guard, the pack heats up in physics and the firmware
+            hits the fault exactly as it would in the field.</p>
+          </details>
+        </div>
+      </div>
+      <div class="mini-row">
+        <span class="n">03</span>
+        <div class="t">Validated models</div>
+        <div class="d">Common peripherals, a gyro, an LCD, a hall encoder, come as <b>validated
+        models from Oracova's open-source marketplace</b>. What you build, you can contribute
+        back.</div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <h3>Motor control</h3>
+        <div class="faults">stuck hall &middot; swapped sectors &middot; skipped sector</div>
+        <p>Commutation and hall-sensor faults on real silicon. All proven on the Oracova
+        bench.</p>
+      </div>
+      <div class="card">
+        <h3>BMS</h3>
+        <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
+        <p>The pack is physics, so protection logic is tested by reaching the fault, not by
+        faking it.</p>
+      </div>
+      <div class="card">
+        <h3>Power and thermal</h3>
+        <div class="faults">heaters &middot; pumps &middot; converters</div>
+        <p>Closed loops settle, overshoot, and fault against a plant that behaves like the
+        real one.</p>
+      </div>
+    </div>
+    <p class="note">Wondering what it takes to get your board on the bench?
+    <a href="onboarding.html" style="color: var(--accent); text-decoration: none;">See how
+    onboarding works &rarr;</a></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The verdict</div>
+    <h2>You review the one that passed.</h2>
+    <p class="dim">Every run returns PASS or FAIL with captured traces, event trails, and
+    firmware hashes. Repeatable, diffable, stored in CI. This is a real run from the bench:</p>
+
+    <div class="run-card">
+      <div class="run-head">
+        <span class="rid">RUN 20260618-080733</span>
+        <span>bldc_hall_a_stuck_low</span>
+      </div>
+      <div class="run-meta">
+        <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
+        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on RP2350</b></div>
+        <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
+      </div>
+      <div class="trace-block">
+        <div class="trace-label">phase U / V / W + hall A capture</div>
+        <svg viewBox="0 0 1000 120" width="100%" height="120" preserveAspectRatio="none" aria-label="captured commutation trace">
+          <polyline fill="none" stroke="#ffb454" stroke-width="2" opacity="0.9"
+            points="0,25 80,25 80,8 160,8 160,25 320,25 320,8 400,8 400,25 560,25 560,8 640,8 640,25 800,25 800,8 880,8 880,25 1000,25"/>
+          <polyline fill="none" stroke="#7aa2c4" stroke-width="2" opacity="0.8"
+            points="0,55 40,55 40,38 200,38 200,55 360,55 360,38 480,38 480,55 700,55 700,38 820,38 820,55 1000,55"/>
+          <polyline fill="none" stroke="#9a8cc9" stroke-width="2" opacity="0.8"
+            points="0,85 120,85 120,68 280,68 280,85 440,85 440,68 520,68 520,85 760,85 760,68 940,68 940,85 1000,85"/>
+          <polyline fill="none" stroke="#ff5252" stroke-width="2"
+            points="0,105 200,105 200,112 1000,112"/>
+          <text x="205" y="104" fill="#ff5252" font-size="10" font-family="monospace">HALL_A stuck low</text>
+        </svg>
+      </div>
+      <div class="verdict-rows">
+        <div class="verdict-row">
+          <span class="dim">unguarded firmware &nbsp; mismatch=8 &nbsp; unsafe=4</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">same firmware + guard patch &nbsp; unsafe=0</span>
+          <span class="badge pass">PASS</span>
+        </div>
+      </div>
+    </div>
+    <p class="run-caption">A stuck hall sensor. Unguarded firmware energizes the wrong phase 8
+    times, 4 of them unsafe. The guarded build shuts down clean. Both verdicts came from real
+    hardware, not a simulator.</p>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="wrap">
+    <div class="kicker">Evidence</div>
+    <h2>What the bench has already done.</h2>
+    <div class="evidence-list">
+      <div class="ev">
+        <div class="ev-head">
+          <span class="tag">betaflight, closed loop</span>
+          <span class="claim">Unmodified Betaflight flies against the bench.</span>
+        </div>
+        <div class="nums">gyro + accel over I2C &middot; 4 motor outputs decoded &middot; ANGLE mode &middot; 8 kHz loop</div>
+        <details class="more">
+          <summary>Full story</summary>
+          <p>Production flight-controller firmware, no source changes, closed the loop against
+          Oracova's emulated world: gyro and accel served over I2C, 4 motor outputs decoded,
+          physics advanced, ANGLE mode holding attitude at an 8 kHz loop. <b>Third-party
+          firmware we cannot see inside is the hardest case. That is why we lead with
+          it.</b></p>
+        </details>
+      </div>
+      <div class="ev">
+        <div class="ev-head">
+          <span class="tag">the bug a green build hid</span>
+          <span class="claim">Zero edges on the wire.</span>
+        </div>
+        <div class="nums">build green &middot; DShot600 configured &middot; static checks passed &middot; output: <span class="v-fail">zero edges</span></div>
+        <details class="more">
+          <summary>Full story</summary>
+          <p>During bring-up, Betaflight's DShot motor output produced no edges at all, a DMA
+          allocation failure on the F411. The build was green, the config said DShot600 active,
+          every static check passed. <b>Only the closed loop caught it.</b> That bug class is
+          exactly what Oracova exists for.</p>
+        </details>
+      </div>
+      <div class="ev">
+        <div class="ev-head">
+          <span class="tag">fault library, on silicon</span>
+          <span class="claim">Real faults, scored verdicts.</span>
+        </div>
+        <div class="nums">BLDC commutation faults on a two-MCU rig. Every verdict has stored evidence and firmware hashes.</div>
+        <div class="vlist">
+          <div>swapped sectors &nbsp;<span class="v-fail">FAIL</span>&nbsp; mismatch=8, unsafe=8</div>
+          <div>hall stuck low &nbsp;<span class="v-fail">FAIL</span>&nbsp; unsafe=4</div>
+          <div>skipped sector &nbsp;<span class="v-fail">FAIL</span>&nbsp; seq_fault=7</div>
+          <div>forced invalid hall bus &nbsp;<span class="v-pass">PASS</span>&nbsp; target shuts down safely</div>
+          <div>+ guard patch: stuck hall flips to &nbsp;<span class="v-pass">PASS</span>&nbsp; unsafe=0</div>
+        </div>
+      </div>
+      <div class="ev">
+        <div class="ev-head">
+          <span class="tag">and one more</span>
+          <span class="claim">The same loop pattern drove a Tesla ECU over CAN.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Objections</div>
+    <h2>Why nothing else does this.</h2>
+    <div class="obj">
+      <div class="obj-row">
+        <div class="obj-q">"An AI cannot be trusted to judge firmware."</div>
+        <div class="obj-a">Correct. Ours does not. <b>Every verdict comes from real hardware,
+        not from the model.</b>
+          <details class="more">
+            <summary>How</summary>
+            <p>The agent brings up the world and proposes scenarios; a <b>deterministic,
+            AI-free checker</b> scores every run.</p>
+          </details>
+        </div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-q">"Simulation already exists."</div>
+        <div class="obj-a">Simulators pass builds that fail on the chip. <b>The loop only
+        closes on real silicon.</b>
+          <details class="more">
+            <summary>Example</summary>
+            <p>Static I/O checks say DShot is configured while the output shows zero
+            edges.</p>
+          </details>
+        </div>
+      </div>
+      <div class="obj-row">
+        <div class="obj-q">"We have HIL vendors."</div>
+        <div class="obj-a">Real HIL starts at $9,900 and runs to six figures. Oracova is
+        <b>agent-drivable, self-serve, per-PR.</b>
+          <details class="more">
+            <summary>The gap</summary>
+            <p>Those systems are configured by hand for one program. Below that floor there is
+            nothing but a human and a bench. <b>Oracova is the layer that was never
+            built.</b></p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap founder">
+    <div>
+      <div class="kicker">The outcome</div>
+      <h2>Firmware finally develops like software.</h2>
+      <p class="dim">I am a hardware and firmware engineer. I have shipped motor controllers and
+      battery systems, and I have been the human at the bench this page describes. Oracova
+      exists because the tools I wanted never did. If your firmware drives something real and
+      testing it still means a person and an afternoon, I want 15 minutes.</p>
+    </div>
+    <div class="founder-cta">
+      <div class="mono" style="margin-top:0">15 minutes, no deck</div>
+      <a class="btn btn-primary" href="#">Book 15 minutes</a>
+      <div class="mono">calendly event: pending · email: pending domain</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+    <span>© 2026 Oracova</span>
+  </div>
+</footer>
+
+</body>
+</html>
