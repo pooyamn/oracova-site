@@ -27,3 +27,12 @@ judges: firmware lead 30.5 (cand) vs 28.5 (kept) -> B; skimmer 33 (cand) vs 31 (
 contract: PASS (49/49) + RP2350/Pico ban CLEAN.
 decision: KEPT. Deployed kept state as live /v9/.
 complaints for next cycle: [fw] hero "hundred iterations" still has no artifact behind it (n=2 shown; can't fix without real data); [fw] "real-time physics" has no performance envelope — wants a mono spec line under the World h2 reusing existing claims only (8 kHz proven, bus list); [skim] seven sections between hero and booking CTA, "The world" is ~3 phone screens of same-weight grids; [skim] two competing orange primaries ("Bring up yours" vs "Book 15 minutes") — NOTE: solid primary on "Bring up yours" is user-locked, cannot demote.
+
+CYCLE 5
+build: mono spec-line under the World h2 ("closed loop proven to 8 kHz · gyro + accel over I2C · 4x motor decode · GPIO / PWM / UART / I2C / SPI / CAN", all pre-existing claims), real <=560px pass on both pages (sections 44px, h2 27px, tighter cards/mini-rows/banner), "Bring up yours" kept solid primary but sized down one notch, index footer CSS unified with onboarding.
+judges: firmware lead 32 (cand) vs 31 (kept) -> B; skimmer 33 (cand) vs 30 (kept) -> B.
+contract: PASS (49/49) + RP2350/Pico ban CLEAN + spec-line verified zero-invention.
+decision: KEPT. Final kept state = cycle-5 candidate.
+open complaints for future rounds: [fw] spec-line mixes proven numbers with the unproven six-bus list under one "proven" umbrella (split it); [fw] Betaflight + DShot evidence cards lack artifact links, "firmware hashes stored in CI" never demonstrated; [skim] spec-line wraps to a 3-line jargon wall at 12px on phones; [skim] replay header run-id is a <30px tap target at 10.5px; [human TODO] real long-run artifact for the "hundred iterations" hero claim, photo of the physical bench, Calendly links.
+
+LOOP COMPLETE: 5/5 cycles kept. v9 = cycle-5 state, published.
