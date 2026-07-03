@@ -602,13 +602,11 @@
   <div class="wrap">
     <div class="kicker">Straight answers</div>
     <h2>Against the ways you test&nbsp;today.</h2>
-    <p class="dim">"An AI cannot be trusted to judge firmware." Correct. Ours does not: the
-    agent brings up the world and proposes scenarios; a <b>deterministic, AI-free checker</b>
-    scores every run on real hardware. <b>The model never grades your code.</b></p>
     <div class="cmp-scroll">
       <table class="cmp">
         <tr><th></th><th class="hl">oracova</th><th>manual bench</th><th>simulator</th><th>HIL rig</th></tr>
         <tr><td>who writes the tests</td><td class="y hl">the agent</td><td class="dim">you</td><td class="dim">you</td><td class="dim">you</td></tr>
+        <tr><td>who scores the runs</td><td class="y hl">AI-free checker</td><td class="dim">you</td><td class="dim">your asserts</td><td class="dim">scripted checks</td></tr>
         <tr><td>runs unattended</td><td class="y hl">agent-driven</td><td class="n">no</td><td class="y">yes</td><td class="dim">scripted</td></tr>
         <tr><td>a bench per PR</td><td class="y hl">yes</td><td class="n">no</td><td class="y">yes</td><td class="n">no</td></tr>
         <tr><td>runs on real silicon</td><td class="y hl">yes</td><td class="y">yes</td><td class="n">no</td><td class="y">yes</td></tr>
