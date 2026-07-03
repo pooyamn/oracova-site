@@ -264,8 +264,7 @@
         <span class="tag">Oracova base board</span>
         <h3>The world, in real time</h3>
         <p>Plays your sensors and loads, protocol-exact, and runs the physics models in real
-        time. The world responds like the product's world does. Comes in variants; you pick
-        one by how much power it has to source and sink.</p>
+        time. The world responds like the product's world does.</p>
       </div>
       <div class="box">
         <span class="tag">Analog front-end modules</span>
@@ -278,11 +277,7 @@
         <h3>Your microcontroller's seat</h3>
         <p>Built for your part, every pin routed to the base board. Your code runs on your
         real silicon, not a substitute part.</p>
-        <div class="list">flash &middot; reset &middot; inspect</div>
-        <details class="more">
-          <summary>The probe</summary>
-          <p>The debug probe flashes, resets, and inspects the target while it runs.</p>
-        </details>
+        <div class="list">flash &middot; reset &middot; inspect, while it runs</div>
       </div>
     </div>
     <p class="note">Benches are cheap to replicate. One per PR, one per agent, as many as
@@ -294,13 +289,10 @@
   <div class="wrap">
     <span class="stepnum">STEP 3</span>
     <h2>The bring-up</h2>
-    <p class="dim" style="margin-bottom:10px">Now the world comes up. An AI agent does the
-    work, with your confirmation along the way.</p>
-    <p class="dim" style="margin-bottom:10px; font-size:15px">On either path, expect some
-    questions about your hardware and its physics, or documentation that answers them. The
-    agent asks, it does not guess.</p>
-    <p class="dim" style="margin-bottom:26px; font-size:15px">How long bring-up takes depends
-    on your board. We scope it, with a number, on the call.</p>
+    <p class="dim" style="margin-bottom:26px">Now the world comes up. An AI agent does the
+    work, with your confirmation along the way; it asks about your hardware and its physics,
+    it does not guess. How long depends on your board: we scope it, with a number, on the
+    call.</p>
     <div class="grid2">
       <div class="path-card">
         <h2>If you have working firmware</h2>
@@ -341,9 +333,8 @@
       <div class="list">gyro &middot; LCD &middot; hall encoder &middot; and more</div>
       <p class="dim" style="font-size:15px; max-width:none">The world rarely starts from
       zero. Common peripherals come as <b>validated models from Oracova's open-source
-      marketplace</b>, already proven against real firmware on other benches. The AI builds
-      what is unique to your product and pulls the rest. And what you build, you can
-      contribute back.</p>
+      marketplace</b>, proven against real firmware. The AI builds what is unique to your
+      product and pulls the rest; what you build, you can contribute back.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
     <div class="boxes">
