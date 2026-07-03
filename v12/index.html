@@ -146,11 +146,13 @@
 
   .cred-band { border-top: 1px solid var(--line); background: var(--bg-panel); }
   .cred-band .wrap {
-    display: flex; flex-wrap: wrap; gap: 8px 36px; padding-top: 14px; padding-bottom: 14px;
+    display: flex; flex-wrap: wrap; gap: 8px 32px; padding-top: 14px; padding-bottom: 14px;
     font-family: var(--mono); font-size: 13px; color: var(--text-dim);
   }
-  .cred-band b { color: var(--text); font-weight: 500; }
-  @media (max-width: 560px) { .cred-band .wrap { gap: 6px 20px; font-size: 12px; } }
+  .cred-band .cred-label { color: var(--accent); letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+  .cred-band a { color: var(--text); text-decoration: none; }
+  .cred-band a:hover { color: var(--accent); }
+  @media (max-width: 560px) { .cred-band .wrap { gap: 6px 16px; font-size: 12px; } }
 
   .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
   .card {
@@ -390,9 +392,10 @@
 
 <div class="cred-band">
   <div class="wrap">
-    <span><b>Founder-built</b> &middot; shipped motor controllers and battery systems</span>
-    <span><b>Real faults on real silicon</b> &middot; every verdict stored with firmware hashes</span>
-    <span><b>Unmodified Betaflight</b> closed the loop at 8 kHz</span>
+    <span class="cred-label">proof, on this page:</span>
+    <a href="#evidence">a real run with stored traces + firmware hashes &rarr;</a>
+    <a href="#simulator">unmodified Betaflight flying against the bench &rarr;</a>
+    <a href="#cta">built by the engineer who was the manual bench &rarr;</a>
   </div>
 </div>
 
@@ -572,7 +575,7 @@
     same two-MCU rig, real hardware, not a simulator.
     <a class="run-link" href="runs/bldc-hall-fault-demo.html">Full run report</a>.</p>
     <div class="evidence-list">
-      <div class="ev">
+      <div class="ev" id="simulator">
         <div class="ev-head">
           <span class="tag">the simplest demonstration of oracova</span>
           <span class="claim">A flight simulator: unmodified Betaflight flies against the bench.</span>
