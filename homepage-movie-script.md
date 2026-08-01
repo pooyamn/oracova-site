@@ -1,6 +1,6 @@
 # Homepage movie — "implement and test the gyro driver"
 
-**Length:** ~95 s · **Sound:** none required (autoplay-muted); optional low synth pad + soft key clicks
+**Length:** ~125 s (full) · 95 s cut ends after Scene 6 · **Sound:** none required (autoplay-muted); optional low synth pad + soft key clicks
 **Look:** the site's own design language — `#0a0e12` background, amber `#ffb454` accent, JetBrains Mono,
 PASS green `#2ee06f`, FAIL red `#ff5252`. The movie should feel like the website came alive, not like a
 marketing render dropped into it.
@@ -145,6 +145,37 @@ checker  deterministic, fixed thresholds — the agent never grades its own work
 - The `result` line gets the green treatment — the deliverable, not the grade — everything else stays quiet.
 - 1:04 Terminal shrinks back into the hero panel of the actual homepage (seamless match-cut — the movie
   literally becomes the website).
+
+## Scene 6b — Act II: make it fast (0:56 extension, ~+30 s)
+
+The suite is green — now the agent improves its own work. Same terminal, same rhythm:
+
+```
+iter 5   improve: burst reads over DMA — free the CPU for the control loop
+build    ok · flash ok · test running
+  burst read @ 8 kHz ........................ FAIL   transfer never starts
+regs     NDTR frozen — driver armed DMA1; SPI1 requests route to DMA2 only
+fix      SPI1 RX/TX → DMA2 streams 0/3 → rebuild
+
+iter 6   flash ok · test running
+  burst read @ 8 kHz ........................ FAIL   stream armed, zero requests
+regs     stream 0 CHSEL=0 — SPI1_RX is channel 3 on this stream
+fix      CHSEL → 3 · CR2 RXDMAEN set → rebuild
+
+iter 7   flash ok · test running
+  gyro_x .................................... data flows, shifted by one byte
+la       15 clocks per 14-byte frame — NDTR off by one, stream parks mid-frame
+fix      exact transfer count: NDTR = 14 → rebuild
+
+iter 8   flash ok · full suite
+  ... all PASS · cpu cycles in the read path: 0
+```
+
+Beats: iters 5-6 are register-diagnosed (the debug probe reads NDTR/CHSEL — no LA needed);
+iter 7 comes back to the LA for the off-by-one clock count, the visual rhyme with iter 1.
+Every bug is real F411 mechanism: SPI1 only requests on DMA2 (RM0383 stream/channel table),
+CHSEL=3 for SPI1_RX on stream 0, and the exact-count park is the bench's own documented
+DMA war story. The arc: works → improve → breaks → fixed → faster. That's the product.
 
 ## Scene 7 — End card (1:08–1:17 … cuttable to 1:08)
 

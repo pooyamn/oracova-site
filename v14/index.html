@@ -423,7 +423,7 @@
           <span class="bench-title">oracova bench</span>
           <span>replay &middot; recreated &middot; sped up &middot; not live video</span>
         </div>
-        <div class="bench-log static" id="bench-log" aria-label="replay of an agent task: implement and test the gyro driver">
+        
           <div class="bl"><span class="k">$</span> oracova task "implement and test the gyro driver"</div>
           <div class="bl">plan     <b>MPU6000 gyro/accel &middot; SPI1: 1 MHz cfg / 20 MHz data &middot; DUT STM32F411, real silicon</b></div>
           <div class="bl">world    pulling <b>mpu6000 model</b> from the marketplace (validated verilog)</div>
@@ -462,7 +462,30 @@
           <div class="bl">  rate step 90 &deg;/s .......................... <span class="pass">PASS</span></div>
           <div class="bl">  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span></div>
           <div class="bl">&nbsp;</div>
-          <div class="bl">result   <span class="pass">gyro driver implemented and tested</span> &middot; 4 iterations &middot; 23 min unattended</div>
+          <div class="bl">iter 5   improve: <b>burst reads over DMA</b> &mdash; free the CPU for the control loop</div>
+          <div class="bl">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
+          <div class="bl">  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   transfer never starts</div>
+          <div class="bl">regs     <span class="k">NDTR frozen &mdash; driver armed DMA1; SPI1 requests route to DMA2 only</span></div>
+          <div class="bl">fix      SPI1 RX/TX &rarr; DMA2 streams 0/3 &rarr; rebuild</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 6   flash <b>ok</b> &middot; test running</div>
+          <div class="bl">  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   stream armed, zero requests</div>
+          <div class="bl">regs     <span class="k">stream 0 CHSEL=0 &mdash; SPI1_RX is channel 3 on this stream</span></div>
+          <div class="bl">fix      CHSEL &rarr; 3 &middot; CR2 RXDMAEN set &rarr; rebuild</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 7   flash <b>ok</b> &middot; test running</div>
+          <div class="bl">  gyro_x .................................... data flows, <span class="fail">shifted by one byte</span></div>
+          <div class="bl">la       <span class="k">15 clocks per 14-byte frame &mdash; NDTR off by one, stream parks mid-frame</span></div>
+          <div class="bl">fix      exact transfer count: NDTR = 14 &rarr; rebuild</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 8   flash <b>ok</b> &middot; full suite</div>
+          <div class="bl">  who_am_i .................................. <span class="pass">PASS</span></div>
+          <div class="bl">  self test ................................. <span class="pass">PASS</span></div>
+          <div class="bl">  rate step 90 &deg;/s .......................... <span class="pass">PASS</span></div>
+          <div class="bl">  burst read @ 8 kHz over DMA ............... <span class="pass">PASS</span></div>
+          <div class="bl">  cpu cycles in the read path ............... <b>0</b></div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; 41 min unattended</div>
           <div class="bl">checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b></div>
         </div>
         <div class="bench-foot">
@@ -782,8 +805,31 @@
     [1300, '  self test ................................. <span class="pass">PASS</span>'],
     [1300, '  rate step 90 &deg;/s .......................... <span class="pass">PASS</span>'],
     [1400, '  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span>'],
+    [2600, ''],
+    [300,  'iter 5   improve: <b>burst reads over DMA</b> &mdash; free the CPU for the control loop'],
+    [2400, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
+    [1900, '  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   transfer never starts'],
+    [2400, 'regs     <span class="k">NDTR frozen &mdash; driver armed DMA1; SPI1 requests route to DMA2 only</span>'],
+    [2600, 'fix      SPI1 RX/TX &rarr; DMA2 streams 0/3 &rarr; rebuild'],
+    [2800, ''],
+    [300,  'iter 6   flash <b>ok</b> &middot; test running'],
+    [1800, '  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   stream armed, zero requests'],
+    [2400, 'regs     <span class="k">stream 0 CHSEL=0 &mdash; SPI1_RX is channel 3 on this stream</span>'],
+    [2400, 'fix      CHSEL &rarr; 3 &middot; CR2 RXDMAEN set &rarr; rebuild'],
+    [2800, ''],
+    [300,  'iter 7   flash <b>ok</b> &middot; test running'],
+    [2000, '  gyro_x .................................... data flows, <span class="fail">shifted by one byte</span>'],
+    [2600, 'la       <span class="k">15 clocks per 14-byte frame &mdash; NDTR off by one, stream parks mid-frame</span>'],
+    [2400, 'fix      exact transfer count: NDTR = 14 &rarr; rebuild'],
+    [2800, ''],
+    [300,  'iter 8   flash <b>ok</b> &middot; full suite'],
+    [1600, '  who_am_i .................................. <span class="pass">PASS</span>'],
+    [1300, '  self test ................................. <span class="pass">PASS</span>'],
+    [1300, '  rate step 90 &deg;/s .......................... <span class="pass">PASS</span>'],
+    [1400, '  burst read @ 8 kHz over DMA ............... <span class="pass">PASS</span>'],
+    [1400, '  cpu cycles in the read path ............... <b>0</b>'],
     [2200, ''],
-    [400,  'result   <span class="pass">gyro driver implemented and tested</span> &middot; 4 iterations &middot; 23 min unattended'],
+    [400,  'result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; 41 min unattended'],
     [2600, 'checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b>']
   ];
 
