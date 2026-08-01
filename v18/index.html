@@ -375,7 +375,13 @@
     body.cmpm .cmp-outer, body.cmpm #compare .table-hint { display: none; }
   }
   @media (min-width: 701px) { .cmp-mobile { display: none !important; } }
-  .cm-seg { display: flex; gap: 8px; margin: 14px 0 12px; }
+  .cmp-mobile { border: 1px solid var(--border-strong); border-radius: 14px;
+    padding: 14px 14px 8px; background: var(--surface); margin-top: 14px; }
+  .cm-seg { display: flex; gap: 8px; margin: 0; }
+  .cm-conn { position: relative; height: 20px; }
+  .cm-conn svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .cm-conn path { stroke: var(--brand); stroke-width: 1.5; fill: none; opacity: .75; }
+  @media (prefers-reduced-motion: reduce) { .cm-conn path { transition: none !important; } }
   .cm-seg button {
     flex: 1; padding: 10px 8px; border-radius: 8px; cursor: pointer;
     background: var(--surface); border: 1px solid var(--border);
@@ -390,9 +396,16 @@
   .cm-head .b { color: var(--text-faint); }
   .cm-row { border-top: 1px solid var(--border); padding: 10px 0; }
   .cm-q { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
-  .cm-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13.5px; align-items: stretch; }
-  .cm-vals .cell-b { display: flex; align-items: center; background: var(--surface-2);
-    border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+  .cm-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13.5px; }
+  .cm-body { position: relative; z-index: 0; }
+  .cm-body::before { content: ""; position: absolute; z-index: -1;
+    top: -4px; bottom: 0; left: calc(50% - 10px); right: -6px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; }
+  .cm-fade { transition: opacity .16s ease, transform .16s ease; }
+  .cm-fade.out { opacity: 0; transform: translateY(4px); }
+  @media (prefers-reduced-motion: reduce) { .cm-fade { transition: none; } .cm-fade.out { transform: none; } }
+  .cm-body .cm-head, .cm-body .cm-row { position: relative; }
+  .cm-vals .cell-b { padding-left: 2px; }
   .cm-vals .cell-a { color: var(--text); font-weight: 600; }
   .cm-vals .y { color: var(--pass); font-weight: 600; }
   .cm-vals .n { color: var(--fail); font-weight: 600; }
@@ -914,32 +927,80 @@
   var table = document.querySelector('#compare table.cmp');
   var mount = document.getElementById('cmp-mobile');
   if (!table || !mount) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var rows = [].slice.call(table.rows);
   var heads = [].slice.call(rows[0].cells).map(function (c) { return c.textContent.trim(); });
   var data = rows.slice(1).map(function (r) {
     return [].slice.call(r.cells).map(function (c) { return { html: c.innerHTML, cls: c.className }; });
   });
   var rivals = [2, 3, 4];
-  var current = 4; // HIL rig first: the comparison buyers ask about
-  function render() {
-    var h = '<div class="cm-seg" role="group" aria-label="pick a method to compare">';
-    rivals.forEach(function (i) {
-      h += '<button type="button" data-i="' + i + '" aria-pressed="' + (i === current) + '">'
-        + heads[i] + '</button>';
-    });
-    h += '</div><div class="cm-head"><span class="a">Oracova</span><span class="b">'
-      + heads[current] + '</span></div>';
-    data.forEach(function (r) {
-      h += '<div class="cm-row"><div class="cm-q">' + r[0].html + '</div>'
-        + '<div class="cm-vals"><span class="cell-a ' + r[1].cls + '">' + r[1].html + '</span>'
-        + '<span class="cell-b ' + r[current].cls + '">' + r[current].html + '</span></div></div>';
-    });
-    mount.innerHTML = h;
-    [].slice.call(mount.querySelectorAll('.cm-seg button')).forEach(function (b) {
-      b.addEventListener('click', function () { current = +b.dataset.i; render(); });
+  var current = 4;
+
+  var h = '<div class="cm-seg" role="group" aria-label="pick a method to compare">';
+  rivals.forEach(function (i) {
+    h += '<button type="button" data-i="' + i + '" aria-pressed="' + (i === current) + '">' + heads[i] + '</button>';
+  });
+  h += '</div><div class="cm-conn"><svg aria-hidden="true"><path d=""/></svg></div>'
+    + '<div class="cm-body"><div class="cm-head"><span class="a">Oracova</span>'
+    + '<span class="b cm-fade"></span></div>';
+  data.forEach(function (r, k) {
+    h += '<div class="cm-row"><div class="cm-q">' + r[0].html + '</div>'
+      + '<div class="cm-vals"><span class="cell-a ' + r[1].cls + '">' + r[1].html + '</span>'
+      + '<span class="cell-b cm-fade" data-k="' + k + '"></span></div></div>';
+  });
+  h += '</div>';
+  mount.innerHTML = h;
+
+  var headB = mount.querySelector('.cm-head .b');
+  var cells = [].slice.call(mount.querySelectorAll('.cell-b'));
+  var btns = [].slice.call(mount.querySelectorAll('.cm-seg button'));
+
+  function fill() {
+    headB.textContent = heads[current];
+    cells.forEach(function (c) {
+      var d = data[+c.dataset.k][current];
+      c.innerHTML = d.html;
+      c.className = 'cell-b cm-fade ' + d.cls;
     });
   }
-  render();
+  var connPath = mount.querySelector('.cm-conn path');
+  function drawConn(animate) {
+    var btn = btns.filter(function (b) { return +b.dataset.i === current; })[0];
+    if (!btn || !connPath) return;
+    var x1 = btn.offsetLeft + btn.offsetWidth / 2;
+    var box = mount.querySelector('.cm-body');
+    var panelLeft = box.offsetLeft + box.offsetWidth * 0.5 - 10;
+    var x2 = panelLeft + (box.offsetWidth * 0.5 + 4) / 2;
+    var d = 'M' + x1 + ' 0 V 10 H' + x2 + ' V 20';
+    connPath.setAttribute('d', d);
+    if (!reduced && animate) {
+      var len = connPath.getTotalLength();
+      connPath.style.transition = 'none';
+      connPath.style.strokeDasharray = len;
+      connPath.style.strokeDashoffset = len;
+      void connPath.getBoundingClientRect();
+      connPath.style.transition = 'stroke-dashoffset .28s ease';
+      connPath.style.strokeDashoffset = '0';
+    }
+  }
+  function switchTo(i) {
+    if (i === current) return;
+    current = i;
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.i === i)); });
+    if (reduced) { fill(); return; }
+    [headB].concat(cells).forEach(function (el) { el.classList.add('out'); });
+    drawConn(true);
+    setTimeout(function () {
+      fill();
+      [headB].concat(cells).forEach(function (el) { el.classList.remove('out'); });
+    }, 170);
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () { switchTo(+b.dataset.i); });
+  });
+  fill();
+  drawConn(false);
+  window.addEventListener('resize', function () { drawConn(false); }, { passive: true });
   document.body.classList.add('cmpm');
 })();
 </script>
