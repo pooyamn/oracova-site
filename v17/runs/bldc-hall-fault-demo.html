@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BLDC Silicon Fault Evidence &mdash; Oracova run 20260618-080733</title>
+  <meta name="description" content="A scored Oracova bench run: BLDC hall-sensor fault library on real STM32 silicon. Six verdicts, fault counters, audit table, firmware hashes.">
+  <link rel="canonical" href="https://oracova.com/runs/bldc-hall-fault-demo">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Oracova">
+  <meta property="og:title" content="BLDC Silicon Fault Evidence &mdash; Oracova run 20260618-080733">
+  <meta property="og:description" content="Six scored verdicts on real STM32 silicon: hall faults injected by physics, FAIL then guarded PASS, firmware hashes.">
+  <meta property="og:url" content="https://oracova.com/runs/bldc-hall-fault-demo">
+  <meta property="og:image" content="https://oracova.com/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://oracova.com/og-card.png">
+  <style>
+    :root {
+      --ink: #d7dee6;
+      --muted: #8a97a5;
+      --line: #1e2a36;
+      --bg: #0a0e12;
+      --panel: #121a23;
+      --green: #2ee06f;
+      --red: #ff5252;
+      --blue: #7aa2c4;
+      --amber: #ffb454;
+      --violet: #9a8cc9;
+      --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    nav.site {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(10,14,18,.94); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav.site .navwrap { max-width: 1180px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between; height: 58px; }
+    .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--ink); text-decoration: none;
+      padding: 12px 0; margin: -12px 0; }
+    .logo span { color: var(--amber); }
+    .nav-links { display: flex; gap: 26px; align-items: center; }
+    .nav-links a:not(.btn) { color: var(--muted); text-decoration: none; font-size: 14.5px; padding: 12px 0; margin: -12px 0; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.btn-primary { color: #14100a; }
+    .btn {
+      display: inline-block; padding: 11px 16px; border-radius: 6px;
+      font-family: var(--mono); font-size: 13.5px; font-weight: 600;
+      text-decoration: none; border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--amber); color: #14100a; }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .nav-links .btn { flex-shrink: 0; white-space: nowrap; }
+    @media (max-width: 800px) {
+      .nav-links a:not(.btn) { display: none; }
+    }
+    header {
+      background: #0f151c;
+      color: #fff;
+      padding: 32px 28px 26px;
+      border-bottom: 1px solid var(--line);
+    }
+    header .kicker { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
+      letter-spacing: .14em; color: var(--amber); margin-bottom: 10px; }
+    header h1 { margin: 0 0 8px; font-size: 30px; font-weight: 720; letter-spacing: -0.02em; }
+    header p { max-width: 860px; margin: 0; color: #d9e1ea; font-size: 16px; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    section { margin: 0 0 24px; }
+    h2 { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
+      letter-spacing: .14em; color: var(--amber); font-weight: 600; margin: 0 0 12px; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .metric, .case-card, .chart-panel, .table-panel, .hash-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .metric { padding: 16px; }
+    .metric b { display: block; font-size: 28px; }
+    .metric span { color: var(--muted); font-family: var(--mono); font-size: 12.5px; }
+    .cases {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .case-card { padding: 14px; min-height: 220px; }
+    .case-card.pass { border-top: 4px solid var(--green); }
+    .case-card.fail { border-top: 4px solid var(--red); }
+    .case-top { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+    .case-top h3 { margin: 0; font-size: 15px; }
+    .case-top p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+    .case-top strong { font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; }
+    .explain { color: #aeb9c5; min-height: 62px; }
+    dl { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0; }
+    dt { color: var(--muted); font-size: 12px; }
+    dd { margin: 0; font-weight: 650; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+    .ok { color: var(--green); }
+    .bad { color: var(--red); }
+    .chart-panel, .table-panel, .hash-panel { padding: 16px; }
+    .legend { display: flex; gap: 14px; color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; }
+    .chart-row {
+      display: grid;
+      grid-template-columns: 220px 1fr 1fr 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+    }
+    .chart-row:first-of-type { border-top: 0; }
+    .chart-label b { display: block; }
+    .chart-label span { color: var(--muted); font-size: 13px; }
+    .bar { position: relative; height: 22px; background: #1b2530; border-radius: 4px; overflow: hidden; }
+    .bar span { position: absolute; inset: 0 auto 0 0; display: block; }
+    .bar b { position: relative; display: block; padding: 2px 7px; font-size: 12px; }
+    .bar.unsafe span { background: var(--red); }
+    .bar.mismatch span { background: var(--blue); }
+    .bar.sequence span { background: var(--amber); }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .table-panel { position: relative; }
+    .table-panel::after {
+      content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 56px;
+      border-radius: 0 8px 8px 0;
+      background: linear-gradient(270deg, var(--panel) 30%, transparent); pointer-events: none;
+      opacity: 0;
+    }
+    .table-hint {
+      display: none; font-family: var(--mono); font-size: 12px; color: var(--amber);
+      margin: -6px 0 8px; letter-spacing: .04em;
+    }
+    @media (max-width: 700px) {
+      .table-panel::after { opacity: 1; }
+      .table-hint { display: block; }
+    }
+    table { width: 100%; min-width: 640px; border-collapse: collapse; }
+    td:first-child, th:first-child { position: sticky; left: 0; background: var(--panel); z-index: 1; }
+    th, td { padding: 9px 8px; border-top: 1px solid var(--line); text-align: left; white-space: nowrap; }
+    th { color: var(--muted); font-size: 12px; font-weight: 650; }
+    .pill { display: inline-block; min-width: 46px; border-radius: 999px; padding: 2px 7px; color: #fff; font-size: 12px; text-align: center; }
+    .pill.good { background: var(--green); }
+    .pill.bad { background: var(--red); }
+    .hash-panel ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .hash-panel li { border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+    .hash-panel span { display: block; color: var(--muted); font-size: 12px; }
+    @media (max-width: 480px) {
+      .table-hint, .table-panel::after { display: none !important; }
+      .table-scroll { overflow: visible; }
+      table { min-width: 0; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr { border: 1px solid var(--line); border-radius: 6px; margin-bottom: 10px; padding: 4px 0; background: #0b1016; }
+      td { border-top: none; white-space: normal; position: static !important;
+        display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; }
+      td::before { content: attr(data-l); color: var(--muted); font-size: 12px; }
+      td:first-child { font-weight: 650; background: none; }
+      td:first-child::before { content: none; }
+    }
+    @media (max-width: 900px) {
+      .summary, .cases { grid-template-columns: 1fr; }
+      .chart-row { grid-template-columns: 1fr; }
+      .hash-panel ul { grid-template-columns: 1fr; }
+      .table-panel { overflow-x: auto; }
+    }
+  
+    @media (prefers-color-scheme: light) {
+      :root {
+        --ink: #15181D; --muted: #4A5260; --line: #C9CDD3; --bg: #F7F7F4;
+        --panel: #FFFFFF; --green: #0E7A3C; --red: #C0262C;
+        --blue: #2A5DA8; --amber: #A85400; --violet: #6C4BA6;
+      }
+      nav.site { background: rgba(247,247,244,.94); }
+      .nav-links a.btn-primary { color: #fff; }
+      .btn-primary { color: #fff; }
+      .btn-primary:hover { filter: none; background: #8F4700; }
+      header { background: #F0F0ED; color: var(--ink); }
+      header p { color: var(--muted); }
+      .bar { background: #E7E9EC; }
+      .bar b { color: var(--ink); }
+      .explain { color: var(--muted); }
+      .pill { color: #fff; }
+      td:first-child, th:first-child { background: var(--panel); }
+      .table-panel::after { background: linear-gradient(270deg, var(--panel) 30%, transparent); }
+      @media (max-width: 480px) { tr { background: #FFFFFF; } }
+    }
+</style>
+</head>
+<body>
+  <nav class="site">
+    <div class="navwrap">
+      <a class="logo" href="/">oracova<span>_</span></a>
+      <div class="nav-links">
+        <a href="/#how">How it works</a>
+        <a href="/#evidence">Evidence</a>
+        <a href="/demo">Demo</a>
+        <a href="/onboarding">Board bring-up</a>
+        <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+      </div>
+    </div>
+  </nav>
+  <header>
+    <div class="kicker">Run 20260618-080733 &middot; scored on the bench</div>
+    <h1>BLDC Silicon Fault Evidence</h1>
+    <p>Two-MCU hardware-in-the-loop run: STM32 target firmware, Oracova base board plant and fault injector, real phase/hall wiring, verdicts scored from wire-level phase/hall capture; RTT carries logs only. This run used the proven two-MCU rig; the production base board moves the same plant models into FPGA fabric.</p>
+  </header>
+  <main>
+    <section class="summary" aria-label="Evidence summary">
+      <div class="metric"><b>6</b><span>silicon verdicts</span></div>
+      <div class="metric"><b>4 &rarr; 0</b><span>unsafe drives after Hall A guard</span></div>
+      <div class="metric"><b>FAIL &rarr; PASS</b><span>same fault, guarded target</span></div>
+    </section>
+
+    <section>
+      <h2>Verdict Cards</h2>
+      <div class="cases">
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Nominal commutation</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">Healthy six-step hall sequence selects the expected active phase.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>882f553a6d7b</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Hall A stuck low</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">A stuck Hall A line creates valid-looking wrong sectors; unguarded firmware keeps driving.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>4</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>83f848006ea0</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Hall A stuck low</h3>
+              <p>Guarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">The same fault is converted into a latched no-drive state by the invalid-hall guard.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>c6aa16c7e324</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card pass">
+          <div class="case-top">
+            <div>
+              <h3>Hall bus forced 000</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>PASS</strong>
+          </div>
+          <p class="explain">All hall lines low is treated as invalid input; phases stay off.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>PASS</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>f79987e41d7f</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Skipped hall sector</h3>
+              <p>Unguarded target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">The oracle sees a sequence jump; this remains the next guard to add.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>0</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>00641270c1a4</code></dd></div>
+          </dl>
+        </article>
+        
+        <article class="case-card fail">
+          <div class="case-top">
+            <div>
+              <h3>Swapped commutation sectors</h3>
+              <p>Buggy target</p>
+            </div>
+            <strong>FAIL</strong>
+          </div>
+          <p class="explain">A copy-paste commutation-table bug drives the wrong phase in two sectors.</p>
+          <dl>
+            <div><dt>Expected</dt><dd>FAIL</dd></div>
+            <div><dt>Expectation</dt><dd class="ok">MET</dd></div>
+            <div><dt>Unsafe drive</dt><dd>8</dd></div>
+            <div><dt>Evidence hash</dt><dd><code>d1fd03dca377</code></dd></div>
+          </dl>
+        </article>
+        </div>
+    </section>
+
+    <section class="chart-panel">
+      <h2>Fault Counters</h2>
+      <div class="legend" style="align-items:center">
+        <span><i style="background:#ff5252"></i>unsafe drive</span>
+        <span><i style="background:#7aa2c4"></i>commutation mismatch</span>
+        <span><i style="background:#ffb454"></i>sequence fault</span>
+        <span style="margin-left:auto">bar length: shared scale, max&nbsp;=&nbsp;24</span>
+      </div>
+      
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Nominal commutation</b>
+            <span>unguarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall A stuck low</b>
+            <span>unguarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:17%"></span><b>4</b></div>
+          <div class="bar mismatch"><span style="width:33%"></span><b>8</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall A stuck low</b>
+            <span>guarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:100%"></span><b>24</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Hall bus forced 000</b>
+            <span>unguarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:100%"></span><b>24</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Skipped hall sector</b>
+            <span>unguarded</span>
+          </div>
+          <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
+          <div class="bar sequence"><span style="width:29%"></span><b>7</b></div>
+        </div>
+        
+        <div class="chart-row">
+          <div class="chart-label">
+            <b>Swapped commutation sectors</b>
+            <span>buggy</span>
+          </div>
+          <div class="bar unsafe"><span style="width:33%"></span><b>8</b></div>
+          <div class="bar mismatch"><span style="width:33%"></span><b>8</b></div>
+          <div class="bar sequence"><span style="width:0%"></span><b>0</b></div>
+        </div>
+        
+    </section>
+
+    <section class="table-panel">
+      <h2>Audit Table</h2>
+      <div class="table-hint">swipe &rarr; verdict &middot; scores &middot; hash</div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Case</th><th>Variant</th><th>Verdict</th><th>Unsafe</th><th>Mismatch</th><th>Invalid shutdown</th><th>Seq fault</th><th>Verdict hash</th></tr></thead>
+        <tbody>
+        <tr>
+          <td data-l="Case">Nominal commutation</td>
+          <td data-l="Variant">Unguarded target</td>
+          <td data-l="Verdict"><span class="pill good">PASS</span></td>
+          <td data-l="Unsafe">0</td>
+          <td data-l="Mismatch">0</td>
+          <td data-l="Invalid shutdown">0</td>
+          <td data-l="Seq fault">0</td>
+          <td data-l="Verdict hash"><code>882f553a6d7b</code></td>
+        </tr>
+        
+        <tr>
+          <td data-l="Case">Hall A stuck low</td>
+          <td data-l="Variant">Unguarded target</td>
+          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
+          <td data-l="Unsafe">4</td>
+          <td data-l="Mismatch">8</td>
+          <td data-l="Invalid shutdown">4</td>
+          <td data-l="Seq fault">0</td>
+          <td data-l="Verdict hash"><code>83f848006ea0</code></td>
+        </tr>
+        
+        <tr>
+          <td data-l="Case">Hall A stuck low</td>
+          <td data-l="Variant">Guarded target</td>
+          <td data-l="Verdict"><span class="pill good">PASS</span></td>
+          <td data-l="Unsafe">0</td>
+          <td data-l="Mismatch">24</td>
+          <td data-l="Invalid shutdown">4</td>
+          <td data-l="Seq fault">0</td>
+          <td data-l="Verdict hash"><code>c6aa16c7e324</code></td>
+        </tr>
+        
+        <tr>
+          <td data-l="Case">Hall bus forced 000</td>
+          <td data-l="Variant">Unguarded target</td>
+          <td data-l="Verdict"><span class="pill good">PASS</span></td>
+          <td data-l="Unsafe">0</td>
+          <td data-l="Mismatch">24</td>
+          <td data-l="Invalid shutdown">24</td>
+          <td data-l="Seq fault">0</td>
+          <td data-l="Verdict hash"><code>f79987e41d7f</code></td>
+        </tr>
+        
+        <tr>
+          <td data-l="Case">Skipped hall sector</td>
+          <td data-l="Variant">Unguarded target</td>
+          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
+          <td data-l="Unsafe">0</td>
+          <td data-l="Mismatch">0</td>
+          <td data-l="Invalid shutdown">0</td>
+          <td data-l="Seq fault">7</td>
+          <td data-l="Verdict hash"><code>00641270c1a4</code></td>
+        </tr>
+        
+        <tr>
+          <td data-l="Case">Swapped commutation sectors</td>
+          <td data-l="Variant">Buggy target</td>
+          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
+          <td data-l="Unsafe">8</td>
+          <td data-l="Mismatch">8</td>
+          <td data-l="Invalid shutdown">0</td>
+          <td data-l="Seq fault">0</td>
+          <td data-l="Verdict hash"><code>d1fd03dca377</code></td>
+        </tr>
+        </tbody>
+      </table>
+      </div>
+      <p style="color:var(--muted); font-size:13px; font-family:var(--mono); margin:12px 0 0; max-width:none">
+      mismatch keeps counting while a guard holds the output latched off; with no phase energized,
+      those mismatches cannot cause damage, which is why a PASS can carry mismatch&nbsp;&gt;&nbsp;0
+      with unsafe&nbsp;=&nbsp;0.</p>
+    </section>
+
+    <section class="hash-panel">
+      <h2>Firmware Hashes</h2>
+      <ul><li><span>emulator (same for all variants)</span><code>787e7c0a8021</code></li><li><span>target: unguarded</span><code>99c0485d4f41</code></li><li><span>target: guarded</span><code>c7811e600a6d</code></li><li><span>target: buggy</span><code>a95d84130157</code></li></ul>
+    </section>
+
+    <section class="cta-panel">
+      <h2>See your board on the bench</h2>
+      <p style="color:var(--muted); max-width:60ch; margin:0 0 14px">Every run on Oracova ends
+      in a report like this one: scored verdicts, captured traces, firmware hashes. 15 minutes,
+      you watch a live run, not a deck.</p>
+      <a class="btn btn-primary" style="padding:12px 22px; font-size:15px"
+         href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+    </section>
+  </main>
+  <footer style="border-top:1px solid var(--line); padding:30px 0; color:var(--muted); font-family:var(--mono); font-size:13px;">
+    <div style="max-width:1180px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+      <span><a href="mailto:pooyamn@gmail.com" style="color:inherit; text-decoration:none;">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+    </div>
+  </footer>
+</body>
+</html>

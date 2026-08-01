@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oracova. AI agents test your firmware on real hardware.</title>
+<meta name="description" content="Oracova is an AI-run test bench. Real chip, emulated world, injected faults, scored verdicts. It tests firmware the way it will actually be used, automatically, on every change.">
+<link rel="canonical" href="https://oracova.com/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Oracova">
+<meta property="og:title" content="Oracova. AI agents test your firmware on real hardware.">
+<meta property="og:description" content="A hundred iterations, unattended. You review the one that passed. Real chip, emulated world, injected faults, scored verdicts.">
+<meta property="og:url" content="https://oracova.com/">
+<meta property="og:image" content="https://oracova.com/og-card.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Oracova. AI agents test your firmware on real hardware.">
+<meta name="twitter:description" content="A hundred iterations, unattended. You review the one that passed.">
+<meta name="twitter:image" content="https://oracova.com/og-card.png">
+<style>
+  :root {
+    --bg: #0a0e12;
+    --bg-panel: #0f151c;
+    --bg-card: #121a23;
+    --line: #1e2a36;
+    --text: #d7dee6;
+    --text-dim: #8a97a5;
+    --accent: #ffb454;
+    --pass: #2ee06f;
+    --fail: #ff5252;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(255,180,84,.25); }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 52px 0; border-top: 1px solid var(--line); }
+  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+  h2 { font-size: 34px; margin-bottom: 14px; }
+  h3 { font-size: 19px; margin-bottom: 8px; }
+  p  { max-width: 62ch; }
+  .dim { color: var(--text-dim); }
+  .mono { font-family: var(--mono); }
+  .kicker {
+    font-family: var(--mono); font-size: 13px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--accent); margin-bottom: 16px;
+  }
+  .spec-line {
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+    letter-spacing: .02em; margin-bottom: 4px;
+  }
+  .spec-line b { color: var(--text); font-weight: 500; }
+
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(10,14,18,.94); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; padding: 12px 0; margin: -12px 0; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 26px; align-items: center; margin-left: 18px; }
+  .nav-links a:not(.btn) { color: var(--text-dim); text-decoration: none; font-size: 14.5px; white-space: nowrap; padding: 12px 0; margin: -12px 0; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a.btn-primary { color: #14100a; }
+  .nav-links a.btn-primary:hover { color: #14100a; }
+
+  .btn {
+    display: inline-block; padding: 12px 22px; border-radius: 6px;
+    font-family: var(--mono); font-size: 15px; font-weight: 600;
+    text-decoration: none; border: 1px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: #14100a; }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--text-dim); }
+  .btn-sm { padding: 11px 16px; font-size: 13.5px; }
+
+  header.hero {
+    padding: 56px 0 52px;
+    background:
+      linear-gradient(rgba(10,14,18,0) 0%, var(--bg) 85%),
+      repeating-linear-gradient(0deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, rgba(30,42,54,.55) 39px 40px);
+  }
+  .hero h1 { font-size: clamp(31px, 6.2vw, 60px); margin-bottom: 8px; }
+  .hero .hero-second { font-size: clamp(17px, 2.6vw, 27px); font-weight: 500; color: var(--text); letter-spacing: -0.01em; margin-bottom: 18px; }
+  .hero .hero-second em { font-style: normal; color: var(--accent); font-weight: 700; }
+  .hero .sub { font-size: clamp(16.5px, 2.2vw, 20px); color: var(--text-dim); max-width: 58ch; margin-bottom: 26px; }
+  .hero .sub strong { color: var(--text); font-weight: 600; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+  @media (max-width: 560px) {
+    header.hero { padding: 28px 0 36px; }
+    .hero h1 { font-size: 29px; margin-bottom: 6px; }
+    .hero .hero-second { font-size: 17.5px; margin-bottom: 8px; }
+    .hero .sub { font-size: 14.5px; line-height: 1.5; margin-bottom: 14px; color: #a4b1bf; }
+    .cta-row { gap: 10px; margin-bottom: 18px; }
+    .cta-row .btn { padding: 10px 16px; font-size: 13.5px; }
+  }
+
+  .video-frame {
+    border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+    background: var(--bg-panel);
+  }
+  .bench-replay {
+    display: flex; flex-direction: column;
+    font-family: var(--mono); font-size: 14.5px;
+    background:
+      radial-gradient(ellipse at center, rgba(255,180,84,.05), transparent 70%),
+      var(--bg-panel);
+  }
+  .bench-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 6px 18px; flex-wrap: wrap; padding: 10px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px; color: var(--text-dim); letter-spacing: .04em;
+  }
+  .bench-head .bench-title { color: var(--text); }
+  .bench-log {
+    flex: 0 0 auto; display: grid; gap: 9px; align-content: start;
+    padding: 22px 18px; overflow: hidden;
+    height: min(50vh, 440px);
+  }
+  @media (max-height: 860px) and (min-width: 561px) {
+    header.hero { padding: 36px 0 40px; }
+    .bench-log { height: min(40vh, 330px); }
+  }
+  .bench-log.static { overflow-y: auto; }
+  .bench-log:not(.static) { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+    mask-image: linear-gradient(180deg, transparent 0, #000 16px); }
+  .cursor::after { content: "\258C"; color: var(--accent); animation: benchblink 1s steps(1) infinite; }
+  .la-card { border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 6px; background: #0b1016; padding: 10px 14px 8px; }
+  .la-card .la-label { font-size: 11px; color: var(--text-dim);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+  .la-card svg { display: block; width: 100%; height: 74px; }
+  .la-card .la-note { font-size: 12px; color: var(--fail); margin-top: 4px; }
+  .bench-foot { border-top: 1px solid var(--line); padding: 8px 18px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    font-size: 12px; color: var(--text-dim); letter-spacing: .04em; }
+  .bench-foot button { background: none; border: 1px solid var(--line); border-radius: 4px;
+    color: var(--text-dim); font-family: var(--mono); font-size: 12px; padding: 11px 16px; cursor: pointer; }
+  .bench-foot button:hover { border-color: var(--accent); color: var(--accent); }
+  .bl { color: var(--text-dim); white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; }
+  .bl b { color: var(--text); font-weight: 500; }
+  .bl .k { color: var(--accent); }
+  .bl .pass { color: var(--pass); font-weight: 700; }
+  .bl .fail { color: var(--fail); font-weight: 700; }
+  .bench-log .bl { border-radius: 3px; margin: -2px -8px; padding: 2px 8px 2px calc(8px + 9ch); }
+  @keyframes benchblink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor::after { animation: none; content: none; }
+  }
+  @media (max-width: 560px) {
+    .bench-replay { aspect-ratio: auto; font-size: 12px; }
+    .bench-log { gap: 7px; padding: 16px 14px; height: min(56vh, 400px); }
+    .bench-head { font-size: 10.5px; padding: 9px 14px; }
+  }
+  .video-caption {
+    border-top: 1px solid var(--line); padding: 12px 18px;
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+  }
+
+  .cred-band { border-top: 1px solid var(--line); background: var(--bg-panel); }
+  .cred-band .wrap { padding-top: 22px; padding-bottom: 24px; }
+  .cred-band .cred-label {
+    font-family: var(--mono); color: var(--accent); letter-spacing: .08em;
+    text-transform: uppercase; font-size: 12px; display: block; margin-bottom: 12px;
+  }
+  .cred-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  a.cred-card {
+    display: grid; gap: 4px; align-content: start;
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 14px 16px; text-decoration: none; color: var(--text);
+  }
+  a.cred-card:hover { border-color: var(--accent); }
+  .cred-card .cc-t { font-weight: 600; font-size: 15px; }
+  .cred-card .cc-t::after { content: " \2192"; color: var(--accent); }
+  .cred-card .cc-d { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); }
+  @media (max-width: 800px) { .cred-cards { grid-template-columns: 1fr; } }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px;
+  }
+  .card h3 { color: var(--text); margin-bottom: 6px; }
+  .card p { font-size: 15px; color: var(--text-dim); line-height: 1.5; }
+  .card .num { font-family: var(--mono); color: var(--accent); font-size: 14px; margin-bottom: 10px; display: block; }
+  .card .faults { font-family: var(--mono); font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+  .note { margin-top: 20px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
+
+  .whatis {
+    font-size: 24px; line-height: 1.5; max-width: 66ch; color: var(--text);
+    font-weight: 600; letter-spacing: -0.01em;
+  }
+  .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .fact { background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .fact .fact-tag {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 8px;
+  }
+  .fact p { font-size: 16px; color: var(--text-dim); max-width: none; }
+  .fact p b { color: var(--text); font-weight: 600; }
+
+  .mini { display: grid; margin-top: 24px; }
+  .mini-row { display: grid; grid-template-columns: 36px 250px 1fr; gap: 16px; padding: 13px 0; align-items: baseline; }
+  .mini-row + .mini-row { border-top: 1px dashed var(--line); }
+  .mini-row .n { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+  .mini-row .t { font-weight: 600; font-size: 16.5px; color: var(--text); }
+  .mini-row .d { font-size: 15px; color: var(--text-dim); }
+  .mini-row .d b { color: var(--text); font-weight: 600; }
+
+  .run-card {
+    background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
+    font-family: var(--mono); font-size: 14px; margin-top: 30px; overflow: hidden;
+  }
+  .run-head {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 14px 20px; border-bottom: 1px solid var(--line); color: var(--text-dim);
+  }
+  .run-head .rid { color: var(--text); }
+  .run-meta { padding: 16px 20px; display: grid; gap: 6px; color: var(--text-dim); }
+  .run-meta b { color: var(--text); font-weight: 500; }
+  .run-meta .fault b { color: var(--accent); }
+  .trace-block { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 20px 6px; background: #0b1016; }
+  .trace-label { font-size: 11.5px; color: var(--text-dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  .verdict-rows { padding: 6px 0; }
+  .verdict-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    padding: 12px 20px;
+  }
+  .verdict-row + .verdict-row { border-top: 1px dashed var(--line); }
+  .badge {
+    padding: 3px 12px; border-radius: 4px; font-weight: 700; font-size: 13px; letter-spacing: .08em;
+  }
+  .badge.fail { background: rgba(255,82,82,.12); color: var(--fail); border: 1px solid rgba(255,82,82,.4); }
+  .badge.pass { background: rgba(46,224,111,.1); color: var(--pass); border: 1px solid rgba(46,224,111,.4); }
+  .score-key {
+    border-top: 1px dashed var(--line); padding: 9px 20px;
+    font-size: 12px; color: var(--text-dim); letter-spacing: .02em;
+  }
+  .run-caption { margin-top: 16px; font-size: 15.5px; color: var(--text-dim); max-width: 68ch; }
+
+  a.run-link {
+    color: inherit; text-decoration: underline;
+    text-decoration-color: rgba(255,180,84,.35); text-underline-offset: 3px;
+  }
+  .bench-head a.run-link, .run-head a.rid {
+    display: inline-block; padding: 12px 2px; margin: -12px -2px;
+  }
+  a.run-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+  .evidence-list { margin-top: 28px; display: grid; gap: 16px; }
+  .ev {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 20px 24px;
+  }
+  .ev .ev-head { display: grid; gap: 6px; }
+  .ev .tag {
+    font-family: var(--mono); font-size: 12px; color: var(--accent);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .ev .claim { font-weight: 600; font-size: 17px; color: var(--text); }
+  .ev .nums { margin-top: 10px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .ev .vlist { margin-top: 10px; display: grid; gap: 5px; font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .ev .v-pass { color: var(--pass); font-family: var(--mono); font-weight: 700; }
+  .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
+  .ev .vref { font-size: 11.5px; color: var(--text-dim); opacity: .85; }
+
+  .ev-note { margin-top: 10px; font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  .ev-note b { color: var(--text); }
+  .ev-aside {
+    margin-top: 14px; padding-left: 4px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); max-width: none;
+  }
+
+
+  .founder { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+  .founder-cta {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 30px; text-align: center;
+  }
+  .founder-cta .btn { width: 100%; margin-top: 14px; }
+  .founder-cta .mono { font-size: 13px; color: var(--text-dim); margin-top: 14px; }
+
+  .cmp-outer { position: relative; margin-top: 8px; }
+  .cmp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cmp {
+    border-collapse: collapse; width: 100%; min-width: 640px;
+    font-family: var(--mono); font-size: 13.5px;
+  }
+  .cmp td:first-child, .cmp th:first-child {
+    position: sticky; left: 0; background: var(--bg); z-index: 1;
+  }
+  .cmp-outer::after {
+    content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 56px;
+    background: linear-gradient(270deg, var(--bg) 30%, transparent); pointer-events: none;
+    opacity: 0;
+  }
+  .table-hint {
+    display: none; font-family: var(--mono); font-size: 12px; color: var(--accent);
+    margin-bottom: 8px; letter-spacing: .04em;
+  }
+  @media (max-width: 700px) {
+    .cmp-outer::after { opacity: 1; }
+    .table-hint { display: block; }
+  }
+  .cmp th, .cmp td { padding: 11px 14px; text-align: left; border-top: 1px solid var(--line); }
+  .cmp tr:first-child th { border-top: none; color: var(--text-dim); font-weight: 500;
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .cmp td:first-child { color: var(--text); }
+  .cmp .y { color: var(--pass); font-weight: 700; }
+  .cmp .n { color: var(--fail); font-weight: 700; }
+  .cmp .dim { color: var(--text-dim); font-weight: 400; }
+  .cmp .hl { background: rgba(255,180,84,.06); }
+  .cmp th.hl { color: var(--accent); }
+  @media (max-width: 560px) { .cmp { font-size: 11.5px; } .cmp th, .cmp td { padding: 8px 8px; } }
+
+  .bringup-banner {
+    margin-top: 28px;
+    background: linear-gradient(180deg, rgba(255,180,84,.05), var(--bg-card) 55%);
+    border: 1px solid rgba(255,180,84,.35); border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .bb-head { margin-bottom: 14px; display: flex; gap: 6px 16px; align-items: baseline; flex-wrap: wrap; }
+  .bb-head .bb-kicker {
+    font-family: var(--mono); font-size: 12px; text-transform: uppercase;
+    letter-spacing: .14em; color: var(--accent);
+  }
+  .bb-head .bb-title { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .bb-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .bb-step {
+    display: grid; gap: 2px; align-content: start;
+    background: var(--bg-panel); border: 1px solid var(--line); border-radius: 6px;
+    padding: 10px 12px; text-decoration: none; color: var(--text);
+  }
+  a.bb-step:hover { border-color: var(--text-dim); }
+  .bb-step .fn { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--accent); }
+  .bb-step.final { border-color: rgba(46,224,111,.35); }
+  .bb-step.final .fn { color: var(--pass); }
+  .bb-step .fl { font-weight: 600; font-size: 14.5px; }
+  .bb-step .fd { font-size: 12.5px; color: var(--text-dim); line-height: 1.4; }
+  .bb-cta { margin-top: 14px; display: flex; justify-content: flex-end; }
+  .bb-cta .btn { padding: 10px 18px; font-size: 14px; }
+  @media (max-width: 800px) { .bb-flow { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .bb-flow { grid-template-columns: 1fr; } .bb-cta .btn { width: 100%; text-align: center; } }
+
+  footer {
+    border-top: 1px solid var(--line); padding: 30px 0; color: var(--text-dim);
+    font-family: var(--mono); font-size: 13px;
+  }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 800px) {
+    .grid3, .fact-grid { grid-template-columns: 1fr; }
+    .obj-row, .founder { grid-template-columns: 1fr; }
+    .mini-row { grid-template-columns: 36px 1fr; }
+    .mini-row .d { grid-column: 2; }
+    section { padding: 52px 0; }
+    .nav-links a.link { display: none; }
+  }
+  @media (max-width: 560px) {
+    section { padding: 44px 0; }
+    h2 { font-size: 27px; }
+    .grid3 { gap: 12px; margin-top: 18px; }
+    .card { padding: 15px 16px; }
+    .card p { font-size: 14px; }
+    .mini { margin-top: 16px; }
+    .mini-row { padding: 10px 0; gap: 6px 12px; }
+    .bringup-banner { margin-top: 22px; padding: 14px; }
+    .bb-flow { gap: 8px; }
+    .spec-line { font-size: 12px; }
+    .run-card { font-size: 12.5px; }
+    .run-head, .run-meta, .verdict-row, .score-key { padding-left: 14px; padding-right: 14px; }
+    .verdict-row { flex-wrap: wrap; row-gap: 6px; }
+    .badge { flex: 0 0 auto; }
+    .trace-block { padding: 10px 14px 6px; }
+    .trace-block svg { height: 88px; }
+    .trace-block svg text { display: none; }
+    .la-card svg text { display: none; }
+  }
+  @media (max-width: 480px) {
+    .nav-links { gap: 12px; }
+    .nav-links a:not(.btn) { font-size: 13.5px; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; white-space: nowrap; }
+  }
+
+  /* ---------- system light theme (dark = default, unchanged) ---------- */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #F7F7F4; --bg-panel: #FFFFFF; --bg-card: #FFFFFF; --line: #C9CDD3;
+      --text: #15181D; --text-dim: #4A5260;
+      --accent: #A85400; --pass: #0E7A3C; --fail: #C0262C;
+    }
+    ::selection { background: rgba(168,84,0,.18); }
+    nav { background: rgba(247,247,244,.94); }
+    header.hero {
+      background:
+        linear-gradient(rgba(247,247,244,0) 0%, var(--bg) 85%),
+        repeating-linear-gradient(0deg, transparent 0 39px, rgba(185,192,202,.38) 39px 40px),
+        repeating-linear-gradient(90deg, transparent 0 39px, rgba(185,192,202,.38) 39px 40px);
+    }
+    .btn-primary { color: #fff; }
+    .btn-primary:hover { filter: none; background: #8F4700; }
+    .nav-links a.btn-primary { color: #fff; }
+    .nav-links a.btn-primary:hover { color: #fff; }
+    .hero .hero-second em, .kicker, .fact .fact-tag, .mini-row .n, .card .faults,
+    .ev .tag, .cred-band .cred-label, .cmp th.hl { color: #8F4700; }
+    .cmp .hl { background: rgba(168,84,0,.06); }
+    a.run-link { text-decoration-color: rgba(168,84,0,.45); }
+    a.run-link:hover { color: #8F4700; }
+    .cred-card .cc-t::after { color: #A85400; }
+    /* the terminal is an instrument: it stays dark in both themes */
+    .video-frame {
+      --bg: #0a0e12; --bg-panel: #0f151c; --bg-card: #121a23; --line: #1e2a36;
+      --text: #d7dee6; --text-dim: #8a97a5; --accent: #ffb454;
+      --pass: #2ee06f; --fail: #ff5252;
+      border-color: #15181D; box-shadow: 4px 4px 0 rgba(21,24,29,.12);
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="/">oracova<span>_</span></a>
+    <div class="nav-links">
+      <a class="link" href="/demo">Demo</a>
+      <a class="link" href="#evidence">Evidence</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a class="btn btn-primary btn-sm" href="#cta">Book 15 minutes</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>AI agents test your firmware on real&nbsp;hardware.</h1>
+    <div class="hero-second">A hundred iterations, unattended. You review <em>the one that passed</em>.</div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#cta">See your board on the bench</a>
+      <a class="btn btn-ghost" href="/runs/bldc-hall-fault-demo">Read a full run report</a>
+    </div>
+    <div class="video-frame">
+      <div class="bench-replay">
+        <div class="bench-head">
+          <span class="bench-title">oracova bench</span>
+          <span>replay &middot; recreated &middot; sped up &middot; not live video</span>
+        </div>
+        <div class="bench-log static" id="bench-log" aria-label="replay of an agent task: implement and test the gyro driver">
+          <div class="bl"><span class="k">$</span> oracova task "implement and test the gyro driver"</div>
+          <div class="bl">plan     <b>MPU6000 gyro/accel &middot; SPI1: 1 MHz cfg / 20 MHz data &middot; DUT STM32F411, real silicon</b></div>
+          <div class="bl">world    pulling <b>mpu6000 model</b> from the marketplace (validated verilog)</div>
+          <div class="bl">         synth &rarr; bench FPGA .......................... <b>ok</b></div>
+          <div class="bl">bench    <b>DUT board seated</b> &middot; internal logic analyzer armed on SPI1</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">netlist  parse DUT board PCBA: <b>SPI1 &rarr; PA5 SCK &middot; PA6 MISO &middot; PA7 MOSI &middot; PA4 nCS</b></div>
+          <div class="bl">map      DUT pins &rarr; base connector &rarr; FPGA balls ............ <b>4 nets routed</b></div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end</div>
+          <div class="bl">  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b></div>
+          <div class="bl">bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz</div>
+          <div class="bl">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
+          <div class="bl">  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68</div>
+          <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div></div>
+          <div class="bl">la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span></div>
+          <div class="bl">fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 2   flash <b>ok</b> &middot; test running</div>
+          <div class="bl">  who_am_i ................................. <span class="pass">PASS</span>   0x68</div>
+          <div class="bl">  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always</div>
+          <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text></svg><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
+          <div class="bl">la       <span class="k">addr 0x43 sent without the 0x80 read bit</span></div>
+          <div class="bl">fix      set MSB on register reads &rarr; rebuild</div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 3   flash <b>ok</b> &middot; test running</div>
+          <div class="bl">  gyro_x .................................... data flows</div>
+          <div class="bl">  rate check: <b>world spins the table 90 &deg;/s</b> &middot; driver reports <span class="fail">11.3</span></div>
+          <div class="bl">fix      scale: driver assumed 131 LSB/(&deg;/s), device is FS_SEL=3 &rarr; <b>16.4</b></div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">iter 4   flash <b>ok</b> &middot; full suite</div>
+          <div class="bl">  who_am_i .................................. <span class="pass">PASS</span></div>
+          <div class="bl">  self test ................................. <span class="pass">PASS</span></div>
+          <div class="bl">  rate step 90 &deg;/s .......................... <span class="pass">PASS</span></div>
+          <div class="bl">  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span></div>
+          <div class="bl">&nbsp;</div>
+          <div class="bl">verdict  <span class="pass">PASS</span>   <b>4 iterations &middot; 6 m 42 s unattended</b></div>
+          <div class="bl">checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b></div>
+        </div>
+        <div class="bench-foot">
+          <span>task &middot; implement and test the gyro driver</span>
+          <span style="display:flex; align-items:center; gap:14px">
+            <a class="run-link" href="/demo">full-screen &rarr;</a>
+            <button id="bench-pause" type="button">pause &#10073;&#10073;</button>
+            <button id="bench-replay" type="button">replay &#8635;</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cred-band">
+  <div class="wrap">
+    <span class="cred-label">check it yourself</span>
+    <div class="cred-cards">
+      <a class="cred-card" href="#evidence">
+        <span class="cc-t">A real run</span>
+        <span class="cc-d">stored traces + firmware hashes</span>
+      </a>
+      <a class="cred-card" href="#simulator">
+        <span class="cc-t">Unmodified Betaflight</span>
+        <span class="cc-d">flying against the bench</span>
+      </a>
+      <a class="cred-card" href="#cta">
+        <span class="cc-t">The founder</span>
+        <span class="cc-d">built by the engineer who was the manual bench</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">What is Oracova</div>
+    <p class="whatis">Oracova is an automated test bench for&nbsp;firmware.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2>Every firmware PR gets its own bench and its own agent.</h2>
+    <div class="mini">
+      <div class="mini-row">
+        <span class="n">01</span>
+        <div class="t">A change arrives with its own tests</div>
+        <div class="d">Your engineers write the change. <b>Oracova writes the tests
+        separately</b> and runs them on the bench, not in a mock.</div>
+      </div>
+      <div class="mini-row">
+        <span class="n">02</span>
+        <div class="t">The loop runs until PASS</div>
+        <div class="d"><b>Flash, run, read, fix, repeat.</b> Nobody watches it work.</div>
+      </div>
+      <div class="mini-row">
+        <span class="n">03</span>
+        <div class="t">Every test keeps running</div>
+        <div class="d">Tests stay in the suite forever, so <b>regressions get caught</b> on
+        every future PR.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="world">
+  <div class="wrap">
+    <div class="kicker">The world</div>
+    <h2>Close your control loop on real-time physics emulation.</h2>
+    <p class="dim" style="margin-top:18px"><b>Motors spin, packs heat up, pressure builds</b>,
+    so your unmodified firmware reaches every test point on its own. No test hooks, no forced
+    states, no special builds. Common peripherals come as validated models from Oracova's
+    open-source marketplace.</p>
+    <div class="grid3">
+      <div class="card">
+        <h3>Motor control</h3>
+        <div class="faults">stuck hall &middot; swapped sectors &middot; skipped sector</div>
+        <p>Commutation and hall-sensor faults on real silicon, proven on the Oracova
+        bench.</p>
+      </div>
+      <div class="card">
+        <h3>BMS</h3>
+        <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
+        <p>The pack is physics, so protection logic is tested by reaching the fault, not by
+        faking it.</p>
+      </div>
+      <div class="card">
+        <h3>Power and thermal</h3>
+        <div class="faults">heaters &middot; pumps &middot; converters</div>
+        <p>Closed loops settle, overshoot, and fault against a plant that behaves like the
+        real one.</p>
+      </div>
+    </div>
+    <div style="margin-top:26px">
+      <a class="btn btn-primary" href="/onboarding">What it takes to get your board on the bench &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="wrap">
+    <div class="kicker">Evidence</div>
+    <h2>You review the one that&nbsp;passed.</h2>
+    <p class="dim">Every run returns PASS or FAIL with captured traces and firmware hashes.
+    A real run from the same bench:</p>
+
+    <div class="run-card">
+      <div class="run-head">
+        <a class="rid run-link" href="/runs/bldc-hall-fault-demo">RUN 20260618-080733</a>
+        <span>bldc_hall_a_stuck_low</span>
+      </div>
+      <div class="run-meta">
+        <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
+        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on the Oracova base board</b></div>
+        <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
+      </div>
+      <div class="trace-block">
+        <div class="trace-label">phase U / V / W + hall A &middot; recreated from the stored run</div>
+        <svg viewBox="0 0 1000 120" width="100%" height="120" preserveAspectRatio="none" aria-label="commutation trace, recreated from the stored run">
+          <polyline fill="none" stroke="#ffb454" stroke-width="2" opacity="0.9"
+            points="0,25 80,25 80,8 160,8 160,25 320,25 320,8 400,8 400,25 560,25 560,8 640,8 640,25 800,25 800,8 880,8 880,25 1000,25"/>
+          <polyline fill="none" stroke="#7aa2c4" stroke-width="2" opacity="0.8"
+            points="0,55 40,55 40,38 200,38 200,55 360,55 360,38 480,38 480,55 700,55 700,38 820,38 820,55 1000,55"/>
+          <polyline fill="none" stroke="#9a8cc9" stroke-width="2" opacity="0.8"
+            points="0,85 120,85 120,68 280,68 280,85 440,85 440,68 520,68 520,85 760,85 760,68 940,68 940,85 1000,85"/>
+          <polyline fill="none" stroke="#ff5252" stroke-width="2"
+            points="0,105 200,105 200,112 1000,112"/>
+          <text x="205" y="104" fill="#ff5252" font-size="10" font-family="monospace">HALL_A stuck low</text>
+        </svg>
+      </div>
+      <div class="verdict-rows">
+        <div class="verdict-row">
+          <span class="dim">unguarded firmware &nbsp; mismatch=8 &nbsp; unsafe=4</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">same firmware + guard patch &nbsp; unsafe=0</span>
+          <span class="badge pass">PASS</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">swapped sectors &nbsp; mismatch=8 &nbsp; unsafe=8</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">skipped sector &nbsp; seq_fault=7</span>
+          <span class="badge fail">FAIL</span>
+        </div>
+        <div class="verdict-row">
+          <span class="dim">forced invalid hall bus &nbsp; clean shutdown</span>
+          <span class="badge pass">PASS</span>
+        </div>
+      </div>
+      <div class="score-key">mismatch counts wrong-phase commutation decisions &middot; unsafe counts
+      the energized ones that could cause damage or harm</div>
+    </div>
+    <p class="run-caption">Unguarded firmware energizes the wrong phase; the guarded build
+    shuts down clean. <a class="run-link" href="/runs/bldc-hall-fault-demo">Full run report &rarr;</a></p>
+    <div class="evidence-list">
+      <div class="ev" id="simulator">
+        <div class="ev-head">
+          <span class="tag">the simplest demonstration of oracova</span>
+          <span class="claim">A flight simulator: unmodified Betaflight flies against the bench.</span>
+        </div>
+        <div class="nums">gyro + accel over SPI &middot; 4 motor outputs decoded &middot; ANGLE mode &middot; 8 kHz loop</div>
+        <p class="ev-note"><b>To the firmware, it is flying.</b> Gyro and accel come from live
+        physics; its motor commands move that world. Every board on Oracova gets the same:
+        a simulator of its own world, faults included.</p>
+      </div>
+      <div class="ev">
+        <div class="ev-head">
+          <span class="tag">the bug a green build hid</span>
+          <span class="claim">Zero edges on the output pin.</span>
+        </div>
+        <div class="nums">build green &middot; DShot600 configured &middot; static checks passed &middot; output: <span class="v-fail">zero edges</span></div>
+        <p class="ev-note">A DMA allocation failure every static check missed. <b>Only the
+        closed loop caught it.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap">
+    <div class="kicker">Straight answers</div>
+    <h2>Against the ways you test&nbsp;today.</h2>
+    <div class="table-hint">swipe &rarr; manual bench &middot; simulator &middot; HIL rig</div>
+    <div class="cmp-outer">
+    <div class="cmp-scroll">
+      <table class="cmp">
+        <tr><th></th><th class="hl">oracova</th><th>manual bench</th><th>simulator</th><th>HIL rig</th></tr>
+        <tr><td>who writes the tests</td><td class="y hl">the agent</td><td class="dim">you</td><td class="dim">you</td><td class="dim">you</td></tr>
+        <tr><td>who scores the runs</td><td class="y hl">AI-free checker</td><td class="dim">you</td><td class="dim">your asserts</td><td class="dim">scripted checks</td></tr>
+        <tr><td>runs unattended</td><td class="y hl">agent-driven</td><td class="n">no</td><td class="y">yes</td><td class="dim">scripted</td></tr>
+        <tr><td>a bench per PR</td><td class="y hl">yes</td><td class="n">no</td><td class="y">yes</td><td class="n">no</td></tr>
+        <tr><td>runs on real silicon</td><td class="y hl">yes</td><td class="y">yes</td><td class="n">no</td><td class="y">yes</td></tr>
+        <tr><td>faults on the chip</td><td class="y hl">by physics</td><td class="dim">hand-wired</td><td class="n">in a model</td><td class="dim">scripted</td></tr>
+        <tr><td>entry cost</td><td class="hl dim">a DUT board + bring-up</td><td class="dim">engineer-hours</td><td class="dim">"free"</td><td class="dim">$9,900+</td></tr>
+      </table>
+    </div>
+    </div>
+    <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
+    unmodified Betaflight in closed loop. Verdicts come from a deterministic checker with
+    fixed thresholds &mdash; the agent never grades its own work.</p>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap founder">
+    <div>
+      <div class="kicker">The outcome</div>
+      <h2>Firmware finally develops like&nbsp;software.</h2>
+      <p class="dim"><b>I was the manual bench.</b> I shipped motor controllers and battery
+      systems, and every change meant me, a board, and an afternoon. I built Oracova to
+      replace that engineer. If your testing still needs one, I want 15 minutes.</p>
+      <p class="mono dim" style="margin-top:14px; font-size:13.5px">&mdash; Pouya Mansouri, founder</p>
+    </div>
+    <div class="founder-cta">
+      <div class="mono" style="margin-top:0">engineer to engineer</div>
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+      <div class="mono">You'll watch a live run, not a deck.</div>
+      <div class="mono">Not ready?
+        <a href="/runs/bldc-hall-fault-demo" style="color: var(--accent); text-decoration: none;">Read
+        a full run report &rarr;</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+    <span><a href="mailto:pooyamn@gmail.com" style="color: inherit; text-decoration: none;">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; © 2026 Oracova</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var log = document.getElementById('bench-log');
+  var replayBtn = document.getElementById('bench-replay');
+  if (!log) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var LA1 =
+    '<div class="la-card">' +
+    '<div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div>' +
+    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low">' +
+    '<text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text>' +
+    '<polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/>' +
+    '<text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text>' +
+    '<polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/>' +
+    '<text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text>' +
+    '<polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/>' +
+    '<text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text>' +
+    '</svg>' +
+    '<div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div>' +
+    '</div>';
+
+  var LA2 =
+    '<div class="la-card">' +
+    '<div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div>' +
+    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low">' +
+    '<text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text>' +
+    '<g font-family="monospace" font-size="13" text-anchor="middle">' +
+    '<rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/>' +
+    '<text x="110" y="57" fill="#ff5252" font-weight="bold">0</text>' +
+    '<rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text>' +
+    '<rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text>' +
+    '<rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text>' +
+    '</g>' +
+    '<text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text>' +
+    '<text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text>' +
+    '</svg>' +
+    '<div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div>' +
+    '</div>';
+
+  var P = '<span class="k">$</span> oracova task "implement and test the gyro driver"';
+  var steps = [
+    [1200, 'plan     <b>MPU6000 gyro/accel &middot; SPI1: 1 MHz cfg / 20 MHz data &middot; DUT STM32F411, real silicon</b>'],
+    [2300, 'world    pulling <b>mpu6000 model</b> from the marketplace (validated verilog)'],
+    [2100, '         synth &rarr; bench FPGA .......................... <b>ok</b>'],
+    [1700, 'bench    <b>DUT board seated</b> &middot; internal logic analyzer armed on SPI1'],
+    [2400, ''],
+    [300,  'netlist  parse DUT board PCBA: <b>SPI1 &rarr; PA5 SCK &middot; PA6 MISO &middot; PA7 MOSI &middot; PA4 nCS</b>'],
+    [2600, 'map      DUT pins &rarr; base connector &rarr; FPGA balls ............ <b>4 nets routed</b>'],
+    [2400, ''],
+    [300,  'wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end'],
+    [2800, '  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b>'],
+    [2200, 'bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware'],
+    [3000, ''],
+    [300,  'iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz'],
+    [2200, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
+    [1800, '  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68'],
+    [2400, LA1, true],
+    [4500, 'la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span>'],
+    [2300, 'fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild'],
+    [2800, ''],
+    [300,  'iter 2   flash <b>ok</b> &middot; test running'],
+    [1800, '  who_am_i ................................. <span class="pass">PASS</span>   0x68'],
+    [1900, '  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always'],
+    [2400, LA2, true],
+    [4200, 'la       <span class="k">addr 0x43 sent without the 0x80 read bit</span>'],
+    [2200, 'fix      set MSB on register reads &rarr; rebuild'],
+    [2800, ''],
+    [300,  'iter 3   flash <b>ok</b> &middot; test running'],
+    [1700, '  gyro_x .................................... data flows'],
+    [2100, '  rate check: <b>world spins the table 90 &deg;/s</b> &middot; driver reports <span class="fail">11.3</span>'],
+    [2800, 'fix      scale: driver assumed 131 LSB/(&deg;/s), device is FS_SEL=3 &rarr; <b>16.4</b>'],
+    [3000, ''],
+    [300,  'iter 4   flash <b>ok</b> &middot; full suite'],
+    [1600, '  who_am_i .................................. <span class="pass">PASS</span>'],
+    [1300, '  self test ................................. <span class="pass">PASS</span>'],
+    [1300, '  rate step 90 &deg;/s .......................... <span class="pass">PASS</span>'],
+    [1400, '  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span>'],
+    [2200, ''],
+    [400,  'verdict  <span class="pass">PASS</span>   <b>4 iterations &middot; 6 m 42 s unattended</b>'],
+    [2600, 'checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b>']
+  ];
+
+  var timers = [];
+  var paused = false, nextIdx = 0;
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function schedule(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+  function addLine(html, isBlock) {
+    var el = document.createElement('div');
+    if (!isBlock) el.className = 'bl';
+    el.innerHTML = html === '' ? '&nbsp;' : html;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
+    return el;
+  }
+
+  function moveCursor(el) {
+    var old = log.querySelector('.cursor');
+    if (old) old.classList.remove('cursor');
+    if (el && !reduced) el.classList.add('cursor');
+  }
+
+  function renderAll() {
+    log.innerHTML = '';
+    log.classList.add('static');
+    addLine(P);
+    steps.forEach(function (st) { addLine(st[1], st[2]); });
+    log.scrollTop = 0;
+  }
+
+  function play() {
+    clearTimers();
+    log.innerHTML = '';
+    if (reduced) { renderAll(); return; }
+
+    log.classList.remove('static');
+    paused = false;
+    var SETUP = 11;
+    var promptEl = addLine('<span class="k">$</span>&nbsp;');
+    promptEl.classList.add('cursor');
+    var cmd = 'oracova task "implement and test the gyro driver"';
+    var i = 0;
+    (function typeChar() {
+      if (i <= cmd.length) {
+        promptEl.innerHTML = '<span class="k">$</span> ' + cmd.slice(0, i).replace(/"/g, '&quot;');
+        i++;
+        schedule(typeChar, 18);
+      } else {
+        streamSetup(0);
+      }
+    })();
+    function streamSetup(j) {
+      if (j >= SETUP) { run(SETUP, 700); return; }
+      schedule(function () {
+        var el = addLine(steps[j][1], steps[j][2]);
+        if (!steps[j][2] && steps[j][1] !== '') moveCursor(el);
+        streamSetup(j + 1);
+      }, 320);
+    }
+
+    function run(idx, extraDelay) {
+      nextIdx = idx;
+      if (idx >= steps.length) {
+        schedule(play, 14000);
+        return;
+      }
+      var st = steps[idx];
+      schedule(function () {
+        var el = addLine(st[1], st[2]);
+        if (!st[2] && st[1] !== '') moveCursor(el);
+        run(idx + 1, 0);
+      }, st[0] + (extraDelay || 0));
+    }
+  }
+
+  var pauseBtn = document.getElementById('bench-pause');
+  if (pauseBtn) pauseBtn.addEventListener('click', function () {
+    if (reduced) return;
+    if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;'; }
+    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; run(Math.max(nextIdx, 11), 200); }
+  });
+  if (replayBtn) replayBtn.addEventListener('click', function () {
+    if (pauseBtn) pauseBtn.innerHTML = 'pause &#10073;&#10073;';
+    play();
+  });
+  play();
+})();
+</script>
+
+</body>
+</html>
