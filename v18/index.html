@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oracova. AI agents test your firmware on real hardware.</title>
-<meta name="description" content="Oracova is an AI-run test bench. Real chip, emulated world, injected faults, scored verdicts. It tests firmware the way it will actually be used, automatically, on every change.">
+<meta name="description" content="Oracova is an AI-run test bench: real chip, emulated world, injected faults, scored verdicts, on every change.">
 <link rel="canonical" href="https://oracova.com/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -474,7 +474,7 @@
       </div>
       <div class="run-stats">
         <span><b>gyro driver implemented &middot; DMA-accelerated &middot; tested</b></span><span>8 iterations</span><span style="color:var(--text); font-weight:700">1 h 12 min unattended</span>
-        <span>deterministic checker &middot; the agent never grades its own work</span>
+        <span>verdicts from fixed thresholds, not from the agent</span>
       </div>
     </div>
   </div>
@@ -550,9 +550,9 @@
 <section id="evidence">
   <div class="wrap">
     <div class="kicker">Evidence</div>
-    <h2>You review the one that&nbsp;passed.</h2>
+    <h2>A verdict you can audit.</h2>
     <p class="dim">Every run returns PASS or FAIL with captured traces and firmware hashes.
-    A real run from the same bench:</p>
+    A run from this bench:</p>
 
     <div class="run-card">
       <div class="run-head">
@@ -649,8 +649,7 @@
     </div>
     </div>
     <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
-    unmodified Betaflight in closed loop. Verdicts come from a deterministic checker with
-    fixed thresholds. The agent never grades its own work.</p>
+    unmodified Betaflight in closed loop. Verdicts come from fixed thresholds, not from the agent.</p>
   </div>
 </section>
 
@@ -658,7 +657,7 @@
   <div class="wrap founder">
     <div>
       <div class="kicker">The outcome</div>
-      <h2>Firmware finally develops like&nbsp;software.</h2>
+      <h2>Firmware gets the CI loop software has had for years.</h2>
       <p class="dim"><b>I was the manual bench.</b> I shipped motor controllers and battery
       systems, and every change meant me, a board, and an afternoon. I built Oracova to
       replace that engineer. If your testing still needs one, I want 15 minutes.</p>

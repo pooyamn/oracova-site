@@ -279,13 +279,13 @@
         <span class="tag">Oracova base board</span>
         <h3>The world, in real time</h3>
         <p>Plays your sensors and loads, protocol-exact, and runs the physics models in real
-        time. The world responds like the product's world does.</p>
+        time.</p>
       </div>
       <div class="box">
         <span class="tag">Analog front-end modules</span>
-        <h3>Voltages and currents, handled</h3>
+        <h3>DAC and ADC front-ends</h3>
         <p>DAC and ADC modules come in different resolutions and speeds; you pick the ones
-        your signals need. Unusual signal? A module can be built for it.</p>
+        your signals need. Unusual signals get a custom module.</p>
       </div>
       <div class="box">
         <span class="tag">Custom DUT + debug probe</span>
@@ -332,15 +332,15 @@
           <div class="mini-row"><span class="n">01</span><span class="t">Peripheral by peripheral</span>
             <span class="d">The bench and the firmware grow together, interface by
             interface.</span></div>
-          <div class="mini-row"><span class="n">02</span><span class="t">Both sides together</span>
+          <div class="mini-row"><span class="n">02</span><span class="t">Driver + world as a pair</span>
             <span class="d">The firmware driver on the DUT and its counterpart in the
             world, brought up as a pair.</span></div>
-          <div class="mini-row"><span class="n">03</span><span class="t">Proven before the next</span>
+          <div class="mini-row"><span class="n">03</span><span class="t">Each peripheral passes before the next</span>
             <span class="d">Each peripheral passes on the bench before the next one is
             added.</span></div>
           <div class="mini-row"><span class="n">04</span><span class="t">The suite is the record</span>
             <span class="d">By the time the firmware is whole, the regression suite already
-            exists. There was never an untested part.</span></div>
+            exists.</span></div>
         </div>
       </div>
     </div>
@@ -349,7 +349,7 @@
       <div class="list">gyro &middot; LCD &middot; hall encoder &middot; and more</div>
       <p class="dim" style="font-size:15px; max-width:none">The world rarely starts from
       zero. Common peripherals come as <b>validated models from Oracova's open-source
-      marketplace</b>, proven against real firmware. The AI builds what is unique to your
+      marketplace</b>, run against real firmware. The AI builds what is unique to your
       product and pulls the rest; what you build, you can contribute back.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
