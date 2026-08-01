@@ -48,7 +48,7 @@
       padding: 12px 0; margin: -12px 0; }
     .logo span { color: var(--amber); }
     .nav-links { display: flex; gap: 26px; align-items: center; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14.5px; padding: 12px 0; margin: -12px 0; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14.5px; }
     .nav-links a:hover { color: var(--ink); }
     .nav-links a.btn-primary { color: #14100a; }
     .btn {
@@ -154,19 +154,6 @@
     .hash-panel ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .hash-panel li { border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
     .hash-panel span { display: block; color: var(--muted); font-size: 12px; }
-    @media (max-width: 480px) {
-      .table-hint, .table-panel::after { display: none !important; }
-      .table-scroll { overflow: visible; }
-      table { min-width: 0; }
-      thead { display: none; }
-      table, tbody, tr, td { display: block; width: 100%; }
-      tr { border: 1px solid var(--line); border-radius: 6px; margin-bottom: 10px; padding: 4px 0; background: #0b1016; }
-      td { border-top: none; white-space: normal; position: static !important;
-        display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; }
-      td::before { content: attr(data-l); color: var(--muted); font-size: 12px; }
-      td:first-child { font-weight: 650; background: none; }
-      td:first-child::before { content: none; }
-    }
     @media (max-width: 900px) {
       .summary, .cases { grid-template-columns: 1fr; }
       .chart-row { grid-template-columns: 1fr; }
@@ -178,12 +165,11 @@
 <body>
   <nav class="site">
     <div class="navwrap">
-      <a class="logo" href="/">oracova<span>_</span></a>
+      <a class="logo" href="../index.html">oracova<span>_</span></a>
       <div class="nav-links">
-        <a href="/#how">How it works</a>
-        <a href="/#evidence">Evidence</a>
-        <a href="/demo">Demo</a>
-        <a href="/onboarding">Board bring-up</a>
+        <a href="../index.html#how">How it works</a>
+        <a href="../index.html#evidence">Evidence</a>
+        <a href="../onboarding.html">Board bring-up</a>
         <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
       </div>
     </div>
@@ -191,13 +177,13 @@
   <header>
     <div class="kicker">Run 20260618-080733 &middot; scored on the bench</div>
     <h1>BLDC Silicon Fault Evidence</h1>
-    <p>Two-MCU hardware-in-the-loop run: STM32 target firmware, Oracova base board plant and fault injector, real phase/hall wiring, verdicts scored from wire-level phase/hall capture; RTT carries logs only. This run used the proven two-MCU rig; the production base board moves the same plant models into FPGA fabric.</p>
+    <p>Two MCU hardware-in-the-loop run: STM32 target firmware, Oracova base board plant and fault injector, real phase/hall wiring, RTT evidence captured through probe-rs.</p>
   </header>
   <main>
     <section class="summary" aria-label="Evidence summary">
       <div class="metric"><b>6</b><span>silicon verdicts</span></div>
-      <div class="metric"><b>4 &rarr; 0</b><span>unsafe drives after Hall A guard</span></div>
-      <div class="metric"><b>FAIL &rarr; PASS</b><span>same fault, guarded target</span></div>
+      <div class="metric"><b>4 -> 0</b><span>unsafe drives after Hall A guard</span></div>
+      <div class="metric"><b>FAIL -> PASS</b><span>same fault, guarded target</span></div>
     </section>
 
     <section>
@@ -319,7 +305,7 @@
         <div class="chart-row">
           <div class="chart-label">
             <b>Nominal commutation</b>
-            <span>unguarded</span>
+            <span>golden</span>
           </div>
           <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
           <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
@@ -329,7 +315,7 @@
         <div class="chart-row">
           <div class="chart-label">
             <b>Hall A stuck low</b>
-            <span>unguarded</span>
+            <span>golden</span>
           </div>
           <div class="bar unsafe"><span style="width:17%"></span><b>4</b></div>
           <div class="bar mismatch"><span style="width:33%"></span><b>8</b></div>
@@ -349,7 +335,7 @@
         <div class="chart-row">
           <div class="chart-label">
             <b>Hall bus forced 000</b>
-            <span>unguarded</span>
+            <span>golden</span>
           </div>
           <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
           <div class="bar mismatch"><span style="width:100%"></span><b>24</b></div>
@@ -359,7 +345,7 @@
         <div class="chart-row">
           <div class="chart-label">
             <b>Skipped hall sector</b>
-            <span>unguarded</span>
+            <span>golden</span>
           </div>
           <div class="bar unsafe"><span style="width:0%"></span><b>0</b></div>
           <div class="bar mismatch"><span style="width:0%"></span><b>0</b></div>
@@ -386,69 +372,69 @@
         <thead><tr><th>Case</th><th>Variant</th><th>Verdict</th><th>Unsafe</th><th>Mismatch</th><th>Invalid shutdown</th><th>Seq fault</th><th>Verdict hash</th></tr></thead>
         <tbody>
         <tr>
-          <td data-l="Case">Nominal commutation</td>
-          <td data-l="Variant">Unguarded target</td>
-          <td data-l="Verdict"><span class="pill good">PASS</span></td>
-          <td data-l="Unsafe">0</td>
-          <td data-l="Mismatch">0</td>
-          <td data-l="Invalid shutdown">0</td>
-          <td data-l="Seq fault">0</td>
-          <td data-l="Verdict hash"><code>882f553a6d7b</code></td>
+          <td>Nominal commutation</td>
+          <td>Unguarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td><code>882f553a6d7b</code></td>
         </tr>
         
         <tr>
-          <td data-l="Case">Hall A stuck low</td>
-          <td data-l="Variant">Unguarded target</td>
-          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
-          <td data-l="Unsafe">4</td>
-          <td data-l="Mismatch">8</td>
-          <td data-l="Invalid shutdown">4</td>
-          <td data-l="Seq fault">0</td>
-          <td data-l="Verdict hash"><code>83f848006ea0</code></td>
+          <td>Hall A stuck low</td>
+          <td>Unguarded target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>4</td>
+          <td>8</td>
+          <td>4</td>
+          <td>0</td>
+          <td><code>83f848006ea0</code></td>
         </tr>
         
         <tr>
-          <td data-l="Case">Hall A stuck low</td>
-          <td data-l="Variant">Guarded target</td>
-          <td data-l="Verdict"><span class="pill good">PASS</span></td>
-          <td data-l="Unsafe">0</td>
-          <td data-l="Mismatch">24</td>
-          <td data-l="Invalid shutdown">4</td>
-          <td data-l="Seq fault">0</td>
-          <td data-l="Verdict hash"><code>c6aa16c7e324</code></td>
+          <td>Hall A stuck low</td>
+          <td>Guarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>24</td>
+          <td>4</td>
+          <td>0</td>
+          <td><code>c6aa16c7e324</code></td>
         </tr>
         
         <tr>
-          <td data-l="Case">Hall bus forced 000</td>
-          <td data-l="Variant">Unguarded target</td>
-          <td data-l="Verdict"><span class="pill good">PASS</span></td>
-          <td data-l="Unsafe">0</td>
-          <td data-l="Mismatch">24</td>
-          <td data-l="Invalid shutdown">24</td>
-          <td data-l="Seq fault">0</td>
-          <td data-l="Verdict hash"><code>f79987e41d7f</code></td>
+          <td>Hall bus forced 000</td>
+          <td>Unguarded target</td>
+          <td><span class="pill good">PASS</span></td>
+          <td>0</td>
+          <td>24</td>
+          <td>24</td>
+          <td>0</td>
+          <td><code>f79987e41d7f</code></td>
         </tr>
         
         <tr>
-          <td data-l="Case">Skipped hall sector</td>
-          <td data-l="Variant">Unguarded target</td>
-          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
-          <td data-l="Unsafe">0</td>
-          <td data-l="Mismatch">0</td>
-          <td data-l="Invalid shutdown">0</td>
-          <td data-l="Seq fault">7</td>
-          <td data-l="Verdict hash"><code>00641270c1a4</code></td>
+          <td>Skipped hall sector</td>
+          <td>Unguarded target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td>
+          <td>7</td>
+          <td><code>00641270c1a4</code></td>
         </tr>
         
         <tr>
-          <td data-l="Case">Swapped commutation sectors</td>
-          <td data-l="Variant">Buggy target</td>
-          <td data-l="Verdict"><span class="pill bad">FAIL</span></td>
-          <td data-l="Unsafe">8</td>
-          <td data-l="Mismatch">8</td>
-          <td data-l="Invalid shutdown">0</td>
-          <td data-l="Seq fault">0</td>
-          <td data-l="Verdict hash"><code>d1fd03dca377</code></td>
+          <td>Swapped commutation sectors</td>
+          <td>Buggy target</td>
+          <td><span class="pill bad">FAIL</span></td>
+          <td>8</td>
+          <td>8</td>
+          <td>0</td>
+          <td>0</td>
+          <td><code>d1fd03dca377</code></td>
         </tr>
         </tbody>
       </table>
@@ -461,7 +447,7 @@
 
     <section class="hash-panel">
       <h2>Firmware Hashes</h2>
-      <ul><li><span>emulator (same for all variants)</span><code>787e7c0a8021</code></li><li><span>target: unguarded</span><code>99c0485d4f41</code></li><li><span>target: guarded</span><code>c7811e600a6d</code></li><li><span>target: buggy</span><code>a95d84130157</code></li></ul>
+      <ul><li><span>buggy:emulator</span><code>787e7c0a8021</code></li><li><span>buggy:target</span><code>a95d84130157</code></li><li><span>golden:emulator</span><code>787e7c0a8021</code></li><li><span>golden:target</span><code>99c0485d4f41</code></li><li><span>guarded:emulator</span><code>787e7c0a8021</code></li><li><span>guarded:target</span><code>c7811e600a6d</code></li></ul>
     </section>
 
     <section class="cta-panel">
