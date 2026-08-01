@@ -367,6 +367,34 @@
   .card:hover .faults { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
   @media (max-width: 800px) { section { padding: 48px 0 0; } section::before { margin-bottom: 32px; } }
+
+  /* ---------- mobile compare: Oracova vs one rival at a time ---------- */
+  .cmp-mobile { display: none; }
+  body.cmpm .cmp-mobile { display: block; }
+  @media (max-width: 700px) {
+    body.cmpm .cmp-outer, body.cmpm #compare .table-hint { display: none; }
+  }
+  @media (min-width: 701px) { .cmp-mobile { display: none !important; } }
+  .cm-seg { display: flex; gap: 8px; margin: 14px 0 12px; }
+  .cm-seg button {
+    flex: 1; padding: 10px 8px; border-radius: 8px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em;
+  }
+  .cm-seg button[aria-pressed="true"] {
+    border-color: var(--brand); color: var(--text); background: var(--surface-2);
+  }
+  .cm-head { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; }
+  .cm-head .a { color: var(--brand); }
+  .cm-head .b { color: var(--text-faint); }
+  .cm-row { border-top: 1px solid var(--border); padding: 10px 0; }
+  .cm-q { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+  .cm-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13.5px; }
+  .cm-vals .cell-a { color: var(--text); font-weight: 600; }
+  .cm-vals .y { color: var(--pass); font-weight: 600; }
+  .cm-vals .n { color: var(--fail); font-weight: 600; }
+  .cm-vals .dim { color: var(--text-dim); font-weight: 400; }
 </style>
 </head>
 <body>
@@ -649,6 +677,7 @@
       </table>
     </div>
     </div>
+    <div class="cmp-mobile" id="cmp-mobile" aria-label="compare Oracova against one method at a time"></div>
     <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
     unmodified Betaflight in closed loop. Verdicts come from fixed thresholds, not from the agent.</p>
   </div>
@@ -878,5 +907,39 @@
 })();
 </script>
 
+<script>
+(function () {
+  var table = document.querySelector('#compare table.cmp');
+  var mount = document.getElementById('cmp-mobile');
+  if (!table || !mount) return;
+  var rows = [].slice.call(table.rows);
+  var heads = [].slice.call(rows[0].cells).map(function (c) { return c.textContent.trim(); });
+  var data = rows.slice(1).map(function (r) {
+    return [].slice.call(r.cells).map(function (c) { return { html: c.innerHTML, cls: c.className }; });
+  });
+  var rivals = [2, 3, 4];
+  var current = 4; // HIL rig first: the comparison buyers ask about
+  function render() {
+    var h = '<div class="cm-seg" role="group" aria-label="pick a method to compare">';
+    rivals.forEach(function (i) {
+      h += '<button type="button" data-i="' + i + '" aria-pressed="' + (i === current) + '">'
+        + heads[i] + '</button>';
+    });
+    h += '</div><div class="cm-head"><span class="a">Oracova</span><span class="b">'
+      + heads[current] + '</span></div>';
+    data.forEach(function (r) {
+      h += '<div class="cm-row"><div class="cm-q">' + r[0].html + '</div>'
+        + '<div class="cm-vals"><span class="cell-a ' + r[1].cls + '">' + r[1].html + '</span>'
+        + '<span class="' + r[current].cls + '">' + r[current].html + '</span></div></div>';
+    });
+    mount.innerHTML = h;
+    [].slice.call(mount.querySelectorAll('.cm-seg button')).forEach(function (b) {
+      b.addEventListener('click', function () { current = +b.dataset.i; render(); });
+    });
+  }
+  render();
+  document.body.classList.add('cmpm');
+})();
+</script>
 </body>
 </html>
