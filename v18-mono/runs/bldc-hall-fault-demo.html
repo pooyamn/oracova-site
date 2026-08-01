@@ -194,46 +194,6 @@
       .table-panel::after { background: linear-gradient(270deg, var(--panel) 30%, transparent); }
       @media (max-width: 480px) { tr { background: #FFFFFF; } }
     }
-
-    /* ---------- v18 skin ---------- */
-    :root {
-      --ink: #EDEEF0; --muted: #9DA1A8; --line: rgba(255,255,255,.09); --bg: #0E0F11;
-      --panel: #15161A; --green: #4ADE80; --red: #F87171;
-      --blue: #7AA2C4; --amber: #FFB454; --violet: #9A8CC9;
-    }
-    body { font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif; }
-    nav.site { background: rgba(14,15,17,.75); backdrop-filter: blur(14px) saturate(1.4); }
-    header { background: transparent; border-bottom: 1px solid var(--line); }
-    header h1 { font-family: var(--mono); letter-spacing: -0.02em; }
-    header p { color: var(--muted); }
-    .btn { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-      font-weight: 600; border-radius: 8px; }
-    .btn-primary { color: #1A1204; }
-    .btn-primary:hover { filter: none; background: #FFC276; }
-    .nav-links a.btn-primary { color: #1A1204; }
-    .metric, .case-card, .chart-panel, .table-panel, .hash-panel { border-radius: 12px; }
-    .case-top h3 { font-family: var(--mono); }
-    .metric b { font-family: var(--mono); }
-    .bar { background: rgba(255,255,255,.06); border-radius: 6px; }
-    .pill.good { background: rgba(74,222,128,.15); color: var(--green); border: 1px solid rgba(74,222,128,.35); }
-    .pill.bad { background: rgba(248,113,113,.15); color: var(--red); border: 1px solid rgba(248,113,113,.35); }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --ink: #16181D; --muted: #555A63; --line: rgba(20,22,26,.1); --bg: #FAFAF9;
-        --panel: #FFFFFF; --green: #16A34A; --red: #DC2626;
-        --blue: #2A5DA8; --amber: #B05C00; --violet: #6C4BA6;
-      }
-      nav.site { background: rgba(250,250,249,.8); }
-      .bar { background: rgba(20,22,26,.07); }
-      .pill.good { background: rgba(22,163,74,.1); color: var(--green); border-color: rgba(22,163,74,.35); }
-      .pill.bad { background: rgba(220,38,38,.1); color: var(--red); border-color: rgba(220,38,38,.35); }
-      .btn-primary { color: #fff; }
-      .btn-primary:hover { background: #C96A02; }
-      .nav-links a.btn-primary { color: #fff; }
-      td:first-child, th:first-child { background: var(--panel); }
-      .table-panel::after { background: linear-gradient(270deg, var(--panel) 30%, transparent); }
-      @media (max-width: 480px) { tr { background: #FFFFFF; } }
-    }
 </style>
 </head>
 <body>

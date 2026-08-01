@@ -224,48 +224,6 @@
     a.run-link { text-decoration-color: rgba(168,84,0,.45); }
     a.run-link:hover { color: #8F4700; }
   }
-
-  /* ---------- v18 skin ---------- */
-  :root {
-    --bg: #0E0F11; --bg-panel: #15161A; --bg-card: #15161A;
-    --line: rgba(255,255,255,.09); --text: #EDEEF0; --text-dim: #9DA1A8;
-    --accent: #FFB454; --pass: #4ADE80; --fail: #F87171;
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
-  }
-  body { font-size: 15.5px; }
-  nav { background: rgba(14,15,17,.75); backdrop-filter: blur(14px) saturate(1.4); border-bottom-color: var(--line); }
-  header.hero {
-    background: radial-gradient(560px 320px at 70% 30%, rgba(255,180,84,.09), transparent 70%);
-  }
-  h1, h2, h3, .flow-step .fl, .box h3, .mini-row .t { font-family: var(--mono); letter-spacing: -0.02em; }
-  .hero h1 { font-size: clamp(26px, 3.8vw, 40px); }
-  h2 { font-size: 22px; }
-  .btn {
-    font-family: var(--sans); font-weight: 600; font-size: 14px; border-radius: 8px;
-    padding: 9px 18px; letter-spacing: -.01em;
-  }
-  .btn-sm { padding: 7px 14px; font-size: 13.5px; }
-  .btn-primary { color: #1A1204; }
-  .btn-primary:hover { filter: none; background: #FFC276; }
-  .nav-links a.btn-primary { color: #1A1204; }
-  .nav-links a.btn-primary:hover { color: #1A1204; }
-  .flow-step, .box, .path-card, .doc { border-radius: 12px; }
-  .honest { border-radius: 12px; }
-  .kicker { color: #6E7278; font-family: var(--mono); }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #FAFAF9; --bg-panel: #FFFFFF; --bg-card: #FFFFFF;
-      --line: rgba(20,22,26,.1); --text: #16181D; --text-dim: #555A63;
-      --accent: #B05C00; --pass: #16A34A; --fail: #DC2626;
-    }
-    nav { background: rgba(250,250,249,.8); }
-    header.hero { background: radial-gradient(560px 320px at 70% 30%, rgba(176,92,0,.06), transparent 70%); }
-    .btn-primary { color: #fff; }
-    .btn-primary:hover { background: #C96A02; }
-    .nav-links a.btn-primary { color: #fff; }
-    .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list, .doc, .mini-row .n { color: #8a6a45; }
-    .box .list, .honest .list, .doc { color: #B05C00; }
-  }
 </style>
 </head>
 <body>
