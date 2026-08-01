@@ -236,7 +236,9 @@
     }
 
     @media (max-width: 800px) {
-      nav.site { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+      nav.site { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11;
+        position: fixed; top: 0; left: 0; right: 0; }
+      body { padding-top: 58px; }
       @media (prefers-color-scheme: light) { nav.site { background: #FAFAF9; } }
     }
 </style>
