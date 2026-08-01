@@ -65,7 +65,7 @@
     header {
       background: #0f151c;
       color: #fff;
-      padding: 32px 28px 26px;
+      padding: 32px calc(max(28px, (100% - 1180px) / 2)) 26px;
       border-bottom: 1px solid var(--line);
     }
     header .kicker { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
@@ -241,11 +241,10 @@
     <div class="navwrap">
       <a class="logo" href="/">oracova<span>_</span></a>
       <div class="nav-links">
-        <a href="/#how">How it works</a>
-        <a href="/#evidence">Evidence</a>
-        <a href="/demo">Demo</a>
-        <a href="/onboarding">Board bring-up</a>
-        <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+      <a href="/">Home</a>
+      <a href="/demo">Demo</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
       </div>
     </div>
   </nav>
