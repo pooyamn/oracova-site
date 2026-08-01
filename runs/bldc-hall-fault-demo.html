@@ -39,7 +39,7 @@
     }
     nav.site {
       position: sticky; top: 0; z-index: 10;
-      background: rgba(10,14,18,.94); backdrop-filter: blur(10px);
+      background: rgba(10,14,18,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line);
     }
     nav.site .navwrap { max-width: 1180px; margin: 0 auto; padding: 0 24px;
@@ -202,7 +202,7 @@
       --blue: #7AA2C4; --amber: #FFB454; --violet: #9A8CC9;
     }
     body { font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif; }
-    nav.site { background: rgba(14,15,17,.75); backdrop-filter: blur(14px) saturate(1.4); }
+    nav.site { background: rgba(14,15,17,.9); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); }
     header { background: transparent; border-bottom: 1px solid var(--line); }
     header h1 { font-family: var(--mono); letter-spacing: -0.02em; }
     header p { color: var(--muted); }

@@ -30,7 +30,7 @@
     --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 68px; }
   body {
     background: var(--bg);
     color: var(--text);
@@ -56,7 +56,7 @@
 
   nav {
     position: sticky; top: 0; z-index: 10;
-    background: rgba(10,14,18,.94); backdrop-filter: blur(10px);
+    background: rgba(10,14,18,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--line);
   }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
@@ -233,7 +233,7 @@
     --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
   }
   body { font-size: 15.5px; }
-  nav { background: rgba(14,15,17,.75); backdrop-filter: blur(14px) saturate(1.4); border-bottom-color: var(--line); }
+  nav { background: rgba(14,15,17,.9); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom-color: var(--line); }
   header.hero {
     background: radial-gradient(560px 320px at 70% 30%, rgba(255,180,84,.09), transparent 70%);
   }
