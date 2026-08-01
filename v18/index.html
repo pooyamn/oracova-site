@@ -386,13 +386,18 @@
   .cx-head { border-bottom: 1px solid var(--border-strong); }
   .cx-head .cx-l { display: flex; align-items: center; padding: 14px 12px;
     font-family: var(--mono); font-size: 11.5px; letter-spacing: .09em; color: var(--brand); }
-  .cx-head .cx-r { padding: 8px 6px; }
-  .cx-pick { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 4px; }
-  .cx-pick .nm { font-family: var(--mono); font-size: 12px; letter-spacing: .07em;
-    text-transform: uppercase; color: var(--text); text-align: center; flex: 1; }
-  .cx-pick button { background: none; border: 0; color: var(--brand); cursor: pointer;
-    font-size: 16px; line-height: 1; padding: 10px 10px; border-radius: 8px; }
-  .cx-pick button:hover { background: rgba(255,255,255,.05); }
+  .cx-head .cx-r { padding: 6px; }
+  .cx-stack { position: relative; width: 100%; display: grid; gap: 2px; }
+  .cx-ind { position: absolute; left: 0; right: 0; height: 26px; border-radius: 7px;
+    background: rgba(255,255,255,.07); border: 1px solid var(--border-strong);
+    transition: top .22s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .cx-ind { transition: none; } }
+  .cx-opt { position: relative; height: 26px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer; border-radius: 7px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text-faint); width: 100%; }
+  .cx-opt[aria-pressed="true"] { color: var(--text); }
+  .cx-opt[aria-pressed="true"]::before { content: "\2023"; color: var(--brand); margin-right: 6px; }
   .cx-r .y { color: var(--pass); font-weight: 600; }
   .cx-r .n { color: var(--fail); font-weight: 600; }
   .cx-r .dim, .cx-r { color: var(--text-dim); }
@@ -929,11 +934,11 @@
 
   var h = '<div class="cmpx"><div class="cx-row cx-head">'
     + '<div class="cx-l">ORACOVA</div>'
-    + '<div class="cx-r"><div class="cx-pick">'
-    + '<button type="button" data-d="-1" aria-label="previous method">&lsaquo;</button>'
-    + '<span class="nm cm-fade"></span>'
-    + '<button type="button" data-d="1" aria-label="next method">&rsaquo;</button>'
-    + '</div></div></div>';
+    + '<div class="cx-r"><div class="cx-stack"><div class="cx-ind"></div>';
+  rivals.forEach(function (i) {
+    h += '<button type="button" class="cx-opt" data-i="' + i + '" aria-pressed="false">' + heads[i] + '</button>';
+  });
+  h += '</div></div></div>';
   data.forEach(function (r, k) {
     h += '<div class="cx-row"><div class="cx-l"><div class="q">' + r[0].html + '</div>'
       + '<div class="a ' + r[1].cls + '">' + r[1].html + '</div></div>'
@@ -942,29 +947,38 @@
   h += '</div>';
   mount.innerHTML = h;
 
-  var nm = mount.querySelector('.nm');
+  var opts = [].slice.call(mount.querySelectorAll('.cx-opt'));
+  var ind = mount.querySelector('.cx-ind');
   var cells = [].slice.call(mount.querySelectorAll('.cx-r span[data-k]'));
   function fill() {
     var i = rivals[pos];
-    nm.textContent = heads[i];
+    opts.forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.i === i)); });
+    var active = opts[pos];
+    ind.style.top = active.offsetTop + 'px';
     cells.forEach(function (c) {
       var d = data[+c.dataset.k][i];
       c.innerHTML = d.html;
       c.className = 'cm-fade ' + d.cls;
     });
   }
-  function step(d) {
-    pos = (pos + d + rivals.length) % rivals.length;
+  function goTo(p) {
+    if (p === pos) return;
+    pos = p;
+    var i = rivals[pos];
+    opts.forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.i === i)); });
+    ind.style.top = opts[pos].offsetTop + 'px';
     if (reduced) { fill(); return; }
-    [nm].concat(cells).forEach(function (el) { el.classList.add('out'); });
+    cells.forEach(function (el) { el.classList.add('out'); });
     setTimeout(function () {
       fill();
-      [nm].concat(cells).forEach(function (el) { el.classList.remove('out'); });
+      cells.forEach(function (el) { el.classList.remove('out'); });
     }, 160);
   }
-  [].slice.call(mount.querySelectorAll('.cx-pick button')).forEach(function (b) {
-    b.addEventListener('click', function () { step(+b.dataset.d); });
+  function step(d) { goTo((pos + d + rivals.length) % rivals.length); }
+  opts.forEach(function (o, k) {
+    o.addEventListener('click', function () { goTo(k); });
   });
+  window.addEventListener('resize', function () { if (opts[pos]) ind.style.top = opts[pos].offsetTop + 'px'; }, { passive: true });
   var x0 = null;
   mount.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
   mount.addEventListener('touchend', function (e) {
@@ -973,8 +987,8 @@
     if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
     x0 = null;
   }, { passive: true });
-  fill();
   document.body.classList.add('cmpm');
+  fill();
 })();
 </script>
 </body>
