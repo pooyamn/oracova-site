@@ -436,13 +436,13 @@
           <div class="bl">&nbsp;</div>
           <div class="bl">wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end</div>
           <div class="bl">  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b></div>
-          <div class="bl">bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware</div>
+          <div class="bl">bench    <b>wiring is ground truth</b>: every failure after this line is firmware</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz</div>
           <div class="bl">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
           <div class="bl">  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68</div>
-          <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div></div>
-          <div class="bl">la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span></div>
+          <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div></div>
+          <div class="bl">la       <span class="k">WHO_AM_I clocked at 10 MHz. Register reads cap at 1 MHz on this part</span></div>
           <div class="bl">fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 2   flash <b>ok</b> &middot; test running</div>
@@ -463,20 +463,20 @@
           <div class="bl">  rate step 90 &deg;/s .......................... <span class="pass">PASS</span></div>
           <div class="bl">  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span></div>
           <div class="bl">&nbsp;</div>
-          <div class="bl">iter 5   improve: <b>burst reads over DMA</b> &mdash; free the CPU for the control loop</div>
+          <div class="bl">iter 5   improve: <b>burst reads over DMA</b>, get the CPU out of the read path</div>
           <div class="bl">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
           <div class="bl">  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   transfer never starts</div>
-          <div class="bl">regs     <span class="k">NDTR frozen &mdash; driver armed DMA1; SPI1 requests route to DMA2 only</span></div>
+          <div class="bl">regs     <span class="k">NDTR frozen: driver armed DMA1, but SPI1 requests only route to DMA2</span></div>
           <div class="bl">fix      SPI1 RX/TX &rarr; DMA2 streams 0/3 &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 6   flash <b>ok</b> &middot; test running</div>
           <div class="bl">  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   stream armed, zero requests</div>
-          <div class="bl">regs     <span class="k">stream 0 CHSEL=0 &mdash; SPI1_RX is channel 3 on this stream</span></div>
+          <div class="bl">regs     <span class="k">stream 0 CHSEL=0. SPI1_RX is channel 3 on this stream</span></div>
           <div class="bl">fix      CHSEL &rarr; 3 &middot; CR2 RXDMAEN set &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 7   flash <b>ok</b> &middot; test running</div>
           <div class="bl">  gyro_x .................................... data flows, <span class="fail">shifted by one byte</span></div>
-          <div class="bl">la       <span class="k">15 clocks per 14-byte frame &mdash; NDTR off by one, stream parks mid-frame</span></div>
+          <div class="bl">la       <span class="k">15 clocks per 14-byte frame: NDTR off by one, so the stream parks mid-frame</span></div>
           <div class="bl">fix      exact transfer count: NDTR = 14 &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 8   flash <b>ok</b> &middot; full suite</div>
@@ -487,7 +487,7 @@
           <div class="bl">  cpu cycles in the read path ............... <b>0</b></div>
           <div class="bl">&nbsp;</div>
           <div class="bl">result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; <b>1 h 12 min unattended</b></div>
-          <div class="bl">checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b></div>
+          <div class="bl">checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b></div>
         </div>
         <div class="bench-foot">
           <span>task &middot; implement and test the gyro driver</span>
@@ -692,7 +692,7 @@
     </div>
     <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
     unmodified Betaflight in closed loop. Verdicts come from a deterministic checker with
-    fixed thresholds &mdash; the agent never grades its own work.</p>
+    fixed thresholds. The agent never grades its own work.</p>
   </div>
 </section>
 
@@ -704,7 +704,7 @@
       <p class="dim"><b>I was the manual bench.</b> I shipped motor controllers and battery
       systems, and every change meant me, a board, and an afternoon. I built Oracova to
       replace that engineer. If your testing still needs one, I want 15 minutes.</p>
-      <p class="mono dim" style="margin-top:14px; font-size:13.5px">&mdash; Pouya Mansouri, founder</p>
+      <p class="mono dim" style="margin-top:14px; font-size:13.5px">Pouya Mansouri, founder</p>
     </div>
     <div class="founder-cta">
       <div class="mono" style="margin-top:0">engineer to engineer</div>
@@ -743,7 +743,7 @@
     '<polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/>' +
     '<text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text>' +
     '</svg>' +
-    '<div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div>' +
+    '<div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div>' +
     '</div>';
 
   var LA2 =
@@ -780,13 +780,13 @@
     [2400, ''],
     [300,  'wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end'],
     [2800, '  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b>'],
-    [2200, 'bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware'],
+    [2200, 'bench    <b>wiring is ground truth</b>: every failure after this line is firmware'],
     [3000, ''],
     [300,  'iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz'],
     [2200, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
     [1800, '  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68'],
     [2400, LA1, true],
-    [4500, 'la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span>'],
+    [4500, 'la       <span class="k">WHO_AM_I clocked at 10 MHz. Register reads cap at 1 MHz on this part</span>'],
     [2300, 'fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 2   flash <b>ok</b> &middot; test running'],
@@ -807,20 +807,20 @@
     [1300, '  rate step 90 &deg;/s .......................... <span class="pass">PASS</span>'],
     [1400, '  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span>'],
     [2600, ''],
-    [300,  'iter 5   improve: <b>burst reads over DMA</b> &mdash; free the CPU for the control loop'],
+    [300,  'iter 5   improve: <b>burst reads over DMA</b>, get the CPU out of the read path'],
     [2400, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
     [1900, '  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   transfer never starts'],
-    [2400, 'regs     <span class="k">NDTR frozen &mdash; driver armed DMA1; SPI1 requests route to DMA2 only</span>'],
+    [2400, 'regs     <span class="k">NDTR frozen: driver armed DMA1, but SPI1 requests only route to DMA2</span>'],
     [2600, 'fix      SPI1 RX/TX &rarr; DMA2 streams 0/3 &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 6   flash <b>ok</b> &middot; test running'],
     [1800, '  burst read @ 8 kHz ........................ <span class="fail">FAIL</span>   stream armed, zero requests'],
-    [2400, 'regs     <span class="k">stream 0 CHSEL=0 &mdash; SPI1_RX is channel 3 on this stream</span>'],
+    [2400, 'regs     <span class="k">stream 0 CHSEL=0. SPI1_RX is channel 3 on this stream</span>'],
     [2400, 'fix      CHSEL &rarr; 3 &middot; CR2 RXDMAEN set &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 7   flash <b>ok</b> &middot; test running'],
     [2000, '  gyro_x .................................... data flows, <span class="fail">shifted by one byte</span>'],
-    [2600, 'la       <span class="k">15 clocks per 14-byte frame &mdash; NDTR off by one, stream parks mid-frame</span>'],
+    [2600, 'la       <span class="k">15 clocks per 14-byte frame: NDTR off by one, so the stream parks mid-frame</span>'],
     [2400, 'fix      exact transfer count: NDTR = 14 &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 8   flash <b>ok</b> &middot; full suite'],
@@ -831,7 +831,7 @@
     [1400, '  cpu cycles in the read path ............... <b>0</b>'],
     [2200, ''],
     [400,  'result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; <b>1 h 12 min unattended</b>'],
-    [2600, 'checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b>']
+    [2600, 'checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b>']
   ];
 
   var timers = [];

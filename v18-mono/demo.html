@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The loop &mdash; Oracova gyro driver demo</title>
+<title>The loop: Oracova gyro driver demo</title>
 <meta name="description" content="One prompt, four iterations: the Oracova agent implements and tests a gyro driver on real silicon — wire test, logic-analyzer captures, deterministic verdict.">
 <link rel="canonical" href="https://oracova.com/demo">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -141,13 +141,13 @@
       <div class="ln">&nbsp;</div>
       <div class="ln">wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end</div>
       <div class="ln">  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b></div>
-      <div class="ln">bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware</div>
+      <div class="ln">bench    <b>wiring is ground truth</b>: every failure after this line is firmware</div>
       <div class="ln">&nbsp;</div>
       <div class="ln">iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz</div>
       <div class="ln">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
       <div class="ln">  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68</div>
-      <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div></div>
-      <div class="ln">la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span></div>
+      <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div></div>
+      <div class="ln">la       <span class="k">WHO_AM_I clocked at 10 MHz. Register reads cap at 1 MHz on this part</span></div>
       <div class="ln">fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild</div>
       <div class="ln">&nbsp;</div>
       <div class="ln">iter 2   flash <b>ok</b> &middot; test running</div>
@@ -169,7 +169,7 @@
       <div class="ln">  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span></div>
       <div class="ln">&nbsp;</div>
       <div class="ln">verdict  <span class="pass">PASS</span>   <b>4 iterations &middot; 6 m 42 s unattended</b></div>
-      <div class="ln">checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b></div>
+      <div class="ln">checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b></div>
     </div>
     <div class="term-foot">
       <span>task &middot; implement and test the gyro driver</span>
@@ -211,7 +211,7 @@
     '<polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/>' +
     '<text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">10 MHz on a 1 MHz register bus</text>' +
     '</svg>' +
-    '<div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz &mdash; 20 MHz is data-only.</div>' +
+    '<div class="la-note">Config read clocked at 10 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div>' +
     '</div>';
 
   var LA2 =
@@ -249,13 +249,13 @@
     [2400, ''],
     [300,  'wiretest gpio loopback, no protocol: fabric drives each net, edge counters at the far end'],
     [2800, '  PA5 <span class="pass">&#10003;</span>   PA6 <span class="pass">&#10003;</span>   PA7 <span class="pass">&#10003;</span>   PA4 <span class="pass">&#10003;</span>          <b>4/4 nets toggle &middot; 0 shorts &middot; 0 opens</b>'],
-    [2200, 'bench    <b>wiring is ground truth</b> &mdash; every failure after this line is firmware'],
+    [2200, 'bench    <b>wiring is ground truth</b>: every failure after this line is firmware'],
     [3000, ''],
     [300,  'iter 1   write driver: spi init &middot; burst read WHO_AM_I @ 10 MHz'],
     [2200, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
     [1800, '  who_am_i ................................. <span class="fail">FAIL</span>   read 0xFF, expected 0x68'],
     [2400, LA1, true],
-    [4500, 'la       <span class="k">WHO_AM_I clocked at 10 MHz &mdash; register reads cap at 1 MHz on this part</span>'],
+    [4500, 'la       <span class="k">WHO_AM_I clocked at 10 MHz. Register reads cap at 1 MHz on this part</span>'],
     [2300, 'fix      config bus &rarr; 1 MHz (sensor burst stays 20 MHz) &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 2   flash <b>ok</b> &middot; test running'],
@@ -277,7 +277,7 @@
     [1400, '  burst read @ 8 kHz sustained .............. <span class="pass">PASS</span>'],
     [2200, ''],
     [400,  'verdict  <span class="pass">PASS</span>   <b>4 iterations &middot; 6 m 42 s unattended</b>'],
-    [2600, 'checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b>']
+    [2600, 'checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b>']
   ];
 
   var timers = [];
