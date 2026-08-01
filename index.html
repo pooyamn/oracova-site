@@ -108,13 +108,6 @@
     .cta-row .btn { padding: 10px 16px; font-size: 13.5px; }
   }
 
-  .scrolly { height: 280vh; }
-  .scrolly-sticky {
-    position: sticky; top: 0; height: 100vh; height: 100svh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding-top: 58px;
-  }
-  @media (max-width: 560px) { .scrolly { height: 300vh; } }
   .video-frame {
     border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
     background: var(--bg-panel);
@@ -155,10 +148,6 @@
   .bench-foot { border-top: 1px solid var(--line); padding: 8px 18px;
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     font-size: 12px; color: var(--text-dim); letter-spacing: .04em; }
-  @media (max-width: 560px) {
-    .bench-foot > span:first-child { display: none; }
-    .bench-foot { justify-content: flex-end; }
-  }
   .bench-foot button { background: none; border: 1px solid var(--line); border-radius: 4px;
     color: var(--text-dim); font-family: var(--mono); font-size: 12px; padding: 11px 16px; cursor: pointer; }
   .bench-foot button:hover { border-color: var(--accent); color: var(--accent); }
@@ -174,7 +163,7 @@
   }
   @media (max-width: 560px) {
     .bench-replay { aspect-ratio: auto; font-size: 12px; }
-    .bench-log { gap: 7px; padding: 16px 14px; height: min(62svh, 560px); }
+    .bench-log { gap: 7px; padding: 16px 14px; height: min(56vh, 400px); }
     .bench-head { font-size: 10.5px; padding: 9px 14px; }
   }
   .video-caption {
@@ -428,13 +417,11 @@
       <a class="btn btn-primary" href="#cta">See your board on the bench</a>
       <a class="btn btn-ghost" href="/runs/bldc-hall-fault-demo">Read a full run report</a>
     </div>
-    <div class="scrolly" id="scrolly">
-    <div class="scrolly-sticky">
     <div class="video-frame">
       <div class="bench-replay">
         <div class="bench-head">
           <span class="bench-title">oracova bench</span>
-          <span>replay &middot; recreated &middot; scroll-paced &middot; not live video</span>
+          <span>replay &middot; recreated &middot; sped up &middot; not live video</span>
         </div>
         <div class="bench-log static" id="bench-log" aria-label="replay of an agent task: implement and test the gyro driver">
           <div class="bl"><span class="k">$</span> oracova task "implement and test the gyro driver"</div>
@@ -481,13 +468,12 @@
         <div class="bench-foot">
           <span>task &middot; implement and test the gyro driver</span>
           <span style="display:flex; align-items:center; gap:14px">
-            <span>scroll &darr; runs it</span>
-            <a class="run-link" href="/demo">watch it play &rarr;</a>
+            <a class="run-link" href="/demo">full-screen &rarr;</a>
+            <button id="bench-pause" type="button">pause &#10073;&#10073;</button>
+            <button id="bench-replay" type="button">replay &#8635;</button>
           </span>
         </div>
       </div>
-    </div>
-    </div>
     </div>
   </div>
 </header>
@@ -801,60 +787,90 @@
     [2600, 'checker  deterministic, fixed thresholds &mdash; <b>the agent never grades its own work</b>']
   ];
 
-  // --- scroll-scrubbed player: your scroll IS the clock (v15) ---
-  var wrap = document.getElementById('scrolly');
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var BASE = 11;                       // prompt + setup block always visible: no empty box
-  var promptEl = null, rendered = 0;
+  var timers = [];
+  var paused = false, nextIdx = 0;
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function schedule(fn, ms) { timers.push(setTimeout(fn, ms)); }
 
-  function nodeFor(i) {
-    var st = steps[i];
+  function addLine(html, isBlock) {
     var el = document.createElement('div');
-    if (!st[2]) el.className = 'bl';
-    el.innerHTML = st[1] === '' ? '&nbsp;' : st[1];
+    if (!isBlock) el.className = 'bl';
+    el.innerHTML = html === '' ? '&nbsp;' : html;
+    log.appendChild(el);
+    log.scrollTop = log.scrollHeight;
     return el;
   }
 
-  function setCount(count) {
-    if (!promptEl) {
-      log.classList.remove('static');
-      log.innerHTML = '';
-      promptEl = document.createElement('div');
-      promptEl.className = 'bl';
-      promptEl.innerHTML = P;
-      log.appendChild(promptEl);
-      rendered = 0;
-    }
-    count = Math.max(BASE, Math.min(steps.length, count));
-    while (rendered > count) { log.removeChild(log.lastChild); rendered--; }
-    while (rendered < count) { log.appendChild(nodeFor(rendered)); rendered++; }
+  function moveCursor(el) {
     var old = log.querySelector('.cursor');
     if (old) old.classList.remove('cursor');
-    var last = log.lastElementChild;
-    if (last && last.classList.contains('bl') && last.innerHTML !== '&nbsp;') last.classList.add('cursor');
-    log.scrollTop = log.scrollHeight;
+    if (el && !reduced) el.classList.add('cursor');
   }
 
-  function onScroll() {
-    var r = wrap.getBoundingClientRect();
-    var span = wrap.offsetHeight - window.innerHeight;
-    if (span <= 0) { setCount(steps.length); return; }
-    var p = Math.min(1, Math.max(0, -r.top / span));
-    setCount(BASE + Math.floor(p * (steps.length - BASE + 0.999)));
+  function renderAll() {
+    log.innerHTML = '';
+    log.classList.add('static');
+    addLine(P);
+    steps.forEach(function (st) { addLine(st[1], st[2]); });
+    log.scrollTop = 0;
   }
 
-  var ticking = false;
-  function req() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(function () { ticking = false; onScroll(); });
+  function play() {
+    clearTimers();
+    log.innerHTML = '';
+    if (reduced) { renderAll(); return; }
+
+    log.classList.remove('static');
+    paused = false;
+    var SETUP = 11;
+    var promptEl = addLine('<span class="k">$</span>&nbsp;');
+    promptEl.classList.add('cursor');
+    var cmd = 'oracova task "implement and test the gyro driver"';
+    var i = 0;
+    (function typeChar() {
+      if (i <= cmd.length) {
+        promptEl.innerHTML = '<span class="k">$</span> ' + cmd.slice(0, i).replace(/"/g, '&quot;');
+        i++;
+        schedule(typeChar, 18);
+      } else {
+        streamSetup(0);
+      }
+    })();
+    function streamSetup(j) {
+      if (j >= SETUP) { run(SETUP, 700); return; }
+      schedule(function () {
+        var el = addLine(steps[j][1], steps[j][2]);
+        if (!steps[j][2] && steps[j][1] !== '') moveCursor(el);
+        streamSetup(j + 1);
+      }, 320);
+    }
+
+    function run(idx, extraDelay) {
+      nextIdx = idx;
+      if (idx >= steps.length) {
+        schedule(play, 14000);
+        return;
+      }
+      var st = steps[idx];
+      schedule(function () {
+        var el = addLine(st[1], st[2]);
+        if (!st[2] && st[1] !== '') moveCursor(el);
+        run(idx + 1, 0);
+      }, st[0] + (extraDelay || 0));
+    }
   }
 
-  if (wrap) {
-    window.addEventListener('scroll', req, { passive: true });
-    window.addEventListener('resize', req, { passive: true });
-    onScroll();
-  }
+  var pauseBtn = document.getElementById('bench-pause');
+  if (pauseBtn) pauseBtn.addEventListener('click', function () {
+    if (reduced) return;
+    if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;'; }
+    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; run(Math.max(nextIdx, 11), 200); }
+  });
+  if (replayBtn) replayBtn.addEventListener('click', function () {
+    if (pauseBtn) pauseBtn.innerHTML = 'pause &#10073;&#10073;';
+    play();
+  });
+  play();
 })();
 </script>
 
