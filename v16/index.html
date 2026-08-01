@@ -30,6 +30,9 @@
     --accent-deep: #8F4700;
     --pass: #0E7A3C;
     --fail: #C0262C;
+    --nav-bg: rgba(252,252,251,.95);
+    --shadow: rgba(21,24,29,.12);
+    --sel: rgba(168,84,0,.18);
     --disp: "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --body: "Helvetica Neue", Helvetica, Arial, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -41,7 +44,7 @@
     font-family: var(--body); font-size: 15px; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: rgba(168,84,0,.18); }
+  ::selection { background: var(--sel); }
   a { color: var(--accent-deep); }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -60,7 +63,7 @@
   .rule-light { border: 0; border-top: 1px solid var(--rule); }
 
   nav.bar {
-    position: sticky; top: 0; z-index: 20; background: rgba(252,252,251,.95);
+    position: sticky; top: 0; z-index: 20; background: var(--nav-bg);
     backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule);
   }
   nav.bar .sheet { display: flex; align-items: center; justify-content: space-between; height: 50px; }
@@ -136,7 +139,7 @@
     --text: #d7dee6; --text-dim: #8a97a5; --accent: #ffb454;
     --pass: #2ee06f; --fail: #ff5252;
     border: 1px solid var(--ink); border-radius: 3px; overflow: hidden;
-    background: var(--bg-panel); box-shadow: 4px 4px 0 rgba(21,24,29,.12);
+    background: var(--bg-panel); box-shadow: 4px 4px 0 var(--shadow);
   }
   .bench-replay {
     display: flex; flex-direction: column;
@@ -271,6 +274,7 @@
 
   /* waveform figure on paper */
   .wave { border: 1px solid var(--rule); background: #fff; padding: 12px 14px 6px; }
+  /* the waveform stays a white print in both themes, like the terminal stays dark */
 
   /* ---------- ordering ---------- */
   .order { display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: center; }
@@ -295,7 +299,29 @@
     font-family: var(--mono); font-size: 12px; color: var(--mute); margin-top: 16px; }
   .foot-line a { color: inherit; text-decoration: none; }
   .foot-line a:hover { color: var(--accent-deep); }
+
+  /* ---------- dark theme ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #101318; --paper-dim: #171B22; --ink: #DCE1E8; --ink-soft: #AEB6C2;
+      --mute: #7C8494; --rule: #333A46; --rule-soft: #222835;
+      --accent: #E8912D; --accent-deep: #F2A868;
+      --pass: #3FCF7A; --fail: #FF6B66;
+      --nav-bg: rgba(16,19,24,.92); --shadow: rgba(0,0,0,.5); --sel: rgba(242,160,61,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #101318; --paper-dim: #171B22; --ink: #DCE1E8; --ink-soft: #AEB6C2;
+    --mute: #7C8494; --rule: #333A46; --rule-soft: #222835;
+    --accent: #E8912D; --accent-deep: #F2A868;
+    --pass: #3FCF7A; --fail: #FF6B66;
+    --nav-bg: rgba(16,19,24,.92); --shadow: rgba(0,0,0,.5); --sel: rgba(242,160,61,.25);
+  }
+  .theme-btn { border: 1px solid var(--rule); background: none; color: var(--ink-soft);
+    font-family: var(--mono); font-size: 13px; padding: 8px 12px; border-radius: 2px; cursor: pointer; }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent-deep); }
 </style>
+<script>(function(){try{var t=localStorage.getItem('oracova-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 </head>
 <body>
 
@@ -306,6 +332,7 @@
       <a href="/demo">Figure 1 &middot; demo</a>
       <a href="#evidence">Table 1 &middot; evidence</a>
       <a href="/onboarding">Board bring-up</a>
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="toggle color theme">&#9789;</button>
       <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
     </div>
   </div>
@@ -764,5 +791,24 @@
 })();
 </script>
 
+<script>
+(function () {
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  function effective() {
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t) return t;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  function paint() { btn.innerHTML = effective() === 'dark' ? '&#9788;' : '&#9789;'; }
+  btn.addEventListener('click', function () {
+    var next = effective() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('oracova-theme', next); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>
 </body>
 </html>

@@ -138,7 +138,7 @@ iter 4   flash ok · full suite
   rate step 90 °/s .......................... PASS
   burst read @ 8 kHz sustained .............. PASS
 
-verdict  PASS   4 iterations · 6 m 42 s unattended
+verdict  PASS   4 iterations · 23 min unattended
 checker  deterministic, fixed thresholds — the agent never grades its own work
 ```
 
