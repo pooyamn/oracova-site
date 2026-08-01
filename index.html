@@ -406,6 +406,11 @@
   .cm-fade { transition: opacity .16s ease; }
   .cm-fade.out { opacity: 0; }
   @media (prefers-reduced-motion: reduce) { .cm-fade { transition: none; } }
+
+  @media (max-width: 800px) {
+    nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+    @media (prefers-color-scheme: light) { nav { background: #FAFAF9; } }
+  }
 </style>
 </head>
 <body>

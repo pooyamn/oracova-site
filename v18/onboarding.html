@@ -266,6 +266,11 @@
     .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list, .doc, .mini-row .n { color: #8a6a45; }
     .box .list, .honest .list, .doc { color: #B05C00; }
   }
+
+  @media (max-width: 800px) {
+    nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+    @media (prefers-color-scheme: light) { nav { background: #FAFAF9; } }
+  }
 </style>
 </head>
 <body>

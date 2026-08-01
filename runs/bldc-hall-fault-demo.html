@@ -234,6 +234,11 @@
       .table-panel::after { background: linear-gradient(270deg, var(--panel) 30%, transparent); }
       @media (max-width: 480px) { tr { background: #FFFFFF; } }
     }
+
+    @media (max-width: 800px) {
+      nav.site { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+      @media (prefers-color-scheme: light) { nav.site { background: #FAFAF9; } }
+    }
 </style>
 </head>
 <body>
