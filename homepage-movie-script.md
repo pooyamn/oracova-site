@@ -138,11 +138,11 @@ iter 4   flash ok · full suite
   rate step 90 °/s .......................... PASS
   burst read @ 8 kHz sustained .............. PASS
 
-verdict  PASS   4 iterations · 23 min unattended
+result   gyro driver implemented and tested · 4 iterations · 23 min unattended
 checker  deterministic, fixed thresholds — the agent never grades its own work
 ```
 
-- The `PASS` verdict gets the site's green badge treatment, everything else stays quiet.
+- The `result` line gets the green treatment — the deliverable, not the grade — everything else stays quiet.
 - 1:04 Terminal shrinks back into the hero panel of the actual homepage (seamless match-cut — the movie
   literally becomes the website).
 
