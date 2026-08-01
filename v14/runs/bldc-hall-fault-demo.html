@@ -191,7 +191,7 @@
   <header>
     <div class="kicker">Run 20260618-080733 &middot; scored on the bench</div>
     <h1>BLDC Silicon Fault Evidence</h1>
-    <p>Two-MCU hardware-in-the-loop run: STM32 target firmware, Oracova base board plant and fault injector, real phase/hall wiring, verdicts scored from wire-level phase/hall capture; RTT carries logs only. This run used the two-MCU rig; the production base board moves the same plant models into FPGA fabric.</p>
+    <p>Two-MCU hardware-in-the-loop run: STM32 target firmware, RP2350 plant and fault injector, real phase/hall wiring, verdicts scored from wire-level phase/hall capture; RTT carries logs only. This run used the two-MCU rig; the production base board moves the same plant models into FPGA fabric.</p>
   </header>
   <main>
     <section class="summary" aria-label="Evidence summary">
@@ -383,7 +383,7 @@
       <div class="table-hint">swipe &rarr; verdict &middot; scores &middot; hash</div>
       <div class="table-scroll">
       <table>
-        <thead><tr><th>Case</th><th>Variant</th><th>Verdict</th><th>Unsafe</th><th>Mismatch</th><th>Invalid shutdown</th><th>Seq fault</th><th>Verdict hash</th></tr></thead>
+        <thead><tr><th>Case</th><th>Variant</th><th>Verdict</th><th>Unsafe</th><th>Mismatch</th><th>Invalid shutdown</th><th>Seq fault</th><th>Evidence hash</th></tr></thead>
         <tbody>
         <tr>
           <td data-l="Case">Nominal commutation</td>
@@ -456,7 +456,7 @@
       <p style="color:var(--muted); font-size:13px; font-family:var(--mono); margin:12px 0 0; max-width:none">
       mismatch keeps counting while a guard holds the output latched off; with no phase energized,
       those mismatches cannot cause damage, which is why a PASS can carry mismatch&nbsp;&gt;&nbsp;0
-      with unsafe&nbsp;=&nbsp;0.</p>
+      with unsafe&nbsp;=&nbsp;0. Invalid shutdown counts invalid-hall frames held with the drive off: the guard doing its job.</p>
     </section>
 
     <section class="hash-panel">

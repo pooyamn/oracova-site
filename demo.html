@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The loop: Oracova gyro driver demo</title>
-<meta name="description" content="One prompt, four iterations: the Oracova agent implements and tests a gyro driver on real silicon — wire test, logic-analyzer captures, deterministic verdict.">
+<meta name="description" content="One prompt, eight iterations: the Oracova agent implements and tests a gyro driver on real silicon: wire test, logic-analyzer captures, deterministic verdict.">
 <link rel="canonical" href="https://oracova.com/demo">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oracova">
-<meta property="og:title" content="The loop — Oracova gyro driver demo">
-<meta property="og:description" content="One prompt, four iterations, PASS. Wire test first, logic analyzer on the bus, the world catches the scale bug.">
+<meta property="og:title" content="The loop: Oracova gyro driver demo">
+<meta property="og:description" content="One prompt, eight iterations, PASS. Wire test first, logic analyzer on the bus, the world catches the scale bug.">
 <meta property="og:url" content="https://oracova.com/demo">
 <meta property="og:image" content="https://oracova.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -330,7 +330,7 @@
   ];
 
   var timers = [];
-  var paused = false, nextIdx = 0;
+  var paused = false, nextIdx = 0, resumeFn = null;
   function clearTimers() { timers.forEach(clearTimeout); timers = []; }
   function schedule(fn, ms) { timers.push(setTimeout(fn, ms)); }
 
@@ -357,7 +357,7 @@
     log.scrollTop = 0;
   }
 
-  function play() {
+  function play(instant) {
     clearTimers();
     log.innerHTML = '';
     if (reduced) { renderAll(); return; }
@@ -366,6 +366,13 @@
     log.classList.remove('static');
     paused = false;
     var SETUP = 11;
+    if (instant) {
+      addLine(P);
+      for (var q = 0; q < SETUP; q++) addLine(steps[q][1], steps[q][2]);
+      moveCursor(log.lastChild);
+      run(SETUP, 600);
+      return;
+    }
     var promptEl = addLine('<span class="k">$</span>&nbsp;');
     promptEl.classList.add('cursor');
     var cmd = 'oracova task "implement and test the gyro driver"';
@@ -380,6 +387,7 @@
       }
     })();
     function streamSetup(j) {
+      resumeFn = function () { streamSetup(j); };
       if (j >= SETUP) { run(SETUP, 700); return; }
       schedule(function () {
         var el = addLine(steps[j][1], steps[j][2]);
@@ -390,6 +398,7 @@
 
     function run(idx, extraDelay) {
       nextIdx = idx;
+      resumeFn = function () { run(idx, 200); };
       if (idx >= steps.length) {
         schedule(play, 14000);  // hold on the verdict, then loop
         return;
@@ -407,7 +416,7 @@
   if (pauseBtn) pauseBtn.addEventListener('click', function () {
     if (reduced) return;
     if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;'; }
-    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; run(Math.max(nextIdx, 11), 200); }
+    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; if (resumeFn) resumeFn(); }
   });
   replayBtn.addEventListener('click', function () {
     if (pauseBtn) pauseBtn.innerHTML = 'pause &#10073;&#10073;';

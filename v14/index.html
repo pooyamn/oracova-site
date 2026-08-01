@@ -604,7 +604,7 @@
       </div>
       <div class="run-meta">
         <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
-        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on the Oracova base board</b></div>
+        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on the two-MCU rig</b></div>
         <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
       </div>
       <div class="trace-block">
@@ -836,7 +836,7 @@
   ];
 
   var timers = [];
-  var paused = false, nextIdx = 0;
+  var paused = false, nextIdx = 0, resumeFn = null;
   function clearTimers() { timers.forEach(clearTimeout); timers = []; }
   function schedule(fn, ms) { timers.push(setTimeout(fn, ms)); }
 
@@ -863,7 +863,7 @@
     log.scrollTop = 0;
   }
 
-  function play() {
+  function play(instant) {
     clearTimers();
     log.innerHTML = '';
     if (reduced) { renderAll(); return; }
@@ -871,6 +871,13 @@
     log.classList.remove('static');
     paused = false;
     var SETUP = 11;
+    if (instant) {
+      addLine(P);
+      for (var q = 0; q < SETUP; q++) addLine(steps[q][1], steps[q][2]);
+      moveCursor(log.lastChild);
+      run(SETUP, 600);
+      return;
+    }
     var promptEl = addLine('<span class="k">$</span>&nbsp;');
     promptEl.classList.add('cursor');
     var cmd = 'oracova task "implement and test the gyro driver"';
@@ -885,6 +892,7 @@
       }
     })();
     function streamSetup(j) {
+      resumeFn = function () { streamSetup(j); };
       if (j >= SETUP) { run(SETUP, 700); return; }
       schedule(function () {
         var el = addLine(steps[j][1], steps[j][2]);
@@ -895,8 +903,10 @@
 
     function run(idx, extraDelay) {
       nextIdx = idx;
+      resumeFn = function () { run(idx, 200); };
       if (idx >= steps.length) {
-        schedule(play, 14000);
+        resumeFn = null;
+        schedule(function () { play(true); }, 14000);
         return;
       }
       var st = steps[idx];
@@ -912,7 +922,7 @@
   if (pauseBtn) pauseBtn.addEventListener('click', function () {
     if (reduced) return;
     if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;'; }
-    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; run(Math.max(nextIdx, 11), 200); }
+    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; if (resumeFn) resumeFn(); }
   });
   if (replayBtn) replayBtn.addEventListener('click', function () {
     if (pauseBtn) pauseBtn.innerHTML = 'pause &#10073;&#10073;';
