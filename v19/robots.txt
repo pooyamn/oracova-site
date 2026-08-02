@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://oracova.com/sitemap.xml
