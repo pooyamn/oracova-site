@@ -569,7 +569,7 @@
         fault injection and capture live in gateware, so the DUT's bus is answered at the DUT's
         own clock. This is what makes an MPU6000 look like an MPU6000 to a driver reading it at
         8 kHz.</p>
-        <p>Its I/O banks run on four independently adjustable rails, 1.19 to 3.29 V, so a
+        <p>Its I/O banks run on four independently adjustable rails, 1.2 to 3.3 V, so a
         1.8 V bus and a 3.3 V bus on the same DUT are both driven at their own level.</p>
         <div class="runs">sensor models &middot; protocol slaves &middot; edge-accurate capture &middot; fault injection</div>
       </div>
@@ -622,7 +622,7 @@
       <p class="dim">The DUT board carries the chip under test and what it needs to boot.
       Everything else is Augur One's job:</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each 1.19&ndash;3.29 V</span></div>
+        <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each 1.2&ndash;3.3 V</span></div>
         <div class="ifitem"><b>40</b><span>analog channels, 10 slots x 4</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, sensed active and asleep</span></div>
         <div class="ifitem"><b>3</b><span>gigabit Ethernet ports</span></div>
@@ -639,7 +639,7 @@
     <div style="padding-top:30px" id="spec">
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.19&ndash;3.29 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
+        <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.2&ndash;3.3 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
         <tr><td>Analog channels</td><td>40</td></tr>
         <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current measured on two ranges: 8.19 A full scale active, 16.4 mA full scale asleep.</td></tr>
