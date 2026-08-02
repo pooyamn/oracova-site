@@ -666,12 +666,9 @@
 
       <div class="spec-h">Analog</div>
       <table class="spec">
-        <tr><td>Channels</td><td>40, across 10 module slots, 4 per slot</td></tr>
-        <tr><td>Per-slot choice</td><td>High-speed module, medium-speed module, or pass-through jumper</td></tr>
-        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V / -1.5 V rails</td></tr>
-        <tr><td>Medium-speed module</td><td>DAC80504 per slot</td></tr>
-        <tr><td>Mix</td><td>Any combination; slots are independent</td></tr>
-        <tr><td>Isolation</td><td>Every analog column flanked by analog-ground columns</td></tr>
+        <tr><td>Channels</td><td>40 analog channels into the DUT, arranged as 10 slots of 4</td></tr>
+        <tr><td>Speed, per slot</td><td>Each slot takes a high-speed or a medium-speed module, mixed freely: fast where the loop needs it, cheap where it does not</td></tr>
+        <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbour.</td></tr>
       </table>
 
       <div class="spec-h">Compute</div>

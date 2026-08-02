@@ -196,12 +196,9 @@ claim otherwise.
 ## Analog
 | | |
 |---|---|
-| Channels | 40, across 10 module slots (4 per slot) |
-| Per-slot choice | High-speed module, medium-speed module, or pass-through jumper |
-| High-speed module | 2 x AD3542R per slot, on dedicated +7 V / -1.5 V rails |
-| Medium-speed module | DAC80504 per slot |
-| Mix | Any combination; slots are independent |
-| Isolation | Every analog column flanked by analog-ground columns, 1.2 AGND per channel |
+| Channels | 40 analog channels into the DUT, as 10 slots of 4 |
+| Speed, per slot | High-speed or medium-speed module, mixed freely |
+| Signal integrity | Every analog channel flanked by its own analog-ground return |
 
 ## Communication
 | | |
