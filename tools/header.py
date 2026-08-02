@@ -34,11 +34,59 @@ CSS = """
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
 .site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
+.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; margin-left: 10px; }
+.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
+  position: relative; transition: background .15s ease; }
+.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
+  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
+  transition: transform .18s ease, top .18s ease; }
+.site-nav .nav-burger span::before { top: -5px; }
+.site-nav .nav-burger span::after { top: 5px; }
+.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu.open { display: block; }
+.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+.site-menu a:first-child { border-top: 0; }
 @media (max-width: 800px) {
   .site-nav { position: fixed; top: 0; left: 0; right: 0;
     -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
   body { padding-top: 56px; }
   .site-nav .nav-set a:not(.nav-cta) { display: none; }
+  .site-nav .nav-burger { display: flex; }
+  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
+    max-height: calc(100vh - 56px); overflow-y: auto; }
+}
+@media (min-width: 801px) { .site-menu { display: none !important; } }
+.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
+.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 5px 0;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
+.site-foot a:hover { color: #EDEEF0; }
+.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
+.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (prefers-color-scheme: light) {
+  .site-menu { background: #FAFAF9; }
+  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
+  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
+  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
+  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+  .site-foot { border-top-color: rgba(20,22,26,.1); }
+  .site-foot h4 { color: #83888F; }
+  .site-foot a { color: #555A63; }
+  .site-foot a:hover { color: #16181D; }
+  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
 }
 @media (prefers-color-scheme: light) {
   .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
@@ -65,12 +113,58 @@ LINKS = {
     'runs/bldc-hall-fault-demo.html':[('/', 'Home'), ('/product', 'Product'), ('/demo', 'Demo')],
 }
 
+MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/product#spec', 'Specification'),
+        ('/onboarding', 'Board bring-up'), ('/demo', 'Live demo'),
+        ('/runs/bldc-hall-fault-demo', 'Run report')]
+
+SITEMAP = [
+    ('Product',  [('/product', 'Augur One'), ('/product#spec', 'Specification'),
+                  ('/onboarding', 'Board bring-up')]),
+    ('Evidence', [('/demo', 'Live demo'), ('/runs/bldc-hall-fault-demo', 'Run report'),
+                  ('/#evidence', 'Scored verdicts')]),
+    ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
+                      ('/#compare', 'Against other methods')]),
+    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes', 'Book 15 minutes'),
+                  ('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
+                  ('mailto:pooyamn@gmail.com', 'Email us')]),
+]
+
 def markup(page):
     links = '\n'.join('      <a href="%s">%s</a>' % (u, t) for u, t in LINKS[page])
+    menu = '\n'.join('    <a href="%s">%s</a>' % (u, t) for u, t in MENU)
     return ('<nav class="site-nav">\n  <div class="nav-inner">\n'
             '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
-            '    <div class="nav-set">\n%s\n      %s\n    </div>\n'
-            '  </div>\n</nav>' % (links, CTA))
+            '    <div class="nav-set">\n%s\n      %s\n'
+            '      <button class="nav-burger" id="nav-burger" type="button"'
+            ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
+            '<span></span></button>\n'
+            '    </div>\n  </div>\n</nav>\n'
+            '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, CTA, menu))
+
+def footer_markup():
+    cols = []
+    for title, items in SITEMAP:
+        rows = '\n'.join('        <a href="%s">%s</a>' % (u, t) for u, t in items)
+        cols.append('      <div>\n        <h4>%s</h4>\n%s\n      </div>' % (title, rows))
+    return ('<footer class="site-foot">\n  <div class="foot-inner">\n'
+            '    <div class="foot-map">\n%s\n    </div>\n'
+            '    <div class="foot-base">\n'
+            '      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>\n'
+            '      <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a>'
+            ' &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>\n'
+            '    </div>\n  </div>\n</footer>' % '\n'.join(cols))
+
+SCRIPT = """<script>
+(function () {
+  var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
+  if (!b || !m) return;
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
+})();
+</script>"""
 
 NAV_RE = re.compile(r'<nav[^>]*>.*?</nav>', re.S)
 
@@ -83,6 +177,9 @@ def apply(path, page):
     if not NAV_RE.search(s):
         raise SystemExit('no <nav> found in ' + path)
     s = NAV_RE.sub(lambda m: markup(page), s, count=1)
+    s = re.sub(r'<footer[^>]*>.*?</footer>', lambda m: footer_markup(), s, count=1, flags=re.S)
+    s = re.sub(r'<script>\n\(function \(\) \{\n  var b = document\.getElementById\(.nav-burger.\).*?</script>\n', '', s, flags=re.S)
+    s = s.replace('</body>', SCRIPT + '\n</body>', 1)
     pathlib.Path(path).write_text(s)
     return hashlib.sha256((CSS + markup(page)).encode()).hexdigest()[:12]
 
