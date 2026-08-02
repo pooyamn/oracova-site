@@ -247,6 +247,11 @@
     nav.site .navwrap { height: 56px; }
 
 
+
+  .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .foot-nav a { padding: 10px 0; }
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -587,7 +592,8 @@
   </main>
   <footer style="border-top:1px solid var(--line); padding:30px 0; color:var(--muted); font-family:var(--mono); font-size:13px;">
     <div style="max-width:1180px; margin:0 auto; padding:0 24px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+          <span class="foot-nav"><a href="/">Home</a> <a href="/product">Product</a> <a href="/demo">Demo</a> <a href="/onboarding">Board bring-up</a> <a href="/runs/bldc-hall-fault-demo">Run report</a></span>
+<span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
       <span><a href="mailto:pooyamn@gmail.com" style="color:inherit; text-decoration:none;">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
     </div>
   </footer>

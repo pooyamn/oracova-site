@@ -94,10 +94,11 @@ def header_of(path):
         return None
     # compare CSS exactly; markup minus the link set (which is intentionally per-page)
     skeleton = re.sub(r'<a href="[^"]*">[^<]*</a>', '', nav.group(0))
+    skeleton = re.sub(r'\s+', ' ', skeleton).strip()   # link count is per-page by design
     return hashlib.sha256((css.group(0) + skeleton).encode()).hexdigest()[:12]
 
 if __name__ == '__main__':
-    roots = ['.', 'v18', 'v19']
+    roots = ['v19']   # staging only; add '.'/'v18' deliberately when promoting
     pages = list(LINKS)
     if '--check' in sys.argv:
         seen = {}

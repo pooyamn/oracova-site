@@ -115,6 +115,11 @@
   nav .wrap { height: 56px; }
 
 
+
+  .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .foot-nav a { padding: 10px 0; }
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -266,7 +271,8 @@
 
 <footer>
   <div class="wrap">
-    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+        <span class="foot-nav"><a href="/">Home</a> <a href="/product">Product</a> <a href="/demo">Demo</a> <a href="/onboarding">Board bring-up</a> <a href="/runs/bldc-hall-fault-demo">Run report</a></span>
+<span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
     <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
   </div>
 </footer>
