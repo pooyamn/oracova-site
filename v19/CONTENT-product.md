@@ -20,13 +20,17 @@ CTA row: `Request a quote` · `Specification ↓`
 
 ---
 
-## Section 1 — Three layers of computation
+## Section 1 — Three layers of computation, two of them on the board
 
-Intro line: Emulating a world has three different jobs, and they run at three different
-speeds. Putting them on one processor is why bench rigs get slow or unfaithful. Augur One
-splits them.
+Intro: Emulating a world has three different jobs and they run at three different speeds.
+Putting them on one processor is why bench rigs end up either slow or unfaithful. Oracova
+splits them across three layers. **Two live on Augur One. The third is the bench computer,
+a separate machine on the network.**
 
-### Layer 1 — FPGA fabric: the part that has to be exact
+(The DUT is not one of the layers. It is the thing being tested: your chip, running your
+unmodified firmware, on the DUT board.)
+
+### Layer 1 (on Augur One) — FPGA fabric: the part that has to be exact
 **Lattice ECP5 LFE5U-85F**
 
 Protocol timing is not a place for software. Sensor register files, bus slaves, PWM and
@@ -37,7 +41,7 @@ the layer that makes an MPU6000 look like an MPU6000 to a driver that reads it a
 Runs here: sensor models, protocol slaves, edge-accurate capture, fault injection,
 per-bank DUT debug relay.
 
-### Layer 2 — Real-time compute: the part that has to be fast
+### Layer 2 (on Augur One) — Real-time compute: the part that has to be fast
 **STM32N657 (Cortex-M55 + NPU)**
 
 Physics is arithmetic, not timing. Motor and plant models, thermal and pack integration,
@@ -47,18 +51,25 @@ laptop hiccup cannot stall the plant.
 
 Runs here: plant models, physics integration, closed-loop state, model coefficients.
 
-### Layer 3 — Host computer: the part that has to think
-**Bench host over Ethernet**
+### Layer 3 (off the board) — Bench computer: the part that has to think
+**A separate machine, reached over Ethernet**
 
 The agent, the test authoring, the run orchestration, the verdict scoring and the evidence
-store are not real-time work. They sit on the host, where they can be slow, be restarted,
-and be reasoned about. The deterministic checker that scores runs lives here too, deliberately
+store are not real-time work. They sit on the bench computer, where they can be slow, be
+restarted, and be reasoned about. The checker that scores runs lives here too, deliberately
 outside the loop it is judging.
+
+Keeping this layer off the board is the point: it can be a machine in your rack or a machine
+in ours, it can be upgraded without touching hardware, and nothing it does can stall the
+plant running on the other two layers.
 
 Runs here: the agent, test authoring, CI triggers, verdicts, evidence and hashes.
 
-Closing line: Each layer only does the work that belongs at its speed, which is why the
-loop closes at rate instead of approximately.
+Closing line: Each layer only does the work that belongs at its speed, which is why the loop
+closes at rate instead of approximately.
+
+Summary line for the page: **Augur One is layers one and two. Your bench computer is layer
+three. Your board is the thing they are all there to test.**
 
 ---
 
@@ -148,10 +159,10 @@ claim otherwise.
 ## Compute
 | | |
 |---|---|
-| FPGA | Lattice ECP5 LFE5U-85F |
-| Real-time MCU | STM32N657, Cortex-M55 with NPU |
-| Supervisor MCU | STM32H563 |
-| Host | External, over Ethernet |
+| Layer 1, on board | Lattice ECP5 LFE5U-85F (gateware: protocol, capture, fault injection) |
+| Layer 2, on board | STM32N657, Cortex-M55 (real-time physics and plant state) |
+| Layer 3, off board | Bench computer over Ethernet (agent, tests, verdicts, evidence) |
+| Supervisor | STM32H563 (recovery, DUT power, not a compute layer) |
 
 ## DUT interface
 | | |
