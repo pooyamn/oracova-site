@@ -170,8 +170,7 @@ claim otherwise.
 | | |
 |---|---|
 | FPGA | Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection. |
-| Real-time MCU | STM32N657, Cortex-M55. Physics and plant state. |
-| NPU | Present on the N6, not used today. Headroom for physics too expensive to integrate directly. |
+| Real-time MCU | STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly. |
 | Supervisor | STM32H563. Recovery and DUT power. |
 
 ## DUT interface
