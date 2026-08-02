@@ -169,12 +169,10 @@ claim otherwise.
 ## Compute
 | | |
 |---|---|
-| Layer 1, on board | Lattice ECP5 LFE5U-85F (gateware: protocol, capture, fault injection) |
-| Layer 2, on board | STM32N657, Cortex-M55 (real-time physics and plant state) |
-| NPU | Present on the N6, not used today. Intended for learned approximations of expensive physics. |
-| Layer 3, off board | Bench computer over Ethernet (agent, tests, verdicts, evidence). Customer-supplied. |
-| Bench computer requirement | Linux, gigabit Ethernet. Nothing else special. |
-| Supervisor | STM32H563 (recovery, DUT power, not a compute layer) |
+| FPGA | Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection. |
+| Real-time MCU | STM32N657, Cortex-M55. Physics and plant state. |
+| NPU | Present on the N6, not used today. Headroom for physics too expensive to integrate directly. |
+| Supervisor | STM32H563. Recovery and DUT power. |
 
 ## DUT interface
 | | |
