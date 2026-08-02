@@ -1,4 +1,4 @@
-# /product — content draft v1
+# /product — Augur One — content draft v2
 
 Two tabs: **Overview** (this narrative) and **Specification** (the table).
 Grounded in `hardware/oracova-tscircuit/DESIGN-INVARIANTS.md` + `DUT-SIGNAL-PIN-BUDGET.md`.
@@ -9,9 +9,10 @@ development hardware (two-MCU rig + Colorlight i9 ECP5). Every claim on this pag
 
 ## Header
 
-**Kicker:** The bench
+**Kicker:** Augur One
+**Product name:** Oracova Augur One (formal first use) / Augur One (everywhere else)
 **H1:** One board between your firmware and the world it thinks it lives in.
-**Sub:** The DUT board carries your microcontroller. The base board is everything your
+**Sub:** The DUT board carries your microcontroller. Augur One is everything your
 firmware expects to find around it: sensors that answer, loads that push back, buses that
 respond, and faults that arrive when the agent decides they should.
 
@@ -22,7 +23,7 @@ CTA row: `Request a quote` · `Specification ↓`
 ## Section 1 — Three layers of computation
 
 Intro line: Emulating a world has three different jobs, and they run at three different
-speeds. Putting them on one processor is why bench rigs get slow or unfaithful. Oracova
+speeds. Putting them on one processor is why bench rigs get slow or unfaithful. Augur One
 splits them.
 
 ### Layer 1 — FPGA fabric: the part that has to be exact
@@ -103,7 +104,7 @@ Closing line: A bench you cannot recover remotely is a bench somebody has to wal
 ## Section 4 — The DUT interface
 
 The DUT board carries the chip under test and the parts that belong to it: crystal, straps,
-whatever that part needs to boot. Everything else is the base board's job.
+whatever that part needs to boot. Everything else is Augur One's job.
 
 We keep DUT boards for the most commonly used chips. For anything else, the DUT board is
 designed for your part, and that is what the bring-up service covers.
@@ -133,11 +134,11 @@ bench. Your firmware still sees the signals it would see in the product.
 | Closed loop on real silicon (DC servo, pump, thermal, BLDC) | Proven, 2026-06-17 |
 | Scored fault library with FAIL then guarded PASS | Proven, run 20260618-080733 |
 | Full control loop in FPGA fabric at 8 kHz (unmodified Betaflight) | Proven on ECP5 development hardware, 2026-07-07 |
-| The base board described on this page | In layout, first article pending |
+| Augur One (the board on this page) | In layout, first article pending |
 | DUT boards | Stocked for common chips, designed per part otherwise |
 
-Line under the table: The capabilities above run today on development hardware. The base
-board consolidates them onto one board; it has not been fabricated yet, and we will not
+Line under the table: The capabilities above run today on development hardware. Augur One
+consolidates them onto one board; it has not been fabricated yet, and we will not
 claim otherwise.
 
 ---
@@ -196,10 +197,10 @@ claim otherwise.
 | Alternate | PoE (option) |
 | ORing | Ideal-diode, both sources may be present |
 
-## Physical
+## Physical (Augur One)
 | | |
 |---|---|
-| Base board | 210 x 130 mm |
+| Augur One | 210 x 130 mm |
 | DUT board | 130 x 80 mm |
 
 ## Recovery
@@ -227,3 +228,18 @@ claim otherwise.
    Which is it?
 2. **NPU on the N6** — used, or incidental to the part choice? Only claim it if it works.
 3. **PoE** — option or standard, and what class/wattage to publish.
+
+
+---
+
+## NAMING (decided 2026-08-01)
+
+- **Base board: Oracova Augur One.** Short form "Augur One". "Oracova Augur One" on first
+  use in formal copy, invoices, and the spec sheet.
+- Clearance note: "Augur" is held by Augur Systems Inc (software, network management) and is
+  also a crypto project; both software, neither test hardware. House-mark prefixing is the
+  mitigation. Run a proper USPTO clearance before silkscreen/packaging spend.
+- Naming grammar for the rest of the line:
+  - DUT boards: `DUT-<part>` e.g. DUT-G474, DUT-F411
+  - Analog modules: fast module / medium module / jumper
+  - Future base boards: Augur Two, etc.
