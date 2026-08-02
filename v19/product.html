@@ -556,107 +556,80 @@
   </div>
 
   <section class="panel" id="panel-o" role="tabpanel" aria-labelledby="tab-o">
-    <div style="padding-top:36px">
+    <div style="padding-top:30px">
       <h2>Three layers of computation, two of them on the board</h2>
-      <p class="dim">Emulating a world has three different jobs and they run at three different
-      speeds. Putting them on one processor is why bench rigs end up either slow or unfaithful.
-      Two layers live on Augur One. The third is the bench computer, a separate machine on the
-      network. The DUT is not one of the layers: it is the thing being tested.</p>
+      <p class="dim">Emulating a world has three jobs running at three speeds. Putting them on
+      one processor is why bench rigs end up slow or unfaithful.</p>
+
       <div class="layer">
-        <div class="lnum">Layer 1 <span class="x">(on Augur One)</span></div>
+        <div class="lnum">Layer 1 <span>(on Augur One)</span></div>
         <h3>FPGA fabric: the part that has to be exact</h3>
         <div class="part">Lattice ECP5 LFE5U-85F</div>
-        <p>Protocol timing is not a place for software. Sensor register files, bus slaves, PWM and encoder decode, fault injection, and the in-fabric logic analyzer all live in gateware, so the DUT's bus sees answers at the DUT's own clock, not when a scheduler gets to it. This is the layer that makes an MPU6000 look like an MPU6000 to a driver that reads it at 8 kHz.</p>
-        <div class="runs">runs here: sensor models &middot; protocol slaves &middot; edge-accurate capture &middot; fault injection &middot; DUT debug relay</div>
+        <p>Protocol timing is not a place for software. Register files, bus slaves, decode,
+        fault injection and capture live in gateware, so the DUT's bus is answered at the DUT's
+        own clock. This is what makes an MPU6000 look like an MPU6000 to a driver reading it at
+        8 kHz.</p>
+        <div class="runs">sensor models &middot; protocol slaves &middot; edge-accurate capture &middot; fault injection</div>
       </div>
+
       <div class="layer">
-        <div class="lnum">Layer 2 <span class="x">(on Augur One)</span></div>
+        <div class="lnum">Layer 2 <span>(on Augur One)</span></div>
         <h3>Real-time compute: the part that has to be fast</h3>
         <div class="part">STM32N657, Cortex-M55</div>
-        <p>Physics is arithmetic, not timing. Motor and plant models, thermal and pack integration, control-rate math, and anything that needs to update state between the DUT's samples run here. Close enough to the fabric to feed it, far enough from the bench computer that a hiccup up there cannot stall the plant.</p>
-        <p>The part also carries an NPU. We are not using it yet, and we are not going to pretend otherwise: it is there because plants whose physics are expensive to integrate directly, like saturating magnetics, flux maps and thermal networks, are a good fit for a learned approximation running at rate. <b>That is a road we have, not a road we have walked.</b></p>
-        <div class="runs">runs here: plant models &middot; physics integration &middot; closed-loop state</div>
+        <p>Physics is arithmetic, not timing. Plant models and closed-loop state update between
+        the DUT's samples, close enough to the fabric to feed it. The NPU on this part is
+        unused today; it is headroom for physics too expensive to integrate directly.</p>
+        <div class="runs">plant models &middot; physics integration &middot; closed-loop state</div>
       </div>
+
       <div class="layer">
         <div class="lnum">Layer 3 <span class="loff">(off the board)</span></div>
         <h3>Bench computer: the part that has to think</h3>
-        <div class="part">A separate machine, reached over Ethernet</div>
-        <p>The agent, the test authoring, the run orchestration, the verdict scoring and the evidence store are not real-time work. They sit on the bench computer, where they can be slow, be restarted, and be reasoned about. The checker that scores runs lives here too, deliberately outside the loop it is judging.</p>
-        <p><b>You supply the bench computer.</b> A Linux machine with gigabit Ethernet is the whole requirement. No GPU, no special hardware, nothing to source: a lab that already has machines does not buy another one, and you are not locked to hardware we picked.</p>
-        <div class="runs">runs here: the agent &middot; test authoring &middot; CI triggers &middot; verdicts &middot; evidence</div>
+        <div class="part">Yours. Linux, gigabit Ethernet, nothing else</div>
+        <p>The agent, the tests, the verdicts and the evidence are not real-time work, so they
+        sit off the board where they can be slow and restarted. The checker that scores runs
+        lives here too, outside the loop it is judging.</p>
+        <div class="runs">the agent &middot; test authoring &middot; CI triggers &middot; verdicts &middot; evidence</div>
       </div>
-      <p class="sumline"><b>Augur One is layers one and two.</b> Your bench computer is layer
-      three. Your board is the thing they are all there to test.</p>
     </div>
 
-    <div style="padding-top:56px">
+    <div style="padding-top:52px">
       <h2>One cable</h2>
-      <p class="dim"><b style="color:var(--text)">Power over Ethernet is standard.</b> Power and
-      network arrive on the same cable, so a bench is one run of Cat-6 from a PoE switch and
-      nothing else. Put it in a rack, in a lab across the building, or in a customer's facility,
-      and it is still reachable and still recoverable.</p>
-      <p class="dim" style="margin-top:10px"><b style="color:var(--text)">USB-C 5 V is the other
-      option</b> when there is no PoE switch to hand. Both inputs go through an ideal-diode ORing
-      stage, so both can be connected at once without either back-feeding the other.</p>
-      <div class="callout">Benches multiply: one per pull request, one per agent, as many as the
-      team runs in parallel. <b>A rack of one-cable benches is a thing a lab can actually
-      operate.</b> A rack of benches each needing a power brick, a hub, and a hand on a button
-      is not.</div>
+      <p class="dim">Power over Ethernet is standard, so a bench is one run of Cat-6 and nothing
+      else. USB-C 5 V is there when no PoE switch is. Both are ideal-diode ORed, so either or
+      both can be connected.</p>
+      <div class="callout">Benches multiply: one per pull request, one per agent. <b>A rack of
+      one-cable benches is a thing a lab can actually operate.</b></div>
     </div>
 
-    <div style="padding-top:56px">
+    <div style="padding-top:52px">
       <h2>It always comes back</h2>
-      <p class="dim">The supervisor is the part that never goes down: an STM32H563 on its own
-      rail with its own network path. The rule the board is designed around is that
-      <b style="color:var(--text)">the Ethernet fabric must never drop during a recovery</b>, so
-      the FPGA and the N6 are always powered and recovery is by reset, not by power.</p>
+      <p class="dim">A supervisor MCU on its own rail, with its own network path. Ethernet never
+      drops during a recovery, so the FPGA and N6 stay powered and recovery is by reset.</p>
       <div class="recovery">
         <div class="rrow"><div class="rw">N6 wedged</div><div class="rf">supervisor asserts its reset line.</div></div>
-        <div class="rrow"><div class="rw">FPGA misconfigured</div><div class="rf">supervisor pulses PROGRAMN, which reconfigures from NOR with I/O tristated.</div></div>
-        <div class="rrow"><div class="rw">FPGA bitstream corrupt</div><div class="rf">the supervisor owns the ECP5's JTAG. It can SRAM-load a known-good image directly, and reprogram the config NOR through the FPGA's own JTAG-to-SPI bridge.</div></div>
-        <div class="rrow"><div class="rw">Switch itself hangs</div><div class="rf">the one case where the supervisor resets the switch.</div></div>
+        <div class="rrow"><div class="rw">FPGA misconfigured</div><div class="rf">PROGRAMN pulsed, reconfigured from NOR with I/O tristated.</div></div>
+        <div class="rrow"><div class="rw">Bitstream corrupt</div><div class="rf">the supervisor owns the FPGA's JTAG: SRAM-load a known-good image, or reprogram the config NOR through it.</div></div>
+        <div class="rrow"><div class="rw">Switch hangs</div><div class="rf">the one case where the supervisor resets the switch.</div></div>
       </div>
-      <p class="dim" style="margin-top:16px">Because the FPGA and N6 have no power switches at
-      all, there are no half-powered or back-driven states to get stuck in. That is by
-      construction, not by firmware discipline. The supervisor also owns DUT power: rail
-      setpoint, enable, current sensing, and the Kelvin sense return.</p>
-      <p class="sumline">A bench you cannot recover remotely is a bench somebody has to walk to.</p>
+      <p class="sumline">No power switches on the FPGA or N6, so there are no half-powered states
+      to get stuck in. <b>A bench you cannot recover remotely is a bench somebody has to walk to.</b></p>
     </div>
 
-    <div style="padding-top:56px">
+    <div style="padding-top:52px; padding-bottom:24px">
       <h2>The DUT interface</h2>
-      <p class="dim">The DUT board carries the chip under test and the parts that belong to it:
-      crystal, straps, whatever that part needs to boot. Everything else is Augur One's job. We
-      keep DUT boards for the most commonly used chips; for anything else the DUT board is
-      designed for your part, and that is what the bring-up service covers.</p>
-      <p class="dim" style="margin-top:10px">Four mezzanine connectors carry
-      <b style="color:var(--text)">400 pins across 287 distinct nets</b>:</p>
+      <p class="dim">The DUT board carries the chip under test and what it needs to boot.
+      Everything else is Augur One's job. Four mezzanine connectors, 400 pins, 287 nets:</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>general-purpose digital I/O</span></div>
-        <div class="ifitem"><b>40</b><span>analog channels, 10 module slots x 4</span></div>
-        <div class="ifitem"><b>40</b><span>QSPI lines from the DAC plane</span></div>
-        <div class="ifitem"><b>40</b><span>pins of adjustable DUT supply, plus Kelvin sense</span></div>
-        <div class="ifitem"><b>24</b><span>pins of 4-pair Ethernet MDI to the DUT</span></div>
-        <div class="ifitem"><b>18</b><span>debug pins, SWD/JTAG relayed via the FPGA</span></div>
+        <div class="ifitem"><b>148</b><span>digital I/O</span></div>
+        <div class="ifitem"><b>40</b><span>analog channels, 10 slots x 4</span></div>
+        <div class="ifitem"><b>40</b><span>QSPI to the DAC plane</span></div>
+        <div class="ifitem"><b>40</b><span>DUT supply, plus Kelvin sense</span></div>
+        <div class="ifitem"><b>24</b><span>4-pair Ethernet MDI</span></div>
+        <div class="ifitem"><b>18</b><span>debug, SWD/JTAG via the FPGA</span></div>
       </div>
-      <p class="dim" style="margin-top:14px">The DUT rail is adjustable 1.8 V to 5 V with current
-      sensing on the rail, so the firmware's own power behaviour is observable, not assumed.</p>
       <div class="callout"><b>We meet your board at the controller boundary.</b> Your power stage
       stays off the bench. Your firmware still sees the signals it would see in the product.</div>
-    </div>
-
-    <div style="padding-top:56px; padding-bottom:20px">
-      <h2>Where this actually stands</h2>
-      <div class="statusgrid">
-        <div class="srow"><div class="st">Closed loop on real silicon: DC servo, pump, thermal, BLDC</div><div class="sv proven">Proven 2026-06-17</div></div>
-        <div class="srow"><div class="st">Scored fault library, FAIL then guarded PASS</div><div class="sv proven">Proven, run 20260618-080733</div></div>
-        <div class="srow"><div class="st">Full control loop in FPGA fabric at 8 kHz, unmodified Betaflight</div><div class="sv proven">Proven on ECP5 dev hardware</div></div>
-        <div class="srow"><div class="st">Augur One, the board on this page</div><div class="sv pending">In layout, first article pending</div></div>
-        <div class="srow"><div class="st">DUT boards</div><div class="sv proven">Stocked for common chips</div></div>
-      </div>
-      <p class="dim" style="margin-top:14px; font-size:14px">The capabilities above run today on
-      development hardware. Augur One consolidates them onto one board. It has not been
-      fabricated yet, and we will not claim otherwise.</p>
     </div>
   </section>
 
@@ -721,9 +694,8 @@
         <tr><td>Switch</td><td>Supervisor reset, only if the switch hangs</td></tr>
         <tr><td>Power switching on FPGA/N6</td><td>None by design. No half-powered states.</td></tr>
       </table>
-      <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the built
-      netlist, not from a datasheet summary. PoE class and measured power draw will be published
-      from the first article.</p>
+      <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the
+      built netlist, not from a datasheet summary.</p>
     </div>
   </section>
 </div>
