@@ -416,7 +416,7 @@
 
 
   .iface.top3 { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
-  .iface.top3 .ifitem { display: block; }
+
   .iface.top3 .ifitem b { display: block; font-size: 15px; margin-bottom: 2px; }
   @media (max-width: 700px) { .iface.top3 { grid-template-columns: 1fr; } }
   table.where { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px;
@@ -468,7 +468,9 @@
   @media (max-width: 700px) { .rrow { grid-template-columns: 1fr; gap: 4px; } }
   .iface { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
   .ifitem { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
-    padding: 12px 16px; display: flex; align-items: baseline; gap: 12px; }
+    padding: 12px 16px; display: block; }
+  .ifitem b { display: block; margin-bottom: 4px; }
+  .ifitem span { display: block; }
   .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--brand); font-weight: 700;
     flex: 0 0 auto; white-space: nowrap; }
   .ifitem span { font-size: 13.5px; color: var(--text-dim); }
