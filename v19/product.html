@@ -637,6 +637,14 @@
 
   <section class="panel" id="panel-s" role="tabpanel" aria-labelledby="tab-s" hidden>
     <div style="padding-top:30px" id="spec">
+      <div class="spec-h">Compute</div>
+      <table class="spec">
+        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
+        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly.</td></tr>
+        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
+        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE, so the bench is the other end of the DUT's link.</td></tr>
+      </table>
+
       <div class="spec-h">DUT interface</div>
       <table class="spec">
         <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.2&ndash;3.3 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
@@ -649,14 +657,6 @@
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
       </table>
 
-      <div class="spec-h">Communication</div>
-      <table class="spec">
-        <tr><td>Gigabit Ethernet</td><td>Power and network on one cable, PoE</td></tr>
-        <tr><td>USB-C</td><td>Backup link and recovery</td></tr>
-      </table>
-
-
-
       <div class="spec-h">Analog</div>
       <table class="spec">
         <tr><td>Channels</td><td>Up to 40 analog channels into the DUT, as 10 slots of 4. Populate only the slots you need.</td></tr>
@@ -664,12 +664,10 @@
         <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbour.</td></tr>
       </table>
 
-      <div class="spec-h">Compute</div>
+      <div class="spec-h">Communication</div>
       <table class="spec">
-        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
-        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly.</td></tr>
-        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
-        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE, so the bench is the other end of the DUT's link.</td></tr>
+        <tr><td>Gigabit Ethernet</td><td>Power and network on one cable, PoE</td></tr>
+        <tr><td>USB-C</td><td>Backup link and recovery</td></tr>
       </table>
       <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the
       built netlist, not from a datasheet summary.</p>
