@@ -180,8 +180,6 @@ claim otherwise.
 ## DUT interface
 | | |
 |---|---|
-| Connectors | 4 x DF40HC(3.0)-100DS-0.4V mezzanine |
-| Total pins | 400 (287 distinct nets) |
 | Digital I/O | 148 |
 | Analog injection channels | 40 |
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
