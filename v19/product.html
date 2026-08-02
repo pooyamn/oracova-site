@@ -625,7 +625,7 @@
       <div class="iface">
         <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each 1.19&ndash;3.29 V</span></div>
         <div class="ifitem"><b>40</b><span>analog channels, 10 slots x 4</span></div>
-        <div class="ifitem"><b>40</b><span>DUT supply, plus Kelvin sense</span></div>
+        <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, sensed active and asleep</span></div>
         <div class="ifitem"><b>3</b><span>gigabit Ethernet ports</span></div>
         <div class="ifitem"><b>2</b><span>USB 2.0 OTG to the DUT</span></div>
         <div class="ifitem"><b>18</b><span>debug, SWD/JTAG via the FPGA</span></div>
@@ -644,6 +644,7 @@
         <tr><td>Ethernet</td><td>3 gigabit ports. 4-pair MDI to the DUT, 24 pins.</td></tr>
         <tr><td>USB</td><td>2 x USB 2.0 OTG to the DUT, with software-controlled attach</td></tr>
         <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current measured on two ranges: 8.19 A full scale active, 16.4 mA full scale asleep.</td></tr>
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
       </table>
 
@@ -656,12 +657,6 @@
         <tr><td>Use</td><td>Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, on the same board</td></tr>
       </table>
 
-      <div class="spec-h">DUT power</div>
-      <table class="spec">
-        <tr><td>Rail</td><td>1.8 V to 5 V adjustable</td></tr>
-        <tr><td>Sensing</td><td>Current sense on the DUT rail, Kelvin sense return</td></tr>
-        <tr><td>Control</td><td>Supervisor-owned setpoint and enable</td></tr>
-      </table>
 
       <div class="spec-h">Analog</div>
       <table class="spec">

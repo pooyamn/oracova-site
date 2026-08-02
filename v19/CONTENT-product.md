@@ -185,6 +185,7 @@ claim otherwise.
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
 | USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
 | Debug | SWD/JTAG, 18 pins, relayed via FPGA |
+| DUT supply | 1.8-5 V adjustable, Kelvin-sensed; current on two ranges: 8.19 A FS active, 16.4 mA FS asleep |
 | DUT self-ID | Revision + capability straps |
 
 ## I/O logic levels
@@ -195,13 +196,6 @@ claim otherwise.
 | Regulation | Closed-loop LDO per rail, each behind its own load switch |
 | Scope | Bank I/O reference only, independent of the DUT supply |
 | Use | Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, same board |
-
-## DUT power
-| | |
-|---|---|
-| Rail | 1.8 V to 5 V adjustable |
-| Sensing | Current sense on the DUT rail, Kelvin sense return |
-| Control | Supervisor-owned setpoint and enable |
 
 ## Analog
 | | |
