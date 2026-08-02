@@ -136,7 +136,8 @@ Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 - **148** general-purpose digital I/O
 - **40** analog channels (10 module slots x 4)
 - **40** pins of adjustable DUT supply, plus Kelvin sense
-- **24** pins of 4-pair Ethernet MDI to the DUT
+- **3** gigabit Ethernet ports, 4-pair MDI to the DUT
+- **2** USB 2.0 OTG links to the DUT
 - **18** debug pins (SWD/JTAG, relayed through the FPGA)
 - straps that let a DUT board identify its own revision and capabilities
 
@@ -183,7 +184,8 @@ claim otherwise.
 | Total pins | 400 (287 distinct nets) |
 | Digital I/O | 148 |
 | Analog injection channels | 40 |
-| DUT Ethernet | 4-pair MDI, 24 pins |
+| Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
+| USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
 | Debug | SWD/JTAG, 18 pins, relayed via FPGA |
 | DUT self-ID | Revision + capability straps |
 
