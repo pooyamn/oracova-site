@@ -122,6 +122,7 @@
 
 
 
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -131,9 +132,9 @@
   display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 12px 0; margin: -12px 0; }
+  text-decoration: none; padding: 12px 0; margin: -12px 0; margin-right: auto; }
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
-.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
@@ -149,7 +150,7 @@
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
 .site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
   border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
-  align-items: center; justify-content: center; margin-left: 10px; }
+  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
 .site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
   position: relative; transition: background .15s ease; }
 .site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
@@ -219,6 +220,7 @@
 
 <nav class="site-nav">
   <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
     <div class="nav-set">
       <a href="/">Home</a>
@@ -227,10 +229,17 @@
       <a href="/demo" aria-current="page">Demo</a>
       <a href="/runs/bldc-hall-fault-demo">Run report</a>
       <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
-      <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     </div>
   </div>
 </nav>
+<div class="site-menu" id="site-menu">
+    <a href="/">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/product#spec">Specification</a>
+    <a href="/onboarding">Board bring-up</a>
+    <a href="/demo" aria-current="page">Demo</a>
+    <a href="/runs/bldc-hall-fault-demo">Run report</a>
+</div>
 <div class="site-menu" id="site-menu">
     <a href="/">Home</a>
     <a href="/product">Augur One</a>

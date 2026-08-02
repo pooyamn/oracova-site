@@ -20,9 +20,9 @@ CSS = """
   display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 12px 0; margin: -12px 0; }
+  text-decoration: none; padding: 12px 0; margin: -12px 0; margin-right: auto; }
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
-.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
@@ -38,7 +38,7 @@ CSS = """
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
 .site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
   border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
-  align-items: center; justify-content: center; margin-left: 10px; }
+  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
 .site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
   position: relative; transition: background .15s ease; }
 .site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
@@ -145,11 +145,11 @@ def markup(page):
     links = '\n'.join('      <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in NAV)
     menu = '\n'.join('    <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in MENU)
     return ('<nav class="site-nav">\n  <div class="nav-inner">\n'
-            '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
-            '    <div class="nav-set">\n%s\n      %s\n'
-            '      <button class="nav-burger" id="nav-burger" type="button"'
+            '    <button class="nav-burger" id="nav-burger" type="button"'
             ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
             '<span></span></button>\n'
+            '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
+            '    <div class="nav-set">\n%s\n      %s\n'
             '    </div>\n  </div>\n</nav>\n'
             '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, CTA, menu))
 
