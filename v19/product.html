@@ -599,7 +599,7 @@
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, Kelvin-sensed</span></div>
         <div class="ifitem"><b>15-bit</b><span>current sense: 250 &micro;A/LSB to 8.19 A awake, 31 nA/LSB asleep</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
-        <div class="ifitem"><b>Ethernet, USB, Wi-Fi</b><span>all reach the DUT. The on-board wireless peer is the far end of your link.</span></div>
+        <div class="ifitem"><b>3 x Ethernet</b><span>plus 2 x USB OTG and a Wi-Fi/BLE peer, all reaching the DUT</span></div>
       </div>
       <div class="callout">We meet your board at the controller boundary. Your power stage stays
       off the bench, and your firmware still sees the signals it would see in the product.</div>
@@ -675,7 +675,7 @@
         <tr><td>Analog channels</td><td>Up to 40, separate from the 148 digital pins</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current on two ranges: 250 &micro;A resolution up to 8.19 A active, and 31 nA resolution asleep.</td></tr>
-        <tr><td>Ethernet to the DUT</td><td>4-pair MDI</td></tr>
+        <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
         <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
