@@ -585,7 +585,7 @@
       <div class="iface top3">
         <div class="ifitem"><b>210 x 130 mm</b><span>one base board</span></div>
         <div class="ifitem"><b>One Cat-6</b><span>power and network</span></div>
-        <div class="ifitem"><b>148 I/O, up to 40 analog</b><span>to the DUT</span></div>
+        <div class="ifitem"><b>148 I/O + 40 analog</b><span>to the DUT</span></div>
       </div>
     </div>
 
@@ -594,8 +594,8 @@
       <p class="dim">Your DUT board carries the part under test and whatever it needs to boot.
       The connectors bring it everything else.</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each on its own 1.2&ndash;3.3 V rail, so a mixed-level DUT works</span></div>
-        <div class="ifitem"><b>up to 40</b><span>analog channels in 10 slots of 4, each slot high-speed or medium-speed</span></div>
+        <div class="ifitem"><b>148</b><span>digital I/O on adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder.</span></div>
+        <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of the 148, in 10 slots of 4, high-speed or medium-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, Kelvin-sensed</span></div>
         <div class="ifitem"><b>15-bit</b><span>current sense: 250 &micro;A/LSB to 8.19 A awake, 31 nA/LSB asleep</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
@@ -671,8 +671,8 @@
 
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.2&ndash;3.3 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
-        <tr><td>Analog channels</td><td>Up to 40</td></tr>
+        <tr><td>Digital I/O</td><td>148 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
+        <tr><td>Analog channels</td><td>Up to 40, separate from the 148 digital pins</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current on two ranges: 250 &micro;A resolution up to 8.19 A active, and 31 nA resolution asleep.</td></tr>
         <tr><td>Ethernet to the DUT</td><td>4-pair MDI</td></tr>
@@ -683,8 +683,9 @@
 
       <div class="spec-h">Analog</div>
       <table class="spec">
-        <tr><td>Channels</td><td>Up to 40 analog channels into the DUT, as 10 slots of 4. Populate only the slots you need.</td></tr>
-        <tr><td>Speed, per slot</td><td>Each slot takes a high-speed or a medium-speed module, mixed freely: fast where the loop needs it, cheap where it does not</td></tr>
+        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, and additional to the 148 digital pins. Each slot takes a high-speed or a medium-speed module, mixed freely. Populate only the slots you need.</td></tr>
+        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails. For channels the control loop reads at rate.</td></tr>
+        <tr><td>Medium-speed module</td><td>DAC80504 per slot. For channels that move slowly: temperatures, pack voltages, setpoints.</td></tr>
         <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbour.</td></tr>
       </table>
 
