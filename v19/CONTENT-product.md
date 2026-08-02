@@ -51,6 +51,11 @@ laptop hiccup cannot stall the plant.
 
 Runs here: plant models, physics integration, closed-loop state, model coefficients.
 
+The part also carries an NPU. We are not using it yet, and we are not going to pretend
+otherwise: it is there because plants whose physics are expensive to integrate directly
+(saturating magnetics, flux maps, thermal networks) are a good fit for a learned
+approximation running at rate. That is a road we have, not a road we have walked.
+
 ### Layer 3 (off the board) — Bench computer: the part that has to think
 **A separate machine, reached over Ethernet**
 
@@ -59,9 +64,12 @@ store are not real-time work. They sit on the bench computer, where they can be 
 restarted, and be reasoned about. The checker that scores runs lives here too, deliberately
 outside the loop it is judging.
 
-Keeping this layer off the board is the point: it can be a machine in your rack or a machine
-in ours, it can be upgraded without touching hardware, and nothing it does can stall the
-plant running on the other two layers.
+Keeping this layer off the board is the point: it upgrades without touching hardware, and
+nothing it does can stall the plant running on the other two layers.
+
+**You supply the bench computer.** Any ordinary Linux machine on the same network does the
+job, so the bench does not lock you into hardware we picked, and a lab that already has
+machines does not buy another one.
 
 Runs here: the agent, test authoring, CI triggers, verdicts, evidence and hashes.
 
@@ -161,7 +169,8 @@ claim otherwise.
 |---|---|
 | Layer 1, on board | Lattice ECP5 LFE5U-85F (gateware: protocol, capture, fault injection) |
 | Layer 2, on board | STM32N657, Cortex-M55 (real-time physics and plant state) |
-| Layer 3, off board | Bench computer over Ethernet (agent, tests, verdicts, evidence) |
+| NPU | Present on the N6, not used today. Intended for learned approximations of expensive physics. |
+| Layer 3, off board | Bench computer over Ethernet (agent, tests, verdicts, evidence). Customer-supplied. |
 | Supervisor | STM32H563 (recovery, DUT power, not a compute layer) |
 
 ## DUT interface
@@ -231,14 +240,17 @@ claim otherwise.
 - Part numbers: fine to publish, but do not lead with them
 - DUT boards: common chips stocked; others are a designed board + bring-up service
 
+## RESOLVED (round 2)
+- Layers: FPGA + N6 on Augur One; **bench computer is layer 3 and is customer-supplied**
+  (not shipped, at least for now). DUT is not a layer.
+- NPU: present, **not used yet**; stated as a direction, not a feature.
+- Vocabulary locked: "bench computer" (never "host") for layer 3; "chip under test" / DUT
+  for the target; one name for the "checker".
+
 ## STILL OPEN
-1. **"The host is on the DUT board"** — need to pin this down before writing Layer 3.
-   Two readings: (a) the third compute layer (the machine running the agent, tests and
-   verdicts) is not an external PC at all, or (b) "host" = the chip under test, which lives
-   on the DUT board, and the third layer is still a separate computer over Ethernet.
-   Which is it?
-2. **NPU on the N6** — used, or incidental to the part choice? Only claim it if it works.
-3. **PoE** — option or standard, and what class/wattage to publish.
+1. **PoE** — option or standard, and what class/wattage to publish.
+2. **Bench computer minimum spec** — worth one line so buyers can check they have one
+   (cores/RAM/OS, Ethernet). Needed for Pricing and Preorder anyway.
 
 
 ---
