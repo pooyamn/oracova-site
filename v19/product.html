@@ -569,6 +569,8 @@
         fault injection and capture live in gateware, so the DUT's bus is answered at the DUT's
         own clock. This is what makes an MPU6000 look like an MPU6000 to a driver reading it at
         8 kHz.</p>
+        <p>Its I/O banks run on four independently adjustable rails, 1.19 to 3.29 V, so a
+        1.8 V bus and a 3.3 V bus on the same DUT are both driven at their own level.</p>
         <div class="runs">sensor models &middot; protocol slaves &middot; edge-accurate capture &middot; fault injection</div>
       </div>
 
@@ -627,6 +629,7 @@
         <div class="ifitem"><b>40</b><span>DUT supply, plus Kelvin sense</span></div>
         <div class="ifitem"><b>24</b><span>4-pair Ethernet MDI</span></div>
         <div class="ifitem"><b>18</b><span>debug, SWD/JTAG via the FPGA</span></div>
+        <div class="ifitem"><b>4</b><span>adjustable I/O rails, 1.19&ndash;3.29 V per bank</span></div>
       </div>
       <div class="callout"><b>We meet your board at the controller boundary.</b> Your power stage
       stays off the bench. Your firmware still sees the signals it would see in the product.</div>
@@ -661,6 +664,15 @@
         <tr><td>Sensing</td><td>Current sense on the DUT rail, Kelvin sense return</td></tr>
         <tr><td>Control</td><td>Supervisor-owned setpoint and enable</td></tr>
       </table>
+      <div class="spec-h">I/O logic levels</div>
+      <table class="spec">
+        <tr><td>Adjustable rails</td><td>4 independent VCCIO domains, one per DUT bank</td></tr>
+        <tr><td>Range</td><td>1.19 V to 3.29 V, set per bank</td></tr>
+        <tr><td>Regulation</td><td>Closed-loop LDO per rail, each behind its own load switch</td></tr>
+        <tr><td>Scope</td><td>Bank I/O reference only, independent of the DUT supply rail</td></tr>
+        <tr><td>Use</td><td>Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, on the same board</td></tr>
+      </table>
+
       <div class="spec-h">Analog</div>
       <table class="spec">
         <tr><td>Channels</td><td>40, across 10 module slots, 4 per slot</td></tr>

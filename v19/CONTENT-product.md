@@ -189,6 +189,15 @@ claim otherwise.
 | Debug | SWD/JTAG, 18 pins, relayed via FPGA |
 | DUT self-ID | Revision + capability straps |
 
+## I/O logic levels
+| | |
+|---|---|
+| Adjustable rails | 4 independent VCCIO domains, one per DUT bank |
+| Range | 1.19 V to 3.29 V, set per bank |
+| Regulation | Closed-loop LDO per rail, each behind its own load switch |
+| Scope | Bank I/O reference only, independent of the DUT supply |
+| Use | Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, same board |
+
 ## DUT power
 | | |
 |---|---|
