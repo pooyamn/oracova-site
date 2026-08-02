@@ -181,7 +181,7 @@ claim otherwise.
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
 | USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
 | Debug | SWD or JTAG on any DUT I/O pin, driven from the FPGA. No fixed debug pinout. |
-| DUT supply | 1.8-5 V adjustable, Kelvin-sensed; current on two ranges: 8.19 A FS active, 16.4 mA FS asleep |
+| DUT supply | 1.8-5 V adjustable, Kelvin-sensed; current on two ranges: 250 uA resolution to 8.19 A active, 31 nA resolution asleep |
 | DUT self-ID | Revision + capability straps |
 
 ## Analog
