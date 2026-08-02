@@ -58,10 +58,11 @@ CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
 
 # page -> its link set (self-link always omitted)
 LINKS = {
-    'index.html':                    [('/demo', 'Demo'), ('#evidence', 'Evidence'), ('/onboarding', 'Board bring-up')],
-    'onboarding.html':               [('/', 'Home'), ('/demo', 'Demo'), ('/#evidence', 'Evidence')],
-    'demo.html':                     [('/', 'Home'), ('/#evidence', 'Evidence'), ('/onboarding', 'Board bring-up')],
-    'runs/bldc-hall-fault-demo.html':[('/', 'Home'), ('/demo', 'Demo'), ('/onboarding', 'Board bring-up')],
+    'index.html':                    [('/product', 'Product'), ('/demo', 'Demo'), ('#evidence', 'Evidence'), ('/onboarding', 'Board bring-up')],
+    'product.html':                  [('/', 'Home'), ('/demo', 'Demo'), ('/onboarding', 'Board bring-up')],
+    'onboarding.html':               [('/', 'Home'), ('/product', 'Product'), ('/demo', 'Demo')],
+    'demo.html':                     [('/', 'Home'), ('/product', 'Product'), ('/onboarding', 'Board bring-up')],
+    'runs/bldc-hall-fault-demo.html':[('/', 'Home'), ('/product', 'Product'), ('/demo', 'Demo')],
 }
 
 def markup(page):
@@ -96,7 +97,7 @@ def header_of(path):
     return hashlib.sha256((css.group(0) + skeleton).encode()).hexdigest()[:12]
 
 if __name__ == '__main__':
-    roots = ['.', 'v18']
+    roots = ['.', 'v18', 'v19']
     pages = list(LINKS)
     if '--check' in sys.argv:
         seen = {}

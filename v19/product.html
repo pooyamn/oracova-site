@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Augur One: the Oracova bench board</title>
+<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute on one board, PoE powered, remotely recoverable, with a 400-pin DUT interface.">
+<link rel="canonical" href="https://oracova.com/product">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Oracova">
+<meta property="og:title" content="Augur One: the Oracova bench board">
+<meta property="og:description" content="Two compute layers on the board, one cable in, and a supervisor that always brings it back.">
+<meta property="og:url" content="https://oracova.com/product">
+<meta property="og:image" content="https://oracova.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://oracova.com/og.png">
+<style>
+  :root {
+    --bg: #0E0F11;
+    --surface: #15161A;
+    --surface-2: #191B20;
+    --border: rgba(255,255,255,.07);
+    --border-strong: rgba(255,255,255,.14);
+    --text: #EDEEF0;
+    --text-dim: #9DA1A8;
+    --text-faint: #6E7278;
+    --brand: #FFB454;
+    --brand-ink: #1A1204;
+    --pass: #4ADE80;
+    --fail: #F87171;
+    --glow: rgba(255,180,84,.10);
+    --nav-bg: rgba(14,15,17,.9);
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    /* terminal instrument palette — fixed in both themes */
+    --bg-panel: #101216; --bg-card: #15171C; --line: #23262D;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 68px; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  ::selection { background: rgba(255,180,84,.28); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 88px 0 0; }
+  h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  h2 { font-size: 30px; margin-bottom: 12px; letter-spacing: -0.025em; }
+  h3 { font-size: 16.5px; margin-bottom: 6px; }
+  p { max-width: 62ch; }
+  .dim { color: var(--text-dim); }
+  .mono { font-family: var(--mono); }
+  .kicker {
+    font-size: 12.5px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .09em; color: var(--text-faint); margin-bottom: 14px;
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--nav-bg); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .logo { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text);
+    text-decoration: none; padding: 12px 0; margin: -12px 0; letter-spacing: -.01em; }
+  .logo span { color: var(--brand); }
+  .nav-links { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
+  .nav-links a:not(.btn) {
+    color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
+    white-space: nowrap; padding: 8px 12px; border-radius: 8px;
+  }
+  .nav-links a:not(.btn):hover { color: var(--text); background: rgba(255,255,255,.05); }
+  .nav-links .btn { margin-left: 10px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 9px 18px; border-radius: 8px;
+    font-family: var(--sans); font-size: 14px; font-weight: 600; letter-spacing: -.01em;
+    text-decoration: none; border: 1px solid transparent; cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-primary { background: var(--brand); color: var(--brand-ink); }
+  .btn-primary:hover { background: #FFC276; }
+  .btn-ghost { border-color: var(--border-strong); color: var(--text); background: transparent; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,.28); background: rgba(255,255,255,.04); }
+  .btn-sm { padding: 7px 14px; font-size: 13.5px; }
+  .nav-links a.btn-primary { color: var(--brand-ink); }
+  .nav-links a.btn-primary:hover { color: var(--brand-ink); }
+
+  /* ---------- hero ---------- */
+  header.hero { position: relative; padding: 84px 0 64px; overflow: hidden; }
+  header.hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto;
+    height: 620px; pointer-events: none;
+    background: radial-gradient(560px 340px at 68% 46%, var(--glow), transparent 70%);
+  }
+  header.hero > .wrap { position: relative; }
+  .hero h1 {
+    font-size: clamp(36px, 5.2vw, 56px); letter-spacing: -0.035em; font-weight: 650;
+    max-width: 22ch; margin-bottom: 14px;
+  }
+  .hero .hero-second {
+    font-size: clamp(16.5px, 2.1vw, 19px); font-weight: 400; color: var(--text-dim);
+    letter-spacing: -0.01em; margin-bottom: 28px; max-width: 52ch;
+  }
+  .hero .hero-second em { font-style: normal; color: var(--brand); font-weight: 600; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+  @media (max-width: 560px) {
+    header.hero { padding: 40px 0 40px; }
+    .hero h1 { font-size: 32px; }
+    .hero .hero-second { font-size: 15.5px; margin-bottom: 18px; }
+    .cta-row { gap: 10px; margin-bottom: 24px; }
+    .cta-row .btn { padding: 9px 15px; font-size: 13.5px; }
+  }
+
+  /* ---------- terminal figure (instrument: fixed dark) ---------- */
+  .video-frame {
+    border: 1px solid var(--border-strong); border-radius: 14px; overflow: hidden;
+    background: var(--bg-panel);
+    box-shadow: 0 24px 80px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.3);
+  }
+  .bench-replay {
+    display: flex; flex-direction: column;
+    font-family: var(--mono); font-size: 13px;
+    background: radial-gradient(ellipse at 30% 0%, rgba(255,180,84,.05), transparent 60%), var(--bg-panel);
+    --text: #E6EAEF; --text-dim: #8E97A3; --accent: #FFB454; --pass: #4ADE80; --fail: #F87171;
+  }
+  .bench-head {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 6px 18px; flex-wrap: wrap; padding: 10px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 11.5px; color: var(--text-dim); letter-spacing: .04em;
+  }
+  .bench-head .bench-title { color: var(--text); }
+  .bench-log {
+    flex: 0 0 auto; display: grid; gap: 8px; align-content: start;
+    padding: 20px 18px; overflow: hidden;
+    height: min(46vh, 430px);
+  }
+  @media (max-height: 860px) and (min-width: 561px) {
+    header.hero { padding: 48px 0 48px; }
+    .bench-log { height: min(40vh, 330px); }
+  }
+  .bench-log.static { overflow-y: auto; }
+  .bench-log:not(.static) { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+    mask-image: linear-gradient(180deg, transparent 0, #000 16px); }
+  .cursor::after { content: "\258C"; color: var(--accent); animation: benchblink 1s steps(1) infinite; }
+  @keyframes benchblink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
+  .la-card { border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 8px; background: #0C0E12; padding: 10px 14px 8px; }
+  .la-card .la-label { font-size: 10.5px; color: var(--text-dim);
+    letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+  .la-card svg { display: block; width: 100%; height: 72px; }
+  .la-card .la-note { font-size: 11.5px; color: var(--fail); margin-top: 4px; }
+  .bl { color: var(--text-dim); white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; }
+  .bl b { color: var(--text); font-weight: 500; }
+  .bl .k { color: var(--accent); }
+  .bl .pass { color: var(--pass); font-weight: 700; }
+  .bl .fail { color: var(--fail); font-weight: 700; }
+  .bench-log .bl { border-radius: 4px; margin: -2px -8px; padding: 2px 8px 2px calc(8px + 9ch); }
+  .bench-foot { border-top: 1px solid var(--line); padding: 8px 18px;
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    font-size: 11.5px; color: var(--text-dim); letter-spacing: .03em; }
+  .bench-ctl { display: flex; align-items: center; gap: 12px; }
+  .bench-ctl button { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
+    color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; padding: 8px 13px; cursor: pointer; }
+  .bench-ctl button:hover { border-color: var(--accent); color: var(--accent); }
+  .bench-ctl a { color: var(--accent); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; }
+  .bench-ctl a:hover { text-decoration: underline; }
+  @media (max-width: 560px) {
+    .bench-foot > span:first-child { display: none; }
+    .bench-foot { justify-content: flex-end; }
+    .bench-log { height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
+    .bench-replay { font-size: 11.5px; }
+    .la-card svg text { display: none; }
+    .trace-block svg text { display: none; }
+    .bench-head { font-size: 10.5px; padding: 9px 14px; }
+  }
+
+  /* ---------- cred cards ---------- */
+  .cred-band { border-top: 1px solid var(--border); background: transparent; margin-top: 64px; }
+  .cred-band .wrap { padding-top: 28px; padding-bottom: 8px; }
+  .cred-band .cred-label {
+    font-size: 12px; font-weight: 600; color: var(--text-faint); letter-spacing: .09em;
+    text-transform: uppercase; display: block; margin-bottom: 14px;
+  }
+  .cred-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  a.cred-card {
+    display: grid; gap: 4px; align-content: start;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 18px; text-decoration: none; color: var(--text);
+    transition: border-color .15s ease, background-color .15s ease;
+  }
+  a.cred-card:hover { border-color: var(--border-strong); background: var(--surface-2); }
+  .cred-card .cc-t { font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
+  .cred-card .cc-t::after { content: " \2192"; color: var(--brand); }
+  .cred-card .cc-d { font-size: 13px; color: var(--text-dim); }
+  @media (max-width: 800px) { .cred-cards { grid-template-columns: 1fr; } }
+
+  /* ---------- sections ---------- */
+  .whatis { font-size: 24px; line-height: 1.45; max-width: 30ch; color: var(--text);
+    font-weight: 600; letter-spacing: -0.02em; }
+
+  .mini { display: grid; margin-top: 18px; }
+  .mini-row { display: grid; grid-template-columns: 44px 250px 1fr; gap: 16px; padding: 16px 0;
+    align-items: baseline; border-bottom: 1px solid var(--border); }
+  .mini-row:first-child { border-top: 1px solid var(--border); }
+  .mini-row .n { font-family: var(--mono); font-size: 12.5px; color: var(--text-faint); }
+  .mini-row .t { font-weight: 600; font-size: 15.5px; color: var(--text); letter-spacing: -.01em; }
+  .mini-row .d { font-size: 14.5px; color: var(--text-dim); }
+  .mini-row .d b { color: var(--text); font-weight: 600; }
+  @media (max-width: 700px) {
+    .mini-row { grid-template-columns: 44px 1fr; }
+    .mini-row .d { grid-column: 2; }
+  }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; transition: border-color .15s ease;
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .card h3 { color: var(--text); letter-spacing: -.01em; }
+  .card p { font-size: 14px; color: var(--text-dim); line-height: 1.55; }
+  .card .faults { font-family: var(--mono); font-size: 11.5px; color: var(--brand); margin-bottom: 8px; opacity: .9; }
+  .note { margin-top: 20px; font-size: 13.5px; color: var(--text-faint); max-width: none; line-height: 1.6; }
+
+  /* ---------- evidence ---------- */
+  .run-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    font-family: var(--mono); font-size: 13px; margin-top: 26px; overflow: hidden;
+  }
+  .run-head {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    padding: 13px 20px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-size: 12px;
+  }
+  .run-head .rid { color: var(--text); }
+  .run-meta { padding: 14px 20px; display: grid; gap: 5px; color: var(--text-dim); font-size: 12.5px; }
+  .run-meta b { color: var(--text); font-weight: 500; }
+  .run-meta .fault b { color: var(--brand); }
+  .trace-block { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 10px 20px 6px; background: #0C0E12; }
+  .trace-label { font-size: 10.5px; color: #8E97A3; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
+  .verdict-rows { padding: 4px 0; }
+  .verdict-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 20px; }
+  .verdict-row + .verdict-row { border-top: 1px solid var(--border); }
+  .verdict-row .dim { color: var(--text-dim); font-size: 12.5px; }
+  .badge { padding: 3px 12px; border-radius: 999px; font-weight: 700; font-size: 12px; letter-spacing: .06em; }
+  .badge.fail { background: rgba(248,113,113,.12); color: var(--fail); border: 1px solid rgba(248,113,113,.3); }
+  .badge.pass { background: rgba(74,222,128,.1); color: var(--pass); border: 1px solid rgba(74,222,128,.3); }
+  .score-key { border-top: 1px solid var(--border); padding: 9px 20px; font-size: 11.5px; color: var(--text-faint); }
+  .run-caption { margin-top: 14px; font-size: 14.5px; color: var(--text-dim); max-width: 68ch; }
+  a.run-link { color: inherit; text-decoration: underline;
+    text-decoration-color: rgba(255,180,84,.4); text-underline-offset: 3px; }
+  a.run-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
+
+  .evidence-list { margin-top: 20px; display: grid; gap: 12px; }
+  .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+  .ev .ev-head { display: grid; gap: 5px; }
+  .ev .tag { font-size: 11.5px; font-weight: 600; color: var(--text-faint); letter-spacing: .09em; text-transform: uppercase; }
+  .ev .claim { font-weight: 600; font-size: 16px; color: var(--text); letter-spacing: -.01em; }
+  .ev .nums { margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
+  .ev-note { margin-top: 8px; font-size: 14px; color: var(--text-dim); max-width: none; }
+  .ev-note b { color: var(--text); }
+
+  /* ---------- comparison table ---------- */
+  .cmp-outer { position: relative; margin-top: 18px; }
+  .cmp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--border); border-radius: 12px; }
+  .cmp { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13.5px; }
+  .cmp th, .cmp td { padding: 11px 16px; text-align: left; border-top: 1px solid var(--border); }
+  .cmp tr:first-child th { border-top: none; color: var(--text-faint); font-weight: 600;
+    font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
+  .cmp td:first-child { color: var(--text-dim); }
+  .cmp td:first-child, .cmp th:first-child { position: sticky; left: 0; background: var(--surface-2); z-index: 1; }
+  .cmp .y { color: var(--pass); font-weight: 600; }
+  .cmp .n { color: var(--fail); font-weight: 600; }
+  .cmp .dim { color: var(--text-dim); font-weight: 400; }
+  .cmp .hl { background: rgba(255,180,84,.05); }
+  .cmp th.hl { color: var(--brand); }
+  .cmp tbody tr, .cmp tr { background: var(--surface); }
+  .tbl-hint, .table-hint { display: none; font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); margin: 6px 0; }
+  .cmp-outer::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 48px;
+    border-radius: 0 12px 12px 0;
+    background: linear-gradient(270deg, var(--bg) 20%, transparent); pointer-events: none; opacity: 0; }
+  @media (max-width: 700px) { .cmp-outer::after { opacity: .9; } .table-hint { display: block; } }
+  @media (max-width: 560px) { .cmp { font-size: 12px; } .cmp th, .cmp td { padding: 9px 10px; } }
+
+  /* ---------- founder / cta ---------- */
+  .founder { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
+    padding-bottom: 88px; }
+  .founder-cta {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 28px; text-align: center;
+  }
+  .founder-cta .btn { width: 100%; margin-top: 14px; }
+  .founder-cta .mono { font-size: 12px; color: var(--text-dim); margin-top: 12px; }
+  @media (max-width: 800px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .founder { grid-template-columns: 1fr; }
+    section { padding: 64px 0 0; }
+    .nav-links a.link { display: none; }
+  }
+
+  footer { border-top: 1px solid var(--border); margin-top: 0; padding: 28px 0;
+    color: var(--text-faint); font-family: var(--mono); font-size: 12.5px; }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  footer a { color: inherit; text-decoration: none; display: inline-block; padding: 12px 2px; margin: -12px -2px; }
+  footer a:hover { color: var(--text-dim); }
+
+  /* ---------- system light theme ---------- */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #FAFAF9; --surface: #FFFFFF; --surface-2: #F5F5F3;
+      --border: rgba(20,22,26,.09); --border-strong: rgba(20,22,26,.18);
+      --text: #16181D; --text-dim: #555A63; --text-faint: #83888F;
+      --brand: #B05C00; --brand-ink: #FFFFFF;
+      --pass: #16A34A; --fail: #DC2626;
+      --glow: rgba(176,92,0,.07); --nav-bg: rgba(250,250,249,.92);
+    }
+    ::selection { background: rgba(176,92,0,.18); }
+    .nav-links a:not(.btn):hover { background: rgba(20,22,26,.05); }
+    .btn-primary:hover { background: #C96A02; }
+    .btn-ghost:hover { border-color: rgba(20,22,26,.3); background: rgba(20,22,26,.03); }
+    .bench-foot button { background: rgba(255,255,255,.04); }
+    .video-frame { box-shadow: 0 24px 60px rgba(20,22,26,.18), 0 2px 8px rgba(20,22,26,.08); }
+    /* instrument surfaces stay dark */
+    .bench-replay { --text: #E6EAEF; --text-dim: #8E97A3; }
+    .cmp .hl { background: rgba(176,92,0,.05); }
+    .card .faults { color: #B05C00; }
+    .run-meta .fault b { color: #B05C00; }
+  }
+
+  /* ---------- mono-as-display variant ---------- */
+  h1, h2, h3, .whatis, .ev .claim, .card h3, .mini-row .t {
+    font-family: var(--mono);
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 42px); letter-spacing: -0.03em; font-weight: 600;
+    max-width: none; line-height: 1.12;
+  }
+  h2 { font-size: 23px; letter-spacing: -0.02em; }
+  h3 { font-size: 15px; }
+  .whatis { font-size: 20px; max-width: 36ch; line-height: 1.5; }
+  .kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em; }
+  .ev .tag, .cred-band .cred-label { font-family: var(--mono); }
+  .mini-row .t { font-size: 14.5px; }
+
+  /* ---------- instrument-readout pass ---------- */
+  section { padding: 56px 0 0; }
+  section::before { content: ""; display: block; height: 1px; margin-bottom: 44px;
+    background: var(--border); }
+  .run-stats { display: flex; gap: 8px 22px; flex-wrap: wrap; align-items: baseline;
+    font-family: var(--mono); font-size: 12px; color: var(--text-faint);
+    padding: 12px 4px 0; letter-spacing: .02em; }
+  .run-stats b { color: var(--pass); font-weight: 700; }
+  .card { transition: border-color .15s ease, transform .15s ease; }
+  .card:hover { transform: translateY(-2px); }
+  .card:hover .faults { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
+  @media (max-width: 800px) { section { padding: 48px 0 0; } section::before { margin-bottom: 32px; } }
+
+  /* ---------- mobile compare: switcher lives in the column header ---------- */
+  .cmp-mobile { display: none; }
+  body.cmpm .cmp-mobile { display: block; }
+  @media (max-width: 700px) {
+    body.cmpm .cmp-outer, body.cmpm #compare .table-hint { display: none; }
+  }
+  @media (min-width: 701px) { .cmp-mobile { display: none !important; } }
+  .cmpx { border: 1px solid var(--border-strong); border-radius: 12px; overflow: hidden; margin-top: 16px; }
+  .cx-row { display: grid; grid-template-columns: 1.15fr 1fr; }
+  .cx-row + .cx-row { border-top: 1px solid var(--border); }
+  .cx-l { padding: 11px 12px; min-width: 0; }
+  .cx-l .q { font-size: 11.5px; color: var(--text-faint); margin-bottom: 3px; }
+  .cx-l .a { font-size: 14px; font-weight: 600; color: var(--text); }
+  .cx-r { background: var(--surface-2); border-left: 1px solid var(--border);
+    padding: 11px 12px; display: flex; align-items: center; font-size: 13.5px; min-width: 0; }
+  .cx-head { border-bottom: 1px solid var(--border-strong); }
+  .cx-head .cx-l { display: flex; align-items: center; padding: 14px 12px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .09em; color: var(--brand); }
+  .cx-head .cx-r { padding: 6px; }
+  .cx-stack { position: relative; width: 100%; display: grid; gap: 2px; }
+  .cx-ind { position: absolute; left: 0; right: 0; height: 26px; border-radius: 7px;
+    background: rgba(255,255,255,.07); border: 1px solid var(--border-strong);
+    transition: top .22s cubic-bezier(.4,0,.2,1); pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .cx-ind { transition: none; } }
+  .cx-opt { position: relative; height: 26px; display: flex; align-items: center; justify-content: center;
+    background: none; border: 0; cursor: pointer; border-radius: 7px;
+    font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--text-faint); width: 100%; }
+  .cx-opt[aria-pressed="true"] { color: var(--text); font-weight: 700; }
+  .cx-opt[aria-pressed="true"]::before { content: "\2023"; color: var(--brand); margin-right: 6px; }
+  .cx-r .y { color: var(--pass); font-weight: 600; }
+  .cx-r .n { color: var(--fail); font-weight: 600; }
+  .cx-r .dim, .cx-r { color: var(--text-dim); }
+  .cx-l .y { color: var(--pass); }
+  .cx-l .n { color: var(--fail); }
+  .cm-fade { transition: opacity .16s ease; }
+  .cm-fade.out { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .cm-fade { transition: none; } }
+
+  @media (max-width: 800px) {
+    nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11;
+      position: fixed; top: 0; left: 0; right: 0; }
+    body { padding-top: 56px; }
+    @media (prefers-color-scheme: light) { nav { background: #FAFAF9; } }
+  }
+
+
+  /* ---------- product page ---------- */
+  .p-hero { padding: 72px 0 40px; }
+  .p-hero h1 { font-family: var(--mono); font-size: clamp(26px, 3.6vw, 40px); font-weight: 700;
+    letter-spacing: -.03em; max-width: 24ch; margin-bottom: 14px; }
+  .p-hero .sub { font-size: clamp(16px, 2vw, 18.5px); color: var(--text-dim); max-width: 60ch; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 30px 0 0; }
+  .tabs button { background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer;
+    font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--text-faint); padding: 12px 14px; }
+  .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--brand); }
+  .tabs button:hover { color: var(--text-dim); }
+  .panel[hidden] { display: none; }
+  .panel section, .panel > div > section { padding: 0; border-top: 0; }
+  .panel > div:first-child { padding-top: 30px !important; }
+  .layer { border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
+    padding: 22px 24px; margin-top: 12px; }
+  .layer .lnum { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--brand); }
+  .layer .loff { color: var(--text-faint); }
+  .layer h3 { font-family: var(--mono); font-size: 16px; margin: 6px 0 2px; letter-spacing: -.01em; }
+  .layer .part { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-bottom: 10px; }
+  .layer p { font-size: 14.5px; color: var(--text-dim); max-width: 70ch; }
+  .layer p + p { margin-top: 10px; }
+  .layer p b, .layer p strong { color: var(--text); }
+  .layer .runs { margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--text-faint); }
+  .sumline { margin-top: 20px; font-size: 15.5px; color: var(--text); max-width: 68ch; }
+  .sumline b { color: var(--brand); font-weight: 600; }
+  .recovery { display: grid; gap: 0; margin-top: 18px; border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; }
+  .rrow { display: grid; grid-template-columns: 220px 1fr; gap: 16px; padding: 14px 18px; }
+  .rrow + .rrow { border-top: 1px solid var(--border); }
+  .rrow .rw { font-family: var(--mono); font-size: 13px; color: var(--fail); }
+  .rrow .rf { font-size: 14px; color: var(--text-dim); }
+  .rrow .rf b { color: var(--text); }
+  @media (max-width: 700px) { .rrow { grid-template-columns: 1fr; gap: 4px; } }
+  .iface { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
+  .ifitem { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+    padding: 12px 16px; display: flex; align-items: baseline; gap: 12px; }
+  .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--brand); font-weight: 700; }
+  .ifitem span { font-size: 13.5px; color: var(--text-dim); }
+  @media (max-width: 700px) { .iface { grid-template-columns: 1fr; } }
+  .callout { border: 1px solid var(--border); border-left: 3px solid var(--brand);
+    border-radius: 10px; background: var(--surface); padding: 16px 20px; margin-top: 18px;
+    font-size: 14.5px; color: var(--text-dim); max-width: 74ch; }
+  .callout b { color: var(--text); }
+  .spec-h { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--brand); margin: 30px 0 8px; }
+  table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.spec td { padding: 10px 14px; border-top: 1px solid var(--border); vertical-align: top;
+    color: var(--text-dim); }
+  table.spec tr:first-child td { border-top: 0; }
+  table.spec td:first-child { width: 34%; color: var(--text); font-weight: 500; }
+  table.spec { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+  @media (max-width: 600px) {
+    table.spec td { display: block; padding: 8px 14px; border-top: 0; }
+    table.spec td:first-child { width: auto; padding-bottom: 0; font-family: var(--mono); font-size: 12px; }
+    table.spec tr { display: block; border-top: 1px solid var(--border); padding: 6px 0; }
+    table.spec tr:first-child { border-top: 0; }
+  }
+  .statusgrid { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .srow { display: grid; grid-template-columns: 1fr 190px; gap: 14px; padding: 13px 18px; font-size: 14px; }
+  .srow + .srow { border-top: 1px solid var(--border); }
+  .srow .st { color: var(--text-dim); }
+  .srow .sv { font-family: var(--mono); font-size: 12.5px; }
+  .sv.proven { color: var(--pass); }
+  .sv.pending { color: var(--text-faint); }
+  @media (max-width: 700px) { .srow { grid-template-columns: 1fr; gap: 4px; } }
+
+/* ===== canonical site header (tools/header.py — do not edit per page) ===== */
+.site-nav { position: sticky; top: 0; z-index: 40;
+  background: rgba(14,15,17,.9);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid rgba(255,255,255,.09); }
+.site-nav .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
+  text-decoration: none; padding: 12px 0; margin: -12px 0; }
+.site-nav .nav-logo i { font-style: normal; color: #FFB454; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
+.site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+.site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
+.site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 10px; padding: 9px 16px; border-radius: 8px; border: 1px solid transparent;
+  background: #FFB454; color: #1A1204; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
+@media (max-width: 800px) {
+  .site-nav { position: fixed; top: 0; left: 0; right: 0;
+    -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+  body { padding-top: 56px; }
+  .site-nav .nav-set a:not(.nav-cta) { display: none; }
+}
+@media (prefers-color-scheme: light) {
+  .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
+  .site-nav .nav-logo { color: #16181D; }
+  .site-nav .nav-logo i { color: #B05C00; }
+  .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav .nav-cta { background: #B05C00; color: #fff; }
+  .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
+  @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
+}
+/* ===== end canonical site header ===== */
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="/">oracova<i>_</i></a>
+    <div class="nav-set">
+      <a href="/">Home</a>
+      <a href="/demo">Demo</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header class="p-hero">
+    <div class="kicker">Augur One</div>
+    <h1>One board between your firmware and the world it thinks it lives in.</h1>
+    <p class="sub">The DUT board carries your microcontroller. Augur One is everything your
+    firmware expects to find around it: sensors that answer, loads that push back, buses that
+    respond, and faults that arrive when the agent decides they should.</p>
+    <div class="cta-row" style="margin-top:26px">
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+      <a class="btn btn-ghost" href="#spec" id="to-spec">Specification</a>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-o" aria-controls="panel-o" aria-selected="true">Overview</button>
+    <button role="tab" id="tab-s" aria-controls="panel-s" aria-selected="false">Specification</button>
+  </div>
+
+  <section class="panel" id="panel-o" role="tabpanel" aria-labelledby="tab-o">
+    <div style="padding-top:36px">
+      <h2>Three layers of computation, two of them on the board</h2>
+      <p class="dim">Emulating a world has three different jobs and they run at three different
+      speeds. Putting them on one processor is why bench rigs end up either slow or unfaithful.
+      Two layers live on Augur One. The third is the bench computer, a separate machine on the
+      network. The DUT is not one of the layers: it is the thing being tested.</p>
+      <div class="layer">
+        <div class="lnum">Layer 1 <span class="x">(on Augur One)</span></div>
+        <h3>FPGA fabric: the part that has to be exact</h3>
+        <div class="part">Lattice ECP5 LFE5U-85F</div>
+        <p>Protocol timing is not a place for software. Sensor register files, bus slaves, PWM and encoder decode, fault injection, and the in-fabric logic analyzer all live in gateware, so the DUT's bus sees answers at the DUT's own clock, not when a scheduler gets to it. This is the layer that makes an MPU6000 look like an MPU6000 to a driver that reads it at 8 kHz.</p>
+        <div class="runs">runs here: sensor models &middot; protocol slaves &middot; edge-accurate capture &middot; fault injection &middot; DUT debug relay</div>
+      </div>
+      <div class="layer">
+        <div class="lnum">Layer 2 <span class="x">(on Augur One)</span></div>
+        <h3>Real-time compute: the part that has to be fast</h3>
+        <div class="part">STM32N657, Cortex-M55</div>
+        <p>Physics is arithmetic, not timing. Motor and plant models, thermal and pack integration, control-rate math, and anything that needs to update state between the DUT's samples run here. Close enough to the fabric to feed it, far enough from the bench computer that a hiccup up there cannot stall the plant.</p>
+        <p>The part also carries an NPU. We are not using it yet, and we are not going to pretend otherwise: it is there because plants whose physics are expensive to integrate directly, like saturating magnetics, flux maps and thermal networks, are a good fit for a learned approximation running at rate. <b>That is a road we have, not a road we have walked.</b></p>
+        <div class="runs">runs here: plant models &middot; physics integration &middot; closed-loop state</div>
+      </div>
+      <div class="layer">
+        <div class="lnum">Layer 3 <span class="loff">(off the board)</span></div>
+        <h3>Bench computer: the part that has to think</h3>
+        <div class="part">A separate machine, reached over Ethernet</div>
+        <p>The agent, the test authoring, the run orchestration, the verdict scoring and the evidence store are not real-time work. They sit on the bench computer, where they can be slow, be restarted, and be reasoned about. The checker that scores runs lives here too, deliberately outside the loop it is judging.</p>
+        <p><b>You supply the bench computer.</b> A Linux machine with gigabit Ethernet is the whole requirement. No GPU, no special hardware, nothing to source: a lab that already has machines does not buy another one, and you are not locked to hardware we picked.</p>
+        <div class="runs">runs here: the agent &middot; test authoring &middot; CI triggers &middot; verdicts &middot; evidence</div>
+      </div>
+      <p class="sumline"><b>Augur One is layers one and two.</b> Your bench computer is layer
+      three. Your board is the thing they are all there to test.</p>
+    </div>
+
+    <div style="padding-top:56px">
+      <h2>One cable</h2>
+      <p class="dim"><b style="color:var(--text)">Power over Ethernet is standard.</b> Power and
+      network arrive on the same cable, so a bench is one run of Cat-6 from a PoE switch and
+      nothing else. Put it in a rack, in a lab across the building, or in a customer's facility,
+      and it is still reachable and still recoverable.</p>
+      <p class="dim" style="margin-top:10px"><b style="color:var(--text)">USB-C 5 V is the other
+      option</b> when there is no PoE switch to hand. Both inputs go through an ideal-diode ORing
+      stage, so both can be connected at once without either back-feeding the other.</p>
+      <div class="callout">Benches multiply: one per pull request, one per agent, as many as the
+      team runs in parallel. <b>A rack of one-cable benches is a thing a lab can actually
+      operate.</b> A rack of benches each needing a power brick, a hub, and a hand on a button
+      is not.</div>
+    </div>
+
+    <div style="padding-top:56px">
+      <h2>It always comes back</h2>
+      <p class="dim">The supervisor is the part that never goes down: an STM32H563 on its own
+      rail with its own network path. The rule the board is designed around is that
+      <b style="color:var(--text)">the Ethernet fabric must never drop during a recovery</b>, so
+      the FPGA and the N6 are always powered and recovery is by reset, not by power.</p>
+      <div class="recovery">
+        <div class="rrow"><div class="rw">N6 wedged</div><div class="rf">supervisor asserts its reset line.</div></div>
+        <div class="rrow"><div class="rw">FPGA misconfigured</div><div class="rf">supervisor pulses PROGRAMN, which reconfigures from NOR with I/O tristated.</div></div>
+        <div class="rrow"><div class="rw">FPGA bitstream corrupt</div><div class="rf">the supervisor owns the ECP5's JTAG. It can SRAM-load a known-good image directly, and reprogram the config NOR through the FPGA's own JTAG-to-SPI bridge.</div></div>
+        <div class="rrow"><div class="rw">Switch itself hangs</div><div class="rf">the one case where the supervisor resets the switch.</div></div>
+      </div>
+      <p class="dim" style="margin-top:16px">Because the FPGA and N6 have no power switches at
+      all, there are no half-powered or back-driven states to get stuck in. That is by
+      construction, not by firmware discipline. The supervisor also owns DUT power: rail
+      setpoint, enable, current sensing, and the Kelvin sense return.</p>
+      <p class="sumline">A bench you cannot recover remotely is a bench somebody has to walk to.</p>
+    </div>
+
+    <div style="padding-top:56px">
+      <h2>The DUT interface</h2>
+      <p class="dim">The DUT board carries the chip under test and the parts that belong to it:
+      crystal, straps, whatever that part needs to boot. Everything else is Augur One's job. We
+      keep DUT boards for the most commonly used chips; for anything else the DUT board is
+      designed for your part, and that is what the bring-up service covers.</p>
+      <p class="dim" style="margin-top:10px">Four mezzanine connectors carry
+      <b style="color:var(--text)">400 pins across 287 distinct nets</b>:</p>
+      <div class="iface">
+        <div class="ifitem"><b>148</b><span>general-purpose digital I/O</span></div>
+        <div class="ifitem"><b>40</b><span>analog channels, 10 module slots x 4</span></div>
+        <div class="ifitem"><b>40</b><span>QSPI lines from the DAC plane</span></div>
+        <div class="ifitem"><b>40</b><span>pins of adjustable DUT supply, plus Kelvin sense</span></div>
+        <div class="ifitem"><b>24</b><span>pins of 4-pair Ethernet MDI to the DUT</span></div>
+        <div class="ifitem"><b>18</b><span>debug pins, SWD/JTAG relayed via the FPGA</span></div>
+      </div>
+      <p class="dim" style="margin-top:14px">The DUT rail is adjustable 1.8 V to 5 V with current
+      sensing on the rail, so the firmware's own power behaviour is observable, not assumed.</p>
+      <div class="callout"><b>We meet your board at the controller boundary.</b> Your power stage
+      stays off the bench. Your firmware still sees the signals it would see in the product.</div>
+    </div>
+
+    <div style="padding-top:56px; padding-bottom:20px">
+      <h2>Where this actually stands</h2>
+      <div class="statusgrid">
+        <div class="srow"><div class="st">Closed loop on real silicon: DC servo, pump, thermal, BLDC</div><div class="sv proven">Proven 2026-06-17</div></div>
+        <div class="srow"><div class="st">Scored fault library, FAIL then guarded PASS</div><div class="sv proven">Proven, run 20260618-080733</div></div>
+        <div class="srow"><div class="st">Full control loop in FPGA fabric at 8 kHz, unmodified Betaflight</div><div class="sv proven">Proven on ECP5 dev hardware</div></div>
+        <div class="srow"><div class="st">Augur One, the board on this page</div><div class="sv pending">In layout, first article pending</div></div>
+        <div class="srow"><div class="st">DUT boards</div><div class="sv proven">Stocked for common chips</div></div>
+      </div>
+      <p class="dim" style="margin-top:14px; font-size:14px">The capabilities above run today on
+      development hardware. Augur One consolidates them onto one board. It has not been
+      fabricated yet, and we will not claim otherwise.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-s" role="tabpanel" aria-labelledby="tab-s" hidden>
+    <div style="padding-top:30px" id="spec">
+      <div class="spec-h">Compute</div>
+      <table class="spec">
+        <tr><td>Layer 1, on board</td><td>Lattice ECP5 LFE5U-85F. Gateware: protocol, capture, fault injection.</td></tr>
+        <tr><td>Layer 2, on board</td><td>STM32N657, Cortex-M55. Real-time physics and plant state.</td></tr>
+        <tr><td>NPU</td><td>Present on the N6. Not used today; intended for learned approximations of expensive physics.</td></tr>
+        <tr><td>Layer 3, off board</td><td>Bench computer over Ethernet. Agent, tests, verdicts, evidence. Customer-supplied.</td></tr>
+        <tr><td>Bench computer requirement</td><td>Linux, gigabit Ethernet. Nothing else special.</td></tr>
+        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power. Not a compute layer.</td></tr>
+      </table>
+      <div class="spec-h">DUT interface</div>
+      <table class="spec">
+        <tr><td>Connectors</td><td>4 x DF40HC(3.0)-100DS-0.4V mezzanine</td></tr>
+        <tr><td>Total pins</td><td>400, across 287 distinct nets</td></tr>
+        <tr><td>Digital I/O</td><td>148</td></tr>
+        <tr><td>Analog channels</td><td>40</td></tr>
+        <tr><td>DAC plane QSPI</td><td>40 lines</td></tr>
+        <tr><td>DUT Ethernet</td><td>4-pair MDI, 24 pins</td></tr>
+        <tr><td>Debug</td><td>SWD/JTAG per bank, 18 pins, relayed via FPGA</td></tr>
+        <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
+      </table>
+      <div class="spec-h">DUT power</div>
+      <table class="spec">
+        <tr><td>Rail</td><td>1.8 V to 5 V adjustable</td></tr>
+        <tr><td>Sensing</td><td>Current sense on the DUT rail, Kelvin sense return</td></tr>
+        <tr><td>Control</td><td>Supervisor-owned setpoint and enable</td></tr>
+      </table>
+      <div class="spec-h">Analog</div>
+      <table class="spec">
+        <tr><td>Channels</td><td>40, across 10 module slots, 4 per slot</td></tr>
+        <tr><td>Per-slot choice</td><td>High-speed module, medium-speed module, or pass-through jumper</td></tr>
+        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V / -1.5 V rails</td></tr>
+        <tr><td>Medium-speed module</td><td>DAC80504 per slot</td></tr>
+        <tr><td>Mix</td><td>Any combination; slots are independent</td></tr>
+        <tr><td>Isolation</td><td>Every analog column flanked by analog-ground columns</td></tr>
+      </table>
+      <div class="spec-h">Network</div>
+      <table class="spec">
+        <tr><td>Switch</td><td>RTL8367S</td></tr>
+        <tr><td>Bench computer link</td><td>Ethernet</td></tr>
+        <tr><td>DUT link</td><td>4-pair MDI to the DUT board</td></tr>
+      </table>
+      <div class="spec-h">Power input</div>
+      <table class="spec">
+        <tr><td>Standard</td><td>Power over Ethernet. Power and network on one cable.</td></tr>
+        <tr><td>Alternate</td><td>USB-C 5 V, 15 W budget</td></tr>
+        <tr><td>ORing</td><td>Ideal-diode; both sources may be connected at once</td></tr>
+      </table>
+      <div class="spec-h">Physical</div>
+      <table class="spec">
+        <tr><td>Augur One</td><td>210 x 130 mm</td></tr>
+        <tr><td>DUT board</td><td>130 x 80 mm</td></tr>
+      </table>
+      <div class="spec-h">Recovery</div>
+      <table class="spec">
+        <tr><td>N6</td><td>Supervisor reset line</td></tr>
+        <tr><td>FPGA</td><td>PROGRAMN reconfigure, plus supervisor-owned JTAG for SRAM load and NOR reprogram</td></tr>
+        <tr><td>Switch</td><td>Supervisor reset, only if the switch hangs</td></tr>
+        <tr><td>Power switching on FPGA/N6</td><td>None by design. No half-powered states.</td></tr>
+      </table>
+      <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the built
+      netlist, not from a datasheet summary. PoE class and measured power draw will be published
+      from the first article.</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+    <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var tabs = [document.getElementById('tab-o'), document.getElementById('tab-s')];
+  var panels = [document.getElementById('panel-o'), document.getElementById('panel-s')];
+  function show(i, push) {
+    tabs.forEach(function (t, k) { t.setAttribute('aria-selected', String(k === i)); });
+    panels.forEach(function (p, k) { p.hidden = k !== i; });
+    if (push) history.replaceState(null, '', i === 1 ? '#spec' : location.pathname);
+  }
+  tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i, true); }); });
+  var toSpec = document.getElementById('to-spec');
+  if (toSpec) toSpec.addEventListener('click', function (e) { e.preventDefault(); show(1, true); window.scrollTo({top: 0, behavior: 'smooth'}); });
+  if (location.hash === '#spec') show(1, false);
+})();
+</script>
+
+</body>
+</html>
