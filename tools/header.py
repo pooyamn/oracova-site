@@ -133,8 +133,7 @@ SITEMAP = [
                   ('/#evidence', 'Scored verdicts')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),
-    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes', 'Book 15 minutes'),
-                  ('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
+    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
                   ('mailto:pooyamn@gmail.com', 'Email us')]),
 ]
 
@@ -149,9 +148,9 @@ def markup(page):
             ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
             '<span></span></button>\n'
             '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
-            '    <div class="nav-set">\n%s\n      %s\n'
+            '    <div class="nav-set">\n%s\n'
             '    </div>\n  </div>\n</nav>\n'
-            '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, CTA, menu))
+            '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, menu))
 
 def footer_markup():
     cols = []
