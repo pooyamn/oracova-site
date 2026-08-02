@@ -26,7 +26,7 @@ speeds. Putting them on one processor is why bench rigs get slow or unfaithful. 
 splits them.
 
 ### Layer 1 — FPGA fabric: the part that has to be exact
-**Lattice ECP5 (LFE5U-85F)**
+**Lattice ECP5 LFE5U-85F**
 
 Protocol timing is not a place for software. Sensor register files, bus slaves, PWM and
 encoder decode, fault injection, and the in-fabric logic analyzer all live in gateware, so
@@ -102,13 +102,16 @@ Closing line: A bench you cannot recover remotely is a bench somebody has to wal
 
 ## Section 4 — The DUT interface
 
-The DUT board is per-part: your microcontroller, its crystal, its straps, routed out to
-the base board. Everything else is the base board's job.
+The DUT board carries the chip under test and the parts that belong to it: crystal, straps,
+whatever that part needs to boot. Everything else is the base board's job.
+
+We keep DUT boards for the most commonly used chips. For anything else, the DUT board is
+designed for your part, and that is what the bring-up service covers.
 
 Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 
 - **148** general-purpose digital I/O
-- **40** analog injection channels
+- **40** analog channels (10 module slots x 4)
 - **40** QSPI lines from the DAC/mimic plane
 - **40** pins of adjustable DUT supply, plus Kelvin sense
 - **24** pins of 4-pair Ethernet MDI to the DUT
@@ -131,7 +134,7 @@ bench. Your firmware still sees the signals it would see in the product.
 | Scored fault library with FAIL then guarded PASS | Proven, run 20260618-080733 |
 | Full control loop in FPGA fabric at 8 kHz (unmodified Betaflight) | Proven on ECP5 development hardware, 2026-07-07 |
 | The base board described on this page | In layout, first article pending |
-| DUT boards | Built per part |
+| DUT boards | Stocked for common chips, designed per part otherwise |
 
 Line under the table: The capabilities above run today on development hardware. The base
 board consolidates them onto one board; it has not been fabricated yet, and we will not
@@ -171,9 +174,12 @@ claim otherwise.
 ## Analog
 | | |
 |---|---|
-| Module options | Jumper (pass-through), DAC80504, AD3552R |
-| Fast path | AD3552R modules for high-rate injection |
-| Reference | REF5025 2.5 V |
+| Channels | 40, across 10 module slots (4 per slot) |
+| Per-slot choice | High-speed module, medium-speed module, or pass-through jumper |
+| High-speed module | 2 x AD3542R per slot, on dedicated +7 V / -1.5 V rails |
+| Medium-speed module | DAC80504 per slot |
+| Mix | Any combination; slots are independent |
+| Isolation | Every analog column flanked by analog-ground columns, 1.2 AGND per channel |
 
 ## Network
 | | |
@@ -190,6 +196,12 @@ claim otherwise.
 | Alternate | PoE (option) |
 | ORing | Ideal-diode, both sources may be present |
 
+## Physical
+| | |
+|---|---|
+| Base board | 210 x 130 mm |
+| DUT board | 130 x 80 mm |
+
 ## Recovery
 | | |
 |---|---|
@@ -200,15 +212,18 @@ claim otherwise.
 
 ---
 
-## OPEN QUESTIONS FOR POUYA
+## RESOLVED
+- ECP5: **LFE5U-85F**
+- Analog: **40 channels, 10 slots x 4**, each slot high-speed or medium-speed
+- Board sizes: base **210 x 130 mm**, DUT **130 x 80 mm**
+- Part numbers: fine to publish, but do not lead with them
+- DUT boards: common chips stocked; others are a designed board + bring-up service
 
-1. **ECP5 size**: BOM lists LFE5U-25F / -45F / -85F. Which is the shipping configuration?
-2. **PoE**: option only, or standard on the product? Wattage/class to publish?
-3. **Analog channel count**: 40 connector pins, but how many *independent* channels does that
-   map to, and at what update rate per module type? (Want a real number, not a pin count.)
-4. **Host**: do you ship the host, or is it customer-supplied? Spec to publish if you ship it.
-5. **N6 role**: is the NPU actually used, or is it incidental to the part choice? (Only claim it
-   if it does something.)
-6. **Confidential**: any part number above you do not want public? Easiest to cut are the
-   exact regulator/switch/reference parts.
-7. **Bench dimensions / rack unit / weight** once the layout closes: worth a physical row.
+## STILL OPEN
+1. **"The host is on the DUT board"** — need to pin this down before writing Layer 3.
+   Two readings: (a) the third compute layer (the machine running the agent, tests and
+   verdicts) is not an external PC at all, or (b) "host" = the chip under test, which lives
+   on the DUT board, and the third layer is still a separate computer over Ethernet.
+   Which is it?
+2. **NPU on the N6** — used, or incidental to the part choice? Only claim it if it works.
+3. **PoE** — option or standard, and what class/wattage to publish.
