@@ -639,7 +639,7 @@
     <div style="padding-top:30px" id="spec">
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>148, across 4 banks, each on its own 1.19&ndash;3.29 V rail</td></tr>
+        <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.19&ndash;3.29 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
         <tr><td>Analog channels</td><td>40</td></tr>
         <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current measured on two ranges: 8.19 A full scale active, 16.4 mA full scale asleep.</td></tr>
@@ -654,14 +654,6 @@
         <tr><td>Wireless use</td><td>The bench is the other end of the link. Pair, associate, drop the connection, and watch what the firmware does about it.</td></tr>
       </table>
 
-      <div class="spec-h">I/O logic levels</div>
-      <table class="spec">
-        <tr><td>Adjustable rails</td><td>4 independent VCCIO domains, one per DUT bank</td></tr>
-        <tr><td>Range</td><td>1.19 V to 3.29 V, set per bank</td></tr>
-        <tr><td>Regulation</td><td>Closed-loop LDO per rail, each behind its own load switch</td></tr>
-        <tr><td>Scope</td><td>Bank I/O reference only, independent of the DUT supply rail</td></tr>
-        <tr><td>Use</td><td>Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, on the same board</td></tr>
-      </table>
 
 
       <div class="spec-h">Analog</div>

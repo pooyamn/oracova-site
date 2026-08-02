@@ -176,22 +176,13 @@ claim otherwise.
 ## DUT interface
 | | |
 |---|---|
-| Digital I/O | 148, across 4 banks, each on its own 1.19-3.29 V rail |
+| Digital I/O | 148, across 4 banks. Each bank on its own adjustable 1.19-3.29 V rail. |
 | Analog injection channels | 40 |
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
 | USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
 | Debug | SWD/JTAG, 18 pins, relayed via FPGA |
 | DUT supply | 1.8-5 V adjustable, Kelvin-sensed; current on two ranges: 8.19 A FS active, 16.4 mA FS asleep |
 | DUT self-ID | Revision + capability straps |
-
-## I/O logic levels
-| | |
-|---|---|
-| Adjustable rails | 4 independent VCCIO domains, one per DUT bank |
-| Range | 1.19 V to 3.29 V, set per bank |
-| Regulation | Closed-loop LDO per rail, each behind its own load switch |
-| Scope | Bank I/O reference only, independent of the DUT supply |
-| Use | Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, same board |
 
 ## Analog
 | | |
