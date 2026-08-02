@@ -39,7 +39,7 @@ the DUT's bus sees answers at the DUT's own clock, not when a scheduler gets to 
 the layer that makes an MPU6000 look like an MPU6000 to a driver that reads it at 8 kHz.
 
 Runs here: sensor models, protocol slaves, edge-accurate capture, fault injection,
-per-bank DUT debug relay.
+DUT debug relay.
 
 ### Layer 2 (on Augur One) — Real-time compute: the part that has to be fast
 **STM32N657 (Cortex-M55 + NPU)**
@@ -138,7 +138,7 @@ Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 - **40** QSPI lines from the DAC/mimic plane
 - **40** pins of adjustable DUT supply, plus Kelvin sense
 - **24** pins of 4-pair Ethernet MDI to the DUT
-- **18** debug pins (SWD/JTAG relayed through the FPGA, per bank)
+- **18** debug pins (SWD/JTAG, relayed through the FPGA)
 - straps that let a DUT board identify its own revision and capabilities
 
 The DUT rail is adjustable **1.8 V to 5 V** with current sensing on the DUT rail, so the
@@ -186,7 +186,7 @@ claim otherwise.
 | Analog injection channels | 40 |
 | Mimic/DAC QSPI lines | 40 |
 | DUT Ethernet | 4-pair MDI, 24 pins |
-| Debug | SWD/JTAG per bank, 18 pins, relayed via FPGA |
+| Debug | SWD/JTAG, 18 pins, relayed via FPGA |
 | DUT self-ID | Revision + capability straps |
 
 ## DUT power
