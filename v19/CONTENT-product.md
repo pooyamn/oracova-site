@@ -88,8 +88,7 @@ is one run of Cat-6 from a PoE switch and nothing else. Put it in a rack, in a l
 the building, or in a customer's facility, and it is still reachable and still recoverable.
 
 **USB-C 5 V is the other option** when there is no PoE switch to hand, on a bench sitting
-next to a laptop. Both inputs go through an ideal-diode ORing stage, so both can be
-connected at once without either back-feeding the other.
+next to a laptop.
 
 Why it matters: benches multiply. One per pull request, one per agent, as many as the team
 runs in parallel. A rack of one-cable benches is a thing a lab can actually operate; a rack
@@ -220,7 +219,6 @@ claim otherwise.
 |---|---|
 | Standard | Power over Ethernet, power and network on one cable |
 | Alternate | USB-C 5 V, 15 W budget |
-| ORing | Ideal-diode; both sources may be connected at once |
 
 ## Physical (Augur One)
 | | |
