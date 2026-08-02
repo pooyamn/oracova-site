@@ -195,7 +195,7 @@ claim otherwise.
 ## Communication
 | | |
 |---|---|
-| Gigabit Ethernet | Power and network on one cable, PoE |
+| Gigabit Ethernet | Power and network on one cable. 802.3bt Type 4 PoE. |
 | USB-C | Backup link and recovery |
 
 ## Power input
