@@ -415,10 +415,10 @@
 
 
 
-  .top3 { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
-  .top3 .ifitem { display: block; }
-  .top3 .ifitem b { display: block; font-size: 15px; margin-bottom: 2px; }
-  @media (max-width: 700px) { .top3 { grid-template-columns: 1fr; } }
+  .iface.top3 { grid-template-columns: repeat(3, 1fr); margin-top: 22px; }
+  .iface.top3 .ifitem { display: block; }
+  .iface.top3 .ifitem b { display: block; font-size: 15px; margin-bottom: 2px; }
+  @media (max-width: 700px) { .iface.top3 { grid-template-columns: 1fr; } }
   table.where { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px;
     border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
   table.where td { padding: 12px 14px; border-top: 1px solid var(--border); vertical-align: top; color: var(--text-dim); }
@@ -469,7 +469,8 @@
   .iface { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
   .ifitem { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
     padding: 12px 16px; display: flex; align-items: baseline; gap: 12px; }
-  .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--brand); font-weight: 700; }
+  .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--brand); font-weight: 700;
+    flex: 0 0 auto; white-space: nowrap; }
   .ifitem span { font-size: 13.5px; color: var(--text-dim); }
   @media (max-width: 700px) { .iface { grid-template-columns: 1fr; } }
   .callout { border: 1px solid var(--border); border-left: 3px solid var(--brand);
@@ -563,7 +564,6 @@
     decides they should.</p>
     <div class="cta-row" style="margin-top:26px">
       <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
-      <a class="btn btn-ghost" href="#spec" id="to-spec">Specification</a>
     </div>
   </header>
 
@@ -597,7 +597,7 @@
         <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each on its own 1.2&ndash;3.3 V rail, so a mixed-level DUT works</span></div>
         <div class="ifitem"><b>up to 40</b><span>analog channels in 10 slots of 4, each slot high-speed or medium-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, Kelvin-sensed</span></div>
-        <div class="ifitem"><b>250 &micro;A &rarr; 8.19 A</b><span>current resolution awake, and 31 nA while it sleeps</span></div>
+        <div class="ifitem"><b>15-bit</b><span>current sense: 250 &micro;A/LSB to 8.19 A awake, 31 nA/LSB asleep</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
         <div class="ifitem"><b>Ethernet, USB, Wi-Fi</b><span>all reach the DUT. The on-board wireless peer is the far end of your link.</span></div>
       </div>
@@ -642,16 +642,18 @@
 
     <div style="padding-top:52px; padding-bottom:24px">
       <h2>It comes back without you</h2>
-      <p class="dim">A third MCU, an STM32H563, sits on its own rail and owns recovery and DUT
+      <p class="dim">A dedicated supervisor MCU, an STM32H563, sits on its own rail and owns recovery and DUT
       power. The board is built around one rule: Ethernet must not drop while something is being
-      recovered. So the FPGA and the N6 are always powered, and every recovery path is a reset.</p>
+      recovered. So the FPGA and the real-time MCU are always powered, and every recovery path is a reset.</p>
       <div class="recovery">
-        <div class="rrow"><div class="rw">N6 wedged</div><div class="rf">supervisor asserts its reset line</div></div>
+        <div class="rrow"><div class="rw">Real-time MCU wedged</div><div class="rf">supervisor asserts its reset line</div></div>
         <div class="rrow"><div class="rw">FPGA misconfigured</div><div class="rf">supervisor pulses PROGRAMN and the FPGA reloads from NOR</div></div>
         <div class="rrow"><div class="rw">Bitstream corrupt</div><div class="rf">supervisor owns the FPGA's JTAG: SRAM-load a known-good image, or reprogram the config flash through it</div></div>
         <div class="rrow"><div class="rw">Switch hangs</div><div class="rf">the one case where the supervisor resets the switch</div></div>
       </div>
-      <p class="dim" style="margin-top:16px">Neither the FPGA nor the N6 has a power switch
+      <p class="dim" style="margin-top:16px"><a class="run-link" href="/demo">Watch an agent run a task on the bench</a>, or
+      <a class="run-link" href="/runs/bldc-hall-fault-demo">read a scored run report</a>.</p>
+      <p class="dim" style="margin-top:16px">Neither the FPGA nor the real-time MCU has a power switch
       anywhere on the board, so half-powered states do not exist to get stuck in. That comes from
       the schematic, not from firmware discipline.</p>
     </div>
