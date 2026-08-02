@@ -638,15 +638,6 @@
 
   <section class="panel" id="panel-s" role="tabpanel" aria-labelledby="tab-s" hidden>
     <div style="padding-top:30px" id="spec">
-      <div class="spec-h">Compute</div>
-      <table class="spec">
-        <tr><td>Layer 1, on board</td><td>Lattice ECP5 LFE5U-85F. Gateware: protocol, capture, fault injection.</td></tr>
-        <tr><td>Layer 2, on board</td><td>STM32N657, Cortex-M55. Real-time physics and plant state.</td></tr>
-        <tr><td>NPU</td><td>Present on the N6. Not used today; intended for learned approximations of expensive physics.</td></tr>
-        <tr><td>Layer 3, off board</td><td>Bench computer over Ethernet. Agent, tests, verdicts, evidence. Customer-supplied.</td></tr>
-        <tr><td>Bench computer requirement</td><td>Linux, gigabit Ethernet. Nothing else special.</td></tr>
-        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power. Not a compute layer.</td></tr>
-      </table>
       <div class="spec-h">DUT interface</div>
       <table class="spec">
         <tr><td>Connectors</td><td>4 x DF40HC(3.0)-100DS-0.4V mezzanine</td></tr>
@@ -658,12 +649,7 @@
         <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
       </table>
-      <div class="spec-h">DUT power</div>
-      <table class="spec">
-        <tr><td>Rail</td><td>1.8 V to 5 V adjustable</td></tr>
-        <tr><td>Sensing</td><td>Current sense on the DUT rail, Kelvin sense return</td></tr>
-        <tr><td>Control</td><td>Supervisor-owned setpoint and enable</td></tr>
-      </table>
+
       <div class="spec-h">I/O logic levels</div>
       <table class="spec">
         <tr><td>Adjustable rails</td><td>4 independent VCCIO domains, one per DUT bank</td></tr>
@@ -671,6 +657,13 @@
         <tr><td>Regulation</td><td>Closed-loop LDO per rail, each behind its own load switch</td></tr>
         <tr><td>Scope</td><td>Bank I/O reference only, independent of the DUT supply rail</td></tr>
         <tr><td>Use</td><td>Mixed-level DUTs: one bank at 1.8 V, another at 3.3 V, on the same board</td></tr>
+      </table>
+
+      <div class="spec-h">DUT power</div>
+      <table class="spec">
+        <tr><td>Rail</td><td>1.8 V to 5 V adjustable</td></tr>
+        <tr><td>Sensing</td><td>Current sense on the DUT rail, Kelvin sense return</td></tr>
+        <tr><td>Control</td><td>Supervisor-owned setpoint and enable</td></tr>
       </table>
 
       <div class="spec-h">Analog</div>
@@ -682,29 +675,15 @@
         <tr><td>Mix</td><td>Any combination; slots are independent</td></tr>
         <tr><td>Isolation</td><td>Every analog column flanked by analog-ground columns</td></tr>
       </table>
-      <div class="spec-h">Network</div>
+
+      <div class="spec-h">Compute</div>
       <table class="spec">
-        <tr><td>Switch</td><td>RTL8367S</td></tr>
-        <tr><td>Bench computer link</td><td>Ethernet</td></tr>
-        <tr><td>DUT link</td><td>4-pair MDI to the DUT board</td></tr>
-      </table>
-      <div class="spec-h">Power input</div>
-      <table class="spec">
-        <tr><td>Standard</td><td>Power over Ethernet. Power and network on one cable.</td></tr>
-        <tr><td>Alternate</td><td>USB-C 5 V, 15 W budget</td></tr>
-        <tr><td>ORing</td><td>Ideal-diode; both sources may be connected at once</td></tr>
-      </table>
-      <div class="spec-h">Physical</div>
-      <table class="spec">
-        <tr><td>Augur One</td><td>210 x 130 mm</td></tr>
-        <tr><td>DUT board</td><td>130 x 80 mm</td></tr>
-      </table>
-      <div class="spec-h">Recovery</div>
-      <table class="spec">
-        <tr><td>N6</td><td>Supervisor reset line</td></tr>
-        <tr><td>FPGA</td><td>PROGRAMN reconfigure, plus supervisor-owned JTAG for SRAM load and NOR reprogram</td></tr>
-        <tr><td>Switch</td><td>Supervisor reset, only if the switch hangs</td></tr>
-        <tr><td>Power switching on FPGA/N6</td><td>None by design. No half-powered states.</td></tr>
+        <tr><td>Layer 1, on board</td><td>Lattice ECP5 LFE5U-85F. Gateware: protocol, capture, fault injection.</td></tr>
+        <tr><td>Layer 2, on board</td><td>STM32N657, Cortex-M55. Real-time physics and plant state.</td></tr>
+        <tr><td>NPU</td><td>Present on the N6. Not used today; intended for learned approximations of expensive physics.</td></tr>
+        <tr><td>Layer 3, off board</td><td>Bench computer over Ethernet. Agent, tests, verdicts, evidence. Customer-supplied.</td></tr>
+        <tr><td>Bench computer requirement</td><td>Linux, gigabit Ethernet. Nothing else special.</td></tr>
+        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power. Not a compute layer.</td></tr>
       </table>
       <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the
       built netlist, not from a datasheet summary.</p>
