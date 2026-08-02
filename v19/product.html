@@ -623,7 +623,7 @@
       Everything else is Augur One's job:</p>
       <div class="iface">
         <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each 1.2&ndash;3.3 V</span></div>
-        <div class="ifitem"><b>40</b><span>analog channels, 10 slots x 4</span></div>
+        <div class="ifitem"><b>up to 40</b><span>analog channels, 10 slots x 4</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, sensed active and asleep</span></div>
         <div class="ifitem"><b>3</b><span>gigabit Ethernet ports</span></div>
         <div class="ifitem"><b>2</b><span>USB 2.0 OTG to the DUT</span></div>
@@ -640,7 +640,7 @@
       <div class="spec-h">DUT interface</div>
       <table class="spec">
         <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.2&ndash;3.3 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
-        <tr><td>Analog channels</td><td>40</td></tr>
+        <tr><td>Analog channels</td><td>Up to 40</td></tr>
         <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current measured on two ranges: 8.19 A full scale active, 16.4 mA full scale asleep.</td></tr>
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
@@ -658,7 +658,7 @@
 
       <div class="spec-h">Analog</div>
       <table class="spec">
-        <tr><td>Channels</td><td>40 analog channels into the DUT, arranged as 10 slots of 4</td></tr>
+        <tr><td>Channels</td><td>Up to 40 analog channels into the DUT, as 10 slots of 4. Populate only the slots you need.</td></tr>
         <tr><td>Speed, per slot</td><td>Each slot takes a high-speed or a medium-speed module, mixed freely: fast where the loop needs it, cheap where it does not</td></tr>
         <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbour.</td></tr>
       </table>
