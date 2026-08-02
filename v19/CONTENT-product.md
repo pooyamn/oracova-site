@@ -206,9 +206,13 @@ claim otherwise.
 | Mix | Any combination; slots are independent |
 | Isolation | Every analog column flanked by analog-ground columns, 1.2 AGND per channel |
 
-## Network
+## Communication
 | | |
 |---|---|
+| Ethernet | 3 gigabit ports; 4-pair MDI to the DUT |
+| USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
+| Wireless | ESP32-C5 test peer on board: Wi-Fi and BLE, supervisor-powered and reset |
+| Wireless use | The bench is the other end of the link: pair, associate, drop it, see what the firmware does |
 | Switch | RTL8367S |
 | Host link | Ethernet |
 | DUT link | 4-pair MDI to the DUT board |
