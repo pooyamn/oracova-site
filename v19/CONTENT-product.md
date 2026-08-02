@@ -172,6 +172,7 @@ claim otherwise.
 | FPGA | Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection. |
 | Real-time MCU | STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly. |
 | Supervisor | STM32H563. Recovery and DUT power. |
+| Wireless peer | ESP32-C5. Wi-Fi and BLE; the bench is the other end of the DUT's link. |
 
 ## DUT interface
 | | |
@@ -191,12 +192,11 @@ claim otherwise.
 | Speed, per slot | High-speed or medium-speed module, mixed freely |
 | Signal integrity | Every analog channel flanked by its own analog-ground return |
 
-## Bench to computer
+## Communication
 | | |
 |---|---|
-| Link | Gigabit Ethernet, 3 ports |
-| Topology | Daisy-chain benches off one uplink, or run each to the switch |
-| Power | PoE on the same cable; USB-C 5 V when there is no PoE switch |
+| Gigabit Ethernet | Power and network on one cable, PoE |
+| USB-C | Backup link and recovery |
 
 ## Power input
 | | |

@@ -649,11 +649,10 @@
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
       </table>
 
-      <div class="spec-h">Bench to computer</div>
+      <div class="spec-h">Communication</div>
       <table class="spec">
-        <tr><td>Link</td><td>Gigabit Ethernet, 3 ports</td></tr>
-        <tr><td>Topology</td><td>Daisy-chain benches off one uplink, or run each to the switch</td></tr>
-        <tr><td>Power</td><td>Power over Ethernet on the same cable. USB-C 5 V when there is no PoE switch.</td></tr>
+        <tr><td>Gigabit Ethernet</td><td>Power and network on one cable, PoE</td></tr>
+        <tr><td>USB-C</td><td>Backup link and recovery</td></tr>
       </table>
 
 
@@ -670,6 +669,7 @@
         <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
         <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly.</td></tr>
         <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
+        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE, so the bench is the other end of the DUT's link.</td></tr>
       </table>
       <p class="dim" style="margin-top:24px; font-size:13.5px">Figures are derived from the
       built netlist, not from a datasheet summary.</p>
