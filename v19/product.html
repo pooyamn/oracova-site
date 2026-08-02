@@ -623,13 +623,12 @@
       <p class="dim">The DUT board carries the chip under test and what it needs to boot.
       Everything else is Augur One's job:</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>digital I/O</span></div>
+        <div class="ifitem"><b>148</b><span>digital I/O across 4 banks, each 1.19&ndash;3.29 V</span></div>
         <div class="ifitem"><b>40</b><span>analog channels, 10 slots x 4</span></div>
         <div class="ifitem"><b>40</b><span>DUT supply, plus Kelvin sense</span></div>
         <div class="ifitem"><b>3</b><span>gigabit Ethernet ports</span></div>
         <div class="ifitem"><b>2</b><span>USB 2.0 OTG to the DUT</span></div>
         <div class="ifitem"><b>18</b><span>debug, SWD/JTAG via the FPGA</span></div>
-        <div class="ifitem"><b>4</b><span>adjustable I/O rails, 1.19&ndash;3.29 V per bank</span></div>
       </div>
       <div class="callout"><b>We meet your board at the controller boundary.</b> Your power stage
       stays off the bench. Your firmware still sees the signals it would see in the product.</div>
@@ -640,7 +639,7 @@
     <div style="padding-top:30px" id="spec">
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>148</td></tr>
+        <tr><td>Digital I/O</td><td>148, across 4 banks, each on its own 1.19&ndash;3.29 V rail</td></tr>
         <tr><td>Analog channels</td><td>40</td></tr>
         <tr><td>Ethernet</td><td>3 gigabit ports. 4-pair MDI to the DUT, 24 pins.</td></tr>
         <tr><td>USB</td><td>2 x USB 2.0 OTG to the DUT, with software-controlled attach</td></tr>

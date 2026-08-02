@@ -133,7 +133,7 @@ designed for your part, and that is what the bring-up service covers.
 
 Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 
-- **148** general-purpose digital I/O
+- **148** digital I/O across 4 banks, each 1.19-3.29 V
 - **40** analog channels (10 module slots x 4)
 - **40** pins of adjustable DUT supply, plus Kelvin sense
 - **3** gigabit Ethernet ports, 4-pair MDI to the DUT
@@ -180,7 +180,7 @@ claim otherwise.
 ## DUT interface
 | | |
 |---|---|
-| Digital I/O | 148 |
+| Digital I/O | 148, across 4 banks, each on its own 1.19-3.29 V rail |
 | Analog injection channels | 40 |
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
 | USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
