@@ -135,7 +135,6 @@ Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 
 - **148** general-purpose digital I/O
 - **40** analog channels (10 module slots x 4)
-- **40** QSPI lines from the DAC/mimic plane
 - **40** pins of adjustable DUT supply, plus Kelvin sense
 - **24** pins of 4-pair Ethernet MDI to the DUT
 - **18** debug pins (SWD/JTAG, relayed through the FPGA)
@@ -184,7 +183,6 @@ claim otherwise.
 | Total pins | 400 (287 distinct nets) |
 | Digital I/O | 148 |
 | Analog injection channels | 40 |
-| Mimic/DAC QSPI lines | 40 |
 | DUT Ethernet | 4-pair MDI, 24 pins |
 | Debug | SWD/JTAG, 18 pins, relayed via FPGA |
 | DUT self-ID | Revision + capability straps |
