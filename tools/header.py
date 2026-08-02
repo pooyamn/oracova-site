@@ -33,6 +33,8 @@ CSS = """
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
 .site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
+.site-menu a[aria-current="page"] { font-weight: 700; }
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
 .site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
   border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
@@ -93,6 +95,7 @@ CSS = """
   .site-nav .nav-logo { color: #16181D; }
   .site-nav .nav-logo i { color: #B05C00; }
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
@@ -105,16 +108,22 @@ CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
        '?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>')
 
 # page -> its link set (self-link always omitted)
-LINKS = {
-    'index.html':                    [('/product', 'Product'), ('/demo', 'Demo'), ('#evidence', 'Evidence'), ('/onboarding', 'Board bring-up')],
-    'product.html':                  [('/', 'Home'), ('/demo', 'Demo'), ('/onboarding', 'Board bring-up')],
-    'onboarding.html':               [('/', 'Home'), ('/product', 'Product'), ('/demo', 'Demo')],
-    'demo.html':                     [('/', 'Home'), ('/product', 'Product'), ('/onboarding', 'Board bring-up')],
-    'runs/bldc-hall-fault-demo.html':[('/', 'Home'), ('/product', 'Product'), ('/demo', 'Demo')],
+# One nav for every page. The current page is marked, never removed.
+NAV = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
+       ('/demo', 'Demo'), ('/runs/bldc-hall-fault-demo', 'Run report')]
+
+# page -> the href that represents it, so we can mark "you are here"
+SELF = {
+    'index.html':                     '/',
+    'product.html':                   '/product',
+    'onboarding.html':                '/onboarding',
+    'demo.html':                      '/demo',
+    'runs/bldc-hall-fault-demo.html': '/runs/bldc-hall-fault-demo',
 }
+LINKS = SELF   # apply()/check iterate over the page list
 
 MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/product#spec', 'Specification'),
-        ('/onboarding', 'Board bring-up'), ('/demo', 'Live demo'),
+        ('/onboarding', 'Board bring-up'), ('/demo', 'Demo'),
         ('/runs/bldc-hall-fault-demo', 'Run report')]
 
 SITEMAP = [
@@ -130,8 +139,11 @@ SITEMAP = [
 ]
 
 def markup(page):
-    links = '\n'.join('      <a href="%s">%s</a>' % (u, t) for u, t in LINKS[page])
-    menu = '\n'.join('    <a href="%s">%s</a>' % (u, t) for u, t in MENU)
+    here = SELF[page]
+    def mark(u):
+        return ' aria-current="page"' if u == here else ''
+    links = '\n'.join('      <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in NAV)
+    menu = '\n'.join('    <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in MENU)
     return ('<nav class="site-nav">\n  <div class="nav-inner">\n'
             '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
             '    <div class="nav-set">\n%s\n      %s\n'
@@ -190,8 +202,8 @@ def header_of(path):
     if not css or not nav:
         return None
     # compare CSS exactly; markup minus the link set (which is intentionally per-page)
-    skeleton = re.sub(r'<a href="[^"]*">[^<]*</a>', '', nav.group(0))
-    skeleton = re.sub(r'\s+', ' ', skeleton).strip()   # link count is per-page by design
+    skeleton = re.sub(r' aria-current="page"', '', nav.group(0))   # only the marker varies
+    skeleton = re.sub(r'\s+', ' ', skeleton).strip()
     return hashlib.sha256((css.group(0) + skeleton).encode()).hexdigest()[:12]
 
 if __name__ == '__main__':

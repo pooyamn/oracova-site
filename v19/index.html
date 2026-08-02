@@ -422,6 +422,7 @@
 
 
 
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -444,6 +445,8 @@
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
 .site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
+.site-menu a[aria-current="page"] { font-weight: 700; }
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
 .site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
   border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
@@ -504,6 +507,7 @@
   .site-nav .nav-logo { color: #16181D; }
   .site-nav .nav-logo i { color: #B05C00; }
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
@@ -518,15 +522,24 @@
   <div class="nav-inner">
     <a class="nav-logo" href="/">oracova<i>_</i></a>
     <div class="nav-set">
-      <a href="/product">Product</a>
-      <a href="/demo">Demo</a>
-      <a href="#evidence">Evidence</a>
+      <a href="/" aria-current="page">Home</a>
+      <a href="/product">Augur One</a>
       <a href="/onboarding">Board bring-up</a>
+      <a href="/demo">Demo</a>
+      <a href="/runs/bldc-hall-fault-demo">Run report</a>
       <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
       <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     </div>
   </div>
 </nav>
+<div class="site-menu" id="site-menu">
+    <a href="/" aria-current="page">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/product#spec">Specification</a>
+    <a href="/onboarding">Board bring-up</a>
+    <a href="/demo">Demo</a>
+    <a href="/runs/bldc-hall-fault-demo">Run report</a>
+</div>
 <div class="site-menu" id="site-menu">
     <a href="/">Home</a>
     <a href="/product">Augur One</a>
