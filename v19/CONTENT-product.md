@@ -191,17 +191,12 @@ claim otherwise.
 | Speed, per slot | High-speed or medium-speed module, mixed freely |
 | Signal integrity | Every analog channel flanked by its own analog-ground return |
 
-## Communication
+## Bench to computer
 | | |
 |---|---|
-| Ethernet | 3 gigabit ports; 4-pair MDI to the DUT |
-| USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
-| Wireless | ESP32-C5 test peer on board: Wi-Fi and BLE, supervisor-powered and reset |
-| Wireless use | The bench is the other end of the link: pair, associate, drop it, see what the firmware does |
-| Switch | RTL8367S |
-| Host link | Ethernet |
-| DUT link | 4-pair MDI to the DUT board |
-| PoE | Stuffing option, approximately 1.5 A board limit |
+| Link | Gigabit Ethernet, 3 ports |
+| Topology | Daisy-chain benches off one uplink, or run each to the switch |
+| Power | PoE on the same cable; USB-C 5 V when there is no PoE switch |
 
 ## Power input
 | | |
