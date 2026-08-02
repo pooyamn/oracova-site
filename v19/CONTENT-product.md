@@ -67,9 +67,9 @@ outside the loop it is judging.
 Keeping this layer off the board is the point: it upgrades without touching hardware, and
 nothing it does can stall the plant running on the other two layers.
 
-**You supply the bench computer.** Any ordinary Linux machine on the same network does the
-job, so the bench does not lock you into hardware we picked, and a lab that already has
-machines does not buy another one.
+**You supply the bench computer.** A Linux machine with gigabit Ethernet is the whole
+requirement. No GPU, no special hardware, nothing to source: a lab that already has machines
+does not buy another one, and you are not locked to hardware we picked.
 
 Runs here: the agent, test authoring, CI triggers, verdicts, evidence and hashes.
 
@@ -81,16 +81,19 @@ three. Your board is the thing they are all there to test.**
 
 ---
 
-## Section 2 — Power: USB-C or PoE, one cable either way
+## Section 2 — One cable
 
-The bench takes **5 V over USB-C** (15 W budget), or **Power over Ethernet** as a stuffing
-option so a bench in a rack needs one cable for power and network together. Input goes
-through an ideal-diode ORing stage, so both sources can be present without back-feeding.
+**Power over Ethernet is standard.** Power and network arrive on the same cable, so a bench
+is one run of Cat-6 from a PoE switch and nothing else. Put it in a rack, in a lab across
+the building, or in a customer's facility, and it is still reachable and still recoverable.
 
-Why it matters: a bench you can put anywhere is a bench you can put in a rack, in a lab
-across the building, or in a customer's facility, and still reach over the network.
+**USB-C 5 V is the other option** when there is no PoE switch to hand, on a bench sitting
+next to a laptop. Both inputs go through an ideal-diode ORing stage, so both can be
+connected at once without either back-feeding the other.
 
-**Status tag:** PoE is a stuffing option on the current design (board limit approximately 1.5 A).
+Why it matters: benches multiply. One per pull request, one per agent, as many as the team
+runs in parallel. A rack of one-cable benches is a thing a lab can actually operate; a rack
+of benches each needing a power brick, a hub, and a hand on a button is not.
 
 ---
 
@@ -171,6 +174,7 @@ claim otherwise.
 | Layer 2, on board | STM32N657, Cortex-M55 (real-time physics and plant state) |
 | NPU | Present on the N6, not used today. Intended for learned approximations of expensive physics. |
 | Layer 3, off board | Bench computer over Ethernet (agent, tests, verdicts, evidence). Customer-supplied. |
+| Bench computer requirement | Linux, gigabit Ethernet. Nothing else special. |
 | Supervisor | STM32H563 (recovery, DUT power, not a compute layer) |
 
 ## DUT interface
@@ -213,9 +217,9 @@ claim otherwise.
 ## Power input
 | | |
 |---|---|
-| Primary | USB-C 5 V, 15 W budget |
-| Alternate | PoE (option) |
-| ORing | Ideal-diode, both sources may be present |
+| Standard | Power over Ethernet, power and network on one cable |
+| Alternate | USB-C 5 V, 15 W budget |
+| ORing | Ideal-diode; both sources may be connected at once |
 
 ## Physical (Augur One)
 | | |
@@ -247,10 +251,15 @@ claim otherwise.
 - Vocabulary locked: "bench computer" (never "host") for layer 3; "chip under test" / DUT
   for the target; one name for the "checker".
 
+## RESOLVED (round 3)
+- **PoE is standard**; USB-C 5 V is the alternate. Both ORed.
+- **Bench computer: Linux + gigabit Ethernet.** Nothing else special, customer-supplied.
+
 ## STILL OPEN
-1. **PoE** — option or standard, and what class/wattage to publish.
-2. **Bench computer minimum spec** — worth one line so buyers can check they have one
-   (cores/RAM/OS, Ethernet). Needed for Pricing and Preorder anyway.
+1. PoE class/wattage to publish once measured on the first article (the design note says
+   approximately 1.5 A board limit; that is a design figure, not a measured one).
+2. Whether the run-report page's "the oracle" gets renamed to "checker" for vocabulary
+   consistency (one-word edit, affects the live site).
 
 
 ---
