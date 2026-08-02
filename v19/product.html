@@ -678,7 +678,7 @@
         <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
         <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
-        <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
+        <tr><td>DUT self-ID</td><td>11 straps read at power-up: 4 bits of board revision, 4 bits of capability flags, 3 bits selecting the supply the board expects. An unprogrammed board reads all ones and the bench treats it as unknown rather than powering it.</td></tr>
       </table>
 
       <div class="spec-h">Analog</div>
