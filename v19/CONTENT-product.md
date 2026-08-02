@@ -137,7 +137,7 @@ Four mezzanine connectors carry **400 pins, 287 distinct nets**, allocated as:
 - **40** pins of adjustable DUT supply, plus Kelvin sense
 - **3** gigabit Ethernet ports, 4-pair MDI to the DUT
 - **2** USB 2.0 OTG links to the DUT
-- **18** debug pins (SWD/JTAG, relayed through the FPGA)
+- **SWD or JTAG on any I/O pin**, driven from the FPGA
 - straps that let a DUT board identify its own revision and capabilities
 
 The DUT rail is adjustable **1.8 V to 5 V** with current sensing on the DUT rail, so the
@@ -180,7 +180,7 @@ claim otherwise.
 | Analog injection channels | 40 |
 | Ethernet | 3 gigabit ports; 4-pair MDI to the DUT, 24 pins |
 | USB | 2 x USB 2.0 OTG to the DUT, software-controlled attach |
-| Debug | SWD/JTAG, 18 pins, relayed via FPGA |
+| Debug | SWD or JTAG on any DUT I/O pin, driven from the FPGA. No fixed debug pinout. |
 | DUT supply | 1.8-5 V adjustable, Kelvin-sensed; current on two ranges: 8.19 A FS active, 16.4 mA FS asleep |
 | DUT self-ID | Revision + capability straps |
 

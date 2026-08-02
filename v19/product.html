@@ -628,7 +628,7 @@
         <div class="ifitem"><b>3</b><span>gigabit Ethernet ports</span></div>
         <div class="ifitem"><b>2</b><span>USB 2.0 OTG to the DUT</span></div>
         <div class="ifitem"><b>Wi-Fi + BLE</b><span>on-board test peer, the other end of the link</span></div>
-        <div class="ifitem"><b>18</b><span>debug, SWD/JTAG via the FPGA</span></div>
+        <div class="ifitem"><b>SWD / JTAG</b><span>on any I/O pin, driven from the FPGA</span></div>
       </div>
       <div class="callout"><b>We meet your board at the controller boundary.</b> Your power stage
       stays off the bench. Your firmware still sees the signals it would see in the product.</div>
@@ -641,7 +641,7 @@
       <table class="spec">
         <tr><td>Digital I/O</td><td>148, across 4 banks. Each bank runs on its own adjustable 1.2&ndash;3.3 V rail, so mixed-level DUTs are driven at their own levels.</td></tr>
         <tr><td>Analog channels</td><td>Up to 40</td></tr>
-        <tr><td>Debug</td><td>SWD/JTAG, 18 pins, relayed via FPGA</td></tr>
+        <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current measured on two ranges: 8.19 A full scale active, 16.4 mA full scale asleep.</td></tr>
         <tr><td>DUT self-ID</td><td>Revision and capability straps</td></tr>
       </table>
