@@ -181,7 +181,6 @@
     .bench-log { height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
     .bench-replay { font-size: 11.5px; }
     .la-card svg text { display: none; }
-    .trace-block svg text { display: none; }
     .bench-head { font-size: 10.5px; padding: 9px 14px; }
   }
 
@@ -234,34 +233,6 @@
   .note { margin-top: 20px; font-size: 13.5px; color: var(--text-faint); max-width: none; line-height: 1.6; }
 
   /* ---------- evidence ---------- */
-  .run-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-    font-family: var(--mono); font-size: 13px; margin-top: 26px; overflow: hidden;
-  }
-  .run-head {
-    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-    padding: 13px 20px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-size: 12px;
-  }
-  .run-head .rid { color: var(--text); }
-  .run-meta { padding: 14px 20px; display: grid; gap: 5px; color: var(--text-dim); font-size: 12.5px; }
-  .run-meta b { color: var(--text); font-weight: 500; }
-  .run-meta .fault b { color: var(--brand); }
-  .trace-block { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    padding: 10px 20px 6px; background: #0C0E12; }
-  .trace-label { font-size: 10.5px; color: #8E97A3; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 4px; }
-  .verdict-rows { padding: 4px 0; }
-  .verdict-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 20px; }
-  .verdict-row + .verdict-row { border-top: 1px solid var(--border); }
-  .verdict-row .dim { color: var(--text-dim); font-size: 12.5px; }
-  .badge { padding: 3px 12px; border-radius: 999px; font-weight: 700; font-size: 12px; letter-spacing: .06em; }
-  .badge.fail { background: rgba(248,113,113,.12); color: var(--fail); border: 1px solid rgba(248,113,113,.3); }
-  .badge.pass { background: rgba(74,222,128,.1); color: var(--pass); border: 1px solid rgba(74,222,128,.3); }
-  .score-key { border-top: 1px solid var(--border); padding: 9px 20px; font-size: 11.5px; color: var(--text-faint); }
-  .run-caption { margin-top: 14px; font-size: 14.5px; color: var(--text-dim); max-width: 68ch; }
-  a.run-link { color: inherit; text-decoration: underline;
-    text-decoration-color: rgba(255,180,84,.4); text-underline-offset: 3px; }
-  a.run-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
-
   .evidence-list { margin-top: 20px; display: grid; gap: 12px; }
   .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
   .ev .ev-head { display: grid; gap: 5px; }
@@ -337,7 +308,6 @@
     .bench-replay { --text: #E6EAEF; --text-dim: #8E97A3; }
     .cmp .hl { background: rgba(176,92,0,.05); }
     .card .faults { color: #B05C00; }
-    .run-meta .fault b { color: #B05C00; }
   }
 
   /* ---------- mono-as-display variant ---------- */
@@ -419,6 +389,7 @@
 
   .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-nav a { padding: 10px 0; }
+
 
 
 
@@ -529,7 +500,6 @@
       <a href="/product">Augur One</a>
       <a href="/onboarding">Board bring-up</a>
       <a href="/demo">Demo</a>
-      <a href="/runs/bldc-hall-fault-demo">Run report</a>
     </div>
   </div>
 </nav>
@@ -539,31 +509,6 @@
     <a href="/product#spec">Specification</a>
     <a href="/onboarding">Board bring-up</a>
     <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/" aria-current="page">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding">Board bring-up</a>
-    <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/" aria-current="page">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding">Board bring-up</a>
-    <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding">Board bring-up</a>
-    <a href="/demo">Live demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
 </div>
 
 <header class="hero">
@@ -572,7 +517,6 @@
     <div class="hero-second">A hundred iterations, unattended. You review <em>the one that passed</em>.</div>
     <div class="cta-row">
       <a class="btn btn-primary" href="#cta">See your board on the bench</a>
-      <a class="btn btn-ghost" href="/runs/bldc-hall-fault-demo">Read a full run report</a>
     </div>
     <div class="video-frame">
       <div class="bench-replay">
@@ -757,61 +701,9 @@
 <section id="evidence">
   <div class="wrap">
     <div class="kicker">Evidence</div>
-    <h2>A verdict you can audit.</h2>
-    <p class="dim">Every run returns PASS or FAIL with captured traces and firmware hashes.
-    A run from this bench:</p>
-
-    <div class="run-card">
-      <div class="run-head">
-        <a class="rid run-link" href="/runs/bldc-hall-fault-demo">RUN 20260618-080733</a>
-        <span>bldc_hall_a_stuck_low</span>
-      </div>
-      <div class="run-meta">
-        <div>target&nbsp;&nbsp;&nbsp;<b>STM32F411, real silicon</b></div>
-        <div>world&nbsp;&nbsp;&nbsp;&nbsp;<b>BLDC plant + hall encoder, emulated on the two-MCU rig</b></div>
-        <div class="fault">fault&nbsp;&nbsp;&nbsp;&nbsp;<b>HALL_A forced low at t+200 ms</b></div>
-      </div>
-      <div class="trace-block">
-        <div class="trace-label">phase U / V / W + hall A &middot; recreated from the stored run</div>
-        <svg viewBox="0 0 1000 120" width="100%" height="120" preserveAspectRatio="none" aria-label="commutation trace, recreated from the stored run">
-          <polyline fill="none" stroke="#ffb454" stroke-width="2" opacity="0.9"
-            points="0,25 80,25 80,8 160,8 160,25 320,25 320,8 400,8 400,25 560,25 560,8 640,8 640,25 800,25 800,8 880,8 880,25 1000,25"/>
-          <polyline fill="none" stroke="#7aa2c4" stroke-width="2" opacity="0.8"
-            points="0,55 40,55 40,38 200,38 200,55 360,55 360,38 480,38 480,55 700,55 700,38 820,38 820,55 1000,55"/>
-          <polyline fill="none" stroke="#9a8cc9" stroke-width="2" opacity="0.8"
-            points="0,85 120,85 120,68 280,68 280,85 440,85 440,68 520,68 520,85 760,85 760,68 940,68 940,85 1000,85"/>
-          <polyline fill="none" stroke="#ff5252" stroke-width="2"
-            points="0,105 200,105 200,112 1000,112"/>
-          <text x="205" y="104" fill="#ff5252" font-size="10" font-family="monospace">HALL_A stuck low</text>
-        </svg>
-      </div>
-      <div class="verdict-rows">
-        <div class="verdict-row">
-          <span class="dim">unguarded firmware &nbsp; mismatch=8 &nbsp; unsafe=4</span>
-          <span class="badge fail">FAIL</span>
-        </div>
-        <div class="verdict-row">
-          <span class="dim">same firmware + guard patch &nbsp; unsafe=0</span>
-          <span class="badge pass">PASS</span>
-        </div>
-        <div class="verdict-row">
-          <span class="dim">swapped sectors &nbsp; mismatch=8 &nbsp; unsafe=8</span>
-          <span class="badge fail">FAIL</span>
-        </div>
-        <div class="verdict-row">
-          <span class="dim">skipped sector &nbsp; seq_fault=7</span>
-          <span class="badge fail">FAIL</span>
-        </div>
-        <div class="verdict-row">
-          <span class="dim">forced invalid hall bus &nbsp; clean shutdown</span>
-          <span class="badge pass">PASS</span>
-        </div>
-      </div>
-      <div class="score-key">mismatch counts wrong-phase commutation decisions &middot; unsafe counts
-      the energized ones that could cause damage or harm</div>
-    </div>
-    <p class="run-caption">Unguarded firmware energizes the wrong phase; the guarded build
-    shuts down clean. <a class="run-link" href="/runs/bldc-hall-fault-demo">Full run report &rarr;</a></p>
+    <h2>What the closed loop caught.</h2>
+    <p class="dim">Every run returns PASS or FAIL with captured traces and firmware hashes,
+    scored against fixed thresholds rather than by the agent.</p>
     <div class="evidence-list">
       <div class="ev" id="simulator">
         <div class="ev-head">
@@ -892,8 +784,7 @@
       <div>
         <h4>Evidence</h4>
         <a href="/demo">Live demo</a>
-        <a href="/runs/bldc-hall-fault-demo">Run report</a>
-        <a href="/#evidence">Scored verdicts</a>
+        <a href="/#evidence">What it caught</a>
       </div>
       <div>
         <h4>How it works</h4>

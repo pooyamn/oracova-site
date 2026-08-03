@@ -121,12 +121,6 @@
 
   .note { margin-top: 22px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
 
-  a.run-link {
-    color: inherit; text-decoration: underline;
-    text-decoration-color: rgba(255,180,84,.35); text-underline-offset: 3px;
-  }
-  a.run-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
-
   .doc-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
   .doc {
     font-family: var(--mono); font-size: 13px; color: var(--text);
@@ -221,8 +215,6 @@
     .nav-links a.btn-primary:hover { color: #fff; }
     .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list,
     .doc, .mini-row .n { color: #8F4700; }
-    a.run-link { text-decoration-color: rgba(168,84,0,.45); }
-    a.run-link:hover { color: #8F4700; }
   }
 
   /* ---------- v18 skin ---------- */
@@ -286,6 +278,7 @@
 
   .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-nav a { padding: 10px 0; }
+
 
 
 
@@ -396,7 +389,6 @@
       <a href="/product">Augur One</a>
       <a href="/onboarding" aria-current="page">Board bring-up</a>
       <a href="/demo">Demo</a>
-      <a href="/runs/bldc-hall-fault-demo">Run report</a>
     </div>
   </div>
 </nav>
@@ -406,31 +398,6 @@
     <a href="/product#spec">Specification</a>
     <a href="/onboarding" aria-current="page">Board bring-up</a>
     <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding" aria-current="page">Board bring-up</a>
-    <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding" aria-current="page">Board bring-up</a>
-    <a href="/demo">Demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
-</div>
-<div class="site-menu" id="site-menu">
-    <a href="/">Home</a>
-    <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
-    <a href="/onboarding">Board bring-up</a>
-    <a href="/demo">Live demo</a>
-    <a href="/runs/bldc-hall-fault-demo">Run report</a>
 </div>
 
 <header class="hero">
@@ -589,8 +556,6 @@
         <span class="tag ok">Proven today</span>
         <h3>The closed loop runs on real silicon now</h3>
         <div class="list">motor commutation &middot; hall fault library &middot; unmodified Betaflight</div>
-        <p style="margin-top:10px"><a class="run-link" href="/runs/bldc-hall-fault-demo">See a
-        scored run from the bench</a></p>
       </div>
     </div>
   </div>
@@ -616,8 +581,7 @@
       <div>
         <h4>Evidence</h4>
         <a href="/demo">Live demo</a>
-        <a href="/runs/bldc-hall-fault-demo">Run report</a>
-        <a href="/#evidence">Scored verdicts</a>
+        <a href="/#evidence">What it caught</a>
       </div>
       <div>
         <h4>How it works</h4>

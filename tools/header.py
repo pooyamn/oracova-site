@@ -110,27 +110,24 @@ CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
 # page -> its link set (self-link always omitted)
 # One nav for every page. The current page is marked, never removed.
 NAV = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
-       ('/demo', 'Demo'), ('/runs/bldc-hall-fault-demo', 'Run report')]
+       ('/demo', 'Demo')]
 
 # page -> the href that represents it, so we can mark "you are here"
 SELF = {
-    'index.html':                     '/',
-    'product.html':                   '/product',
-    'onboarding.html':                '/onboarding',
-    'demo.html':                      '/demo',
-    'runs/bldc-hall-fault-demo.html': '/runs/bldc-hall-fault-demo',
+    'index.html':      '/',
+    'product.html':    '/product',
+    'onboarding.html': '/onboarding',
+    'demo.html':       '/demo',
 }
 LINKS = SELF   # apply()/check iterate over the page list
 
 MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/product#spec', 'Specification'),
-        ('/onboarding', 'Board bring-up'), ('/demo', 'Demo'),
-        ('/runs/bldc-hall-fault-demo', 'Run report')]
+        ('/onboarding', 'Board bring-up'), ('/demo', 'Demo')]
 
 SITEMAP = [
     ('Product',  [('/product', 'Augur One'), ('/product#spec', 'Specification'),
                   ('/onboarding', 'Board bring-up')]),
-    ('Evidence', [('/demo', 'Live demo'), ('/runs/bldc-hall-fault-demo', 'Run report'),
-                  ('/#evidence', 'Scored verdicts')]),
+    ('Evidence', [('/demo', 'Live demo'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),
     ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
@@ -187,6 +184,8 @@ def apply(path, page):
     # 2. one canonical markup
     if not NAV_RE.search(s):
         raise SystemExit('no <nav> found in ' + path)
+    # drop any menu blocks a previous run left behind, else they accumulate
+    s = re.sub(r'<div class="site-menu"[^>]*>.*?</div>\n?', '', s, flags=re.S)
     s = NAV_RE.sub(lambda m: markup(page), s, count=1)
     s = re.sub(r'<footer[^>]*>.*?</footer>', lambda m: footer_markup(), s, count=1, flags=re.S)
     s = re.sub(r'<script>\n\(function \(\) \{\n  var b = document\.getElementById\(.nav-burger.\).*?</script>\n', '', s, flags=re.S)
