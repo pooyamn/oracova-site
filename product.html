@@ -260,7 +260,7 @@
   /* Board render. Deliberately matte and orthographic so it reads as an assembly view
      rather than a product shot, and captioned as a render so the image never has to be
      taken on trust. */
-  .board-shot { margin: 26px 0 0; border: 1px solid var(--border); border-radius: 12px;
+  .board-shot { margin: 0 0 30px; border: 1px solid var(--border); border-radius: 12px;
     background: var(--surface); overflow: hidden; }
   .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 900; }
   .board-shot figcaption { border-top: 1px solid var(--border); padding: 11px 16px;
@@ -483,6 +483,14 @@
 
   <section class="panel" id="panel-o" role="tabpanel" aria-labelledby="tab-o">
     <div style="padding-top:30px">
+      <figure class="board-shot">
+        <picture>
+          <source media="(max-width: 700px)" srcset="/board-augur-one-700.jpg">
+          <img src="/board-augur-one.jpg" width="1600" height="900" decoding="async"
+               alt="Augur One at a low angle: Ethernet and USB-C at the left edge, power section along the near edge, FPGA and memory across the centre, ten analog modules fitted right of centre, and the DUT connector strips along the far edge.">
+        </picture>
+        <figcaption>CAD render from the board assembly &middot; Augur One with 10 modules fitted &middot; 2026-08-03</figcaption>
+      </figure>
       <h2>The rig you would have built by hand</h2>
       <p class="dim">Testing a control loop means having a plant to close it against, so someone
       builds one: a sensor breakout on a jumper harness, a motor with a load on it, a bench
@@ -497,14 +505,6 @@
         <div class="ifitem"><b>148 I/O + 40 analog</b><span>to the DUT</span></div>
       </div>
 
-      <figure class="board-shot">
-        <picture>
-          <source media="(max-width: 700px)" srcset="/board-augur-one-700.jpg">
-          <img src="/board-augur-one.jpg" width="1600" height="900" loading="lazy" decoding="async"
-               alt="Augur One with ten analog mimic modules fitted along one edge, the FPGA and memory in the centre, DUT connectors across the board and the Ethernet jack at the far corner.">
-        </picture>
-        <figcaption>CAD render from the board assembly &middot; Augur One with 10 modules fitted &middot; 2026-08-03</figcaption>
-      </figure>
     </div>
 
     <div style="padding-top:52px">
