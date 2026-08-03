@@ -61,7 +61,16 @@ so a visitor can now scroll the whole site without seeing one artifact produced 
 machine rather than written about it. Do not fix this by drawing another synthetic trace -
 that is more of the same problem. Capture a real one.
 
-The bench is powered but busy, so this needs a scheduled window. Plan:
+**Attempted 2026-08-02 - no artifact yet.** Full write-up on the `evidence-capture`
+branch (`evidence-capture/FINDINGS.md`): the BLDC rig is unplugged, so the attempt used
+the Betaflight + i9 flight-sim rig instead. Two adapters were built so the BF HIL suite
+runs on today's city gateware at all (38-byte telemetry framing, and a CRSF bench adapter
+because RC reaches BF from the fabric, not over MSP). It then measured 8/12, 5/12, and
+PASS/FAIL/FAIL on repeats of the same scenario, so nothing was published. One mechanism is
+named (no scenario clears the fault it injects) and the remaining unexplained pattern plus
+ordered next steps are in that file. Start there, not from scratch.
+
+Plan:
 
 1. **Pick the run.** The BLDC hall-fault suite is the strongest: it already produces a real
    FAIL on the unguarded build and PASS with the guard patch, which is the whole argument in
