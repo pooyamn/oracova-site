@@ -260,9 +260,18 @@
   /* Board render. Deliberately matte and orthographic so it reads as an assembly view
      rather than a product shot, and captioned as a render so the image never has to be
      taken on trust. */
-  .board-shot { margin: 0 0 30px; border: 1px solid var(--border); border-radius: 12px;
+  /* Desktop: copy left, board right. It is a block in the layout, not a full-width
+     band across the page. Stacks below 900px. */
+  .ov-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
+    gap: 30px; align-items: start; margin-bottom: 26px; }
+  .ov-intro > div { min-width: 0; }
+  .ov-intro p { max-width: none; }
+  @media (max-width: 900px) {
+    .ov-intro { grid-template-columns: 1fr; gap: 22px; }
+  }
+  .board-shot { margin: 0; border: 1px solid var(--border); border-radius: 12px;
     background: var(--surface); overflow: hidden; }
-  .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 900; }
+  .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 660; }
   .panel-cta { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
     display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .panel-cta p { color: var(--text-dim); margin: 0; }
@@ -481,21 +490,25 @@
 
   <section class="panel" id="panel-o" role="tabpanel" aria-labelledby="tab-o">
     <div style="padding-top:30px">
-      <figure class="board-shot">
-        <picture>
-          <source media="(max-width: 700px)" srcset="/board-augur-one-700.jpg">
-          <img src="/board-augur-one.jpg" width="1600" height="900" decoding="async"
+      <div class="ov-intro">
+        <div>
+          <h2>The rig you would have built by hand</h2>
+          <p class="dim">Testing a control loop means having a plant to close it against, so
+          someone builds one: a sensor breakout on a jumper harness, a motor with a load on it, a
+          bench supply, a logic analyzer, and a person to power-cycle the whole thing when the DUT
+          locks up.</p>
+          <p class="dim" style="margin-top:10px">Augur One is that bench as one board. Your DUT
+          board plugs in, and the world your firmware reads is generated in hardware and driven
+          from the network.</p>
+        </div>
+        <figure class="board-shot">
+          <img src="/board-augur-one.jpg"
+               srcset="/board-augur-one-700.jpg 800w, /board-augur-one.jpg 1600w"
+               sizes="(max-width: 900px) 100vw, 44vw"
+               width="1600" height="660" decoding="async"
                alt="Augur One at a low angle: Ethernet and USB-C at the left edge, power section along the near edge, FPGA and memory across the centre, ten analog modules fitted right of centre, and the DUT connector strips along the far edge.">
-        </picture>
-      </figure>
-      <h2>The rig you would have built by hand</h2>
-      <p class="dim">Testing a control loop means having a plant to close it against, so someone
-      builds one: a sensor breakout on a jumper harness, a motor with a load on it, a bench
-      supply, a logic analyzer, and a person to power-cycle the whole thing when the DUT locks
-      up.</p>
-      <p class="dim" style="margin-top:10px">Augur One is that bench as one board. Your DUT board
-      plugs in, and the world your firmware reads is generated in hardware and driven from the
-      network.</p>
+        </figure>
+      </div>
       <div class="iface top3">
         <div class="ifitem"><b>210 x 130 mm</b><span>one base board</span></div>
         <div class="ifitem"><b>One Cat-6</b><span>power and network</span></div>
