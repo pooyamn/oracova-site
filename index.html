@@ -142,11 +142,12 @@
   .bench-log {
     flex: 0 0 auto; display: grid; gap: 8px; align-content: start;
     padding: 20px 18px; overflow: hidden;
-    height: min(46vh, 430px);
+    height: 430px;            /* px, not vh: vh changes as the mobile URL bar
+                                 hides on scroll and the panel resizes under the reader */
   }
   @media (max-height: 860px) and (min-width: 561px) {
     header.hero { padding: 48px 0 48px; }
-    .bench-log { height: min(40vh, 330px); }
+    .bench-log { height: 330px; }
   }
   .bench-log.static { overflow-y: auto; }
   .bench-log:not(.static) { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
@@ -179,7 +180,7 @@
   @media (max-width: 560px) {
     .bench-foot > span:first-child { display: none; }
     .bench-foot { justify-content: flex-end; }
-    .bench-log { height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
+    .bench-log { height: 400px; gap: 7px; padding: 14px 12px; }
     .bench-replay { font-size: 11.5px; }
     .la-card svg text { display: none; }
     .la-card.bits svg { display: none; }
