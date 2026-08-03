@@ -118,9 +118,6 @@ SELF = {
     'product.html':    '/product',
     'onboarding.html': '/onboarding',
     'demo.html':       '/demo',
-    # Run reports carry the canonical chrome but are deliberately NOT in NAV/MENU/SITEMAP:
-    # they are linked from the evidence they belong to, not from site navigation.
-    'runs/bldc-hall-guard-20260802.html': '/runs/bldc-hall-guard-20260802',
 }
 LINKS = SELF   # apply()/check iterate over the page list
 
