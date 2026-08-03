@@ -1,10 +1,30 @@
 # oracova-site
 
-Marketing site for Oracova. `v19/` is staging, the repo root is production
+Marketing site for Oracova. `v19/` is staging, the repo root mirrors production
 (oracova.com / oracova-site.pages.dev). `tools/header.py` owns the nav, hamburger menu and
 footer sitemap on every page: edit it, never the per-page chrome, then run
-`python3 tools/header.py` (and `--check` to verify no drift). Its `roots` list is
-deliberately `['v19']` so production is only touched when promoting.
+`python3 tools/header.py` (and `--check` to verify no drift). Its `roots` is `['.', 'v19']`
+so the chrome can never drift between the two trees. Page bodies are copied root-ward only
+at promote time, so between promotions the root carries staged chrome and shipped bodies.
+
+Promote (production is the `main` branch, deployed from the `v19` directory):
+
+```
+for f in index product demo onboarding 404; do cp v19/$f.html $f.html; done
+cp v19/board-augur-one-*.webp v19/robots.txt v19/sitemap.xml v19/_redirects .
+python3 tools/header.py && python3 tools/header.py --check
+set -a; . ~/.openclaw/secrets/cloudflare.env; set +a
+npx wrangler pages deploy v19 --project-name=oracova-site --branch=main
+```
+
+Do not deploy the repo root itself: it carries the `v1`..`v18` archives, which
+production has never served.
+
+The board render is generated, not photographed. `ai-hil/hardware/render2.py` with
+`--rgba` (alpha, so one asset works in both themes) and `--fit=<pad>` (solves scale and
+offset from the projected vertex extents, so the board cannot leave the frame). The
+approved desktop camera is `240 24 34 3 1.5 0 0 0.98 1600 660`; the phone crop is the same
+camera at elevation 46 into `900 620`. Source: `oracova-assembly.step` via `step_tess.py`.
 
 Deploy staging:
 
@@ -87,9 +107,37 @@ Plan:
 5. **Label it accurately.** A real capture needs no "recreated" label - instead state the
    date, the firmware commit, and that it ran on development hardware.
 
-### At promote time
-Production still serves `/runs/bldc-hall-fault-demo`. When v19 goes to root, that URL dies:
-add a `/runs/*` -> `/#evidence` redirect so bookmarks and shared links do not 404.
+### Open questions blocking copy fixes (raised by review 2026-08-03)
+Each of these is a claim on the live site that cannot be verified from the repo:
+
+1. **Is the test-agent split real?** The homepage says "A separate agent writes the tests,
+   working from the spec rather than the code", but the replay above it shows a single
+   `oracova task "implement and test the gyro driver"`. Either the replay shows the split
+   or the claim comes off.
+2. **Can the bench read analog out of the DUT?** Onboarding promises "everything your MCU
+   senses and drives"; the spec lists only DACs plus the Kelvin-sensed supply current.
+3. **The internal logic analyzer has no specification.** It is the replay's hero feature
+   and appears nowhere in the spec tab: channels, depth, sample rate, trigger model.
+4. **How does a run reach the bench from CI?** No GitHub / GitLab / webhook / pipeline
+   mention exists anywhere, yet "every firmware PR gets its own bench" is the core pitch.
+5. **Where does firmware source go and where does the agent run?** No mention of cloud,
+   on-prem or self-hosted. Reviewers rate this the silent deal-killer above the engineer.
+6. **"A hundred iterations, unattended"** in the hero against `8 iterations, 1 h 12 min`
+   in the artifact below it. 100 implies a 15 hour run.
+7. **Sensorless FOC.** Every motor claim on the site is hall-sensored. No latency, analog
+   update rate or bandwidth figure is published anywhere.
+8. **DUT power budget in watts.** "up to 8.19 A" reads as a supply rating next to
+   "1.8-5 V DUT supply"; 5 V x 8.19 A = 41 W against a 71.3 W PoE budget shared with
+   everything else on the board.
+9. **"DUT designs are open source"** was removed from onboarding on 2026-08-03 for having
+   no link, same rule as the marketplace. Restore it with a repository URL.
+
+### Cloudflare zone setting
+Scrape Shield "Email Address Obfuscation" is ON for oracova.com. It rewrites every
+`mailto:` into `/cdn-cgi/l/email-protection#<hex>`, which 404s without JavaScript, and
+replaces the footer address with a visible `[email protected]` placeholder until the
+decoder script runs. The API token in `~/.openclaw/secrets/cloudflare.env` cannot read or
+write zone settings, so this needs the dashboard: oracova.com -> Scrape Shield -> off.
 
 ## House style
 

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Augur One: the Oracova bench board</title>
-<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute on one board, PoE powered, remotely recoverable, with a 400-pin DUT interface.">
+<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute on one board, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels to the DUT.">
 <link rel="canonical" href="https://oracova.com/product">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -24,7 +24,7 @@
     --border-strong: rgba(255,255,255,.14);
     --text: #EDEEF0;
     --text-dim: #9DA1A8;
-    --text-faint: #6E7278;
+    --text-faint: #83888F;
     --brand: #FFB454;
     --brand-ink: #1A1204;
     --pass: #4ADE80;
@@ -50,7 +50,7 @@
   h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 30px; margin-bottom: 12px; letter-spacing: -0.025em; }
   h3 { font-size: 16.5px; margin-bottom: 6px; }
-  p { max-width: 68ch; }
+  p { max-width: 68ch; text-wrap: pretty; }
   .dim { color: var(--text-dim); }
   .mono { font-family: var(--mono); }
   .kicker {
@@ -172,9 +172,9 @@
     :root {
       --bg: #FAFAF9; --surface: #FFFFFF; --surface-2: #F5F5F3;
       --border: rgba(20,22,26,.09); --border-strong: rgba(20,22,26,.18);
-      --text: #16181D; --text-dim: #555A63; --text-faint: #83888F;
+      --text: #16181D; --text-dim: #555A63; --text-faint: #6B7078;
       --brand: #B05C00; --brand-ink: #FFFFFF;
-      --pass: #16A34A; --fail: #DC2626;
+      --pass: #15803D; --fail: #DC2626;
       --glow: rgba(176,92,0,.07); --nav-bg: rgba(250,250,249,.92);
     }
     ::selection { background: rgba(176,92,0,.18); }
@@ -246,7 +246,8 @@
   .p-hero { padding: 72px 0 8px; }
   .p-hero h1 { font-family: var(--mono); font-size: clamp(40px, 6.4vw, 68px); font-weight: 700;
     letter-spacing: -.04em; margin-bottom: 12px; }
-  .p-hero .sub { font-size: clamp(16px, 2vw, 18.5px); color: var(--text-dim); max-width: 60ch; }
+  .p-hero .sub { font-size: clamp(16px, 2vw, 18.5px); color: var(--text-dim); max-width: 60ch;
+    text-wrap: pretty; }
   .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin: 30px 0 0; }
   .tabs button { background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer;
     font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase;
@@ -306,7 +307,7 @@
   .rrow .rf { font-size: 14px; color: var(--text-dim); }
   .rrow .rf b { color: var(--text); }
   /* status, not faults: --fail here reads as a list of things that broke */
-  .runs-today .rw { color: var(--ok, #3FB950); }
+  .runs-today .rw { color: var(--pass); }
   .runs-today .rrow:last-child .rw { color: var(--text-dim); }
   @media (max-width: 700px) { .rrow { grid-template-columns: 1fr; gap: 4px; } }
   .iface { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
@@ -377,6 +378,10 @@
 
 
 
+
+
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -394,7 +399,8 @@
   font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
 .site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
 .site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
-  margin-left: 10px; padding: 9px 16px; border-radius: 8px; border: 1px solid transparent;
+  min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
+  border: 1px solid transparent;
   background: #FFB454; color: #1A1204; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
@@ -415,7 +421,8 @@
 .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
 .site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
 .site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
-.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.16); background: #0E0F11;
+  box-shadow: 0 14px 28px rgba(0,0,0,.45); }
 .site-menu.open { display: block; }
 .site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
@@ -431,31 +438,39 @@
     max-height: calc(100vh - 56px); overflow-y: auto; }
 }
 @media (min-width: 801px) { .site-menu { display: none !important; } }
+/* burger + logo + CTA do not fit a 320px viewport at the default metrics */
+@media (max-width: 400px) {
+  .site-nav .nav-inner { padding: 0 16px; }
+  .site-nav .nav-burger { margin-right: 10px; }
+  .site-nav .nav-cta { margin-left: 8px; padding: 9px 12px; font-size: 13px; }
+}
 .site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
 .site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
-  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot h2 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
 .site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
   line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
   margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
-  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
-.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #83888F; }
+.site-foot .foot-base a { display: inline-block; padding: 11px 0; min-height: 44px;
+  color: inherit; font-family: inherit; font-size: inherit; }
 @media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
 @media (prefers-color-scheme: light) {
-  .site-menu { background: #FAFAF9; }
+  .site-menu { background: #FFFFFF; border-bottom-color: rgba(20,22,26,.16);
+    box-shadow: 0 14px 28px rgba(20,22,26,.12); }
   .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
   .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
   .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
   .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
   .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h4 { color: #83888F; }
+  .site-foot h2 { color: #6B7078; }
   .site-foot a { color: #555A63; }
   .site-foot a:hover { color: #16181D; }
-  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
+  .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
 }
 @media (prefers-color-scheme: light) {
   .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
@@ -483,6 +498,7 @@
       <a href="/product" aria-current="page">Augur One</a>
       <a href="/onboarding">Board bring-up</a>
       <a href="/demo">Demo</a>
+      <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
     </div>
   </div>
 </nav>
@@ -532,7 +548,7 @@
                srcset="/board-augur-one-800.webp 800w, /board-augur-one-1600.webp 1600w"
                sizes="(max-width: 900px) 100vw, 44vw"
                width="1600" height="660" decoding="async"
-               alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten mimic analog modules in green, and the DUT connectors along the far edge.">
+               alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten analog module slots, populated in green, and the DUT connectors along the far edge.">
         </picture>
         <figcaption>CAD render &middot; in fabrication</figcaption>
       </figure>
@@ -600,7 +616,7 @@
       <h2>It comes back without you</h2>
       <p class="dim">A dedicated supervisor MCU, an STM32H563, sits on its own rail and owns recovery and DUT
       power. The board is built around one rule: Ethernet must not drop while something is being
-      recovered. So the FPGA and the real-time MCU are always powered, and every recovery path is a reset.</p>
+      recovered. So the FPGA and the real-time MCU are always powered and are recovered by reset. Only DUT power is switched.</p>
       <div class="recovery">
         <div class="rrow"><div class="rw">DUT wedged</div><div class="rf">supervisor cuts and restores DUT power, the case the bench exists to stop you walking over for</div></div>
         <div class="rrow"><div class="rw">Real-time MCU wedged</div><div class="rf">supervisor asserts its reset line</div></div>
@@ -616,7 +632,7 @@
       <div class="recovery runs-today">
         <div class="rrow"><div class="rw">Closed loop on real silicon</div><div class="rf">running today on Oracova development hardware: BLDC plant and hall encoder against an STM32F411</div></div>
         <div class="rrow"><div class="rw">Fault library</div><div class="rf">running: hall faults scored FAIL on the unguarded build, PASS with the guard patch</div></div>
-        <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: full control loop in FPGA fabric at 8 kHz</div></div>
+        <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: unmodified Betaflight on real silicon, closing its 8 kHz loop against the world in FPGA fabric</div></div>
         <div class="rrow"><div class="rw">Augur One</div><div class="rf">in fabrication, first article pending. Everything above runs today on development hardware; Augur One puts it on one board.</div></div>
       </div>
 
@@ -641,7 +657,7 @@
       <table class="spec">
         <tr><td>Digital I/O</td><td>148 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
-        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current is sensed on two ranges: 250 &micro;A resolution up to 8.19 A for normal draw, and 31 nA resolution on the low range for sleep currents.</td></tr>
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current is sensed on two ranges: 250 &micro;A/LSB up to 8.19 A full scale for normal draw, and 31 nA/LSB on the sleep range for sleep currents. Sleep-range full scale is confirmed at first article.</td></tr>
         <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
         <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
@@ -650,10 +666,10 @@
 
       <div class="spec-h">Analog</div>
       <table class="spec">
-        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, and additional to the 148 digital pins. Each slot takes a high-speed or a medium-speed module, mixed freely. Populate only the slots you need.</td></tr>
+        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, in addition to the 148 digital pins. Each slot takes a high-speed or a medium-speed module, mixed freely. Populate only the slots you need.</td></tr>
         <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails. For channels the control loop reads at rate.</td></tr>
         <tr><td>Medium-speed module</td><td>DAC80504 per slot. For channels that move slowly: temperatures, pack voltages, setpoints.</td></tr>
-        <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbour.</td></tr>
+        <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbor.</td></tr>
       </table>
 
       <div class="spec-h">Communication</div>
@@ -664,35 +680,39 @@
       <p class="dim" style="margin-top:24px; font-size:13.5px">Interface figures are counted from
       the built netlist rather than a block diagram. Converter figures come from the parts named
       above.</p>
-      <div class="panel-cta">
-        <p>Bring your board to the bench.</p>
-        <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
-      </div>
     </div>
   </section>
+
+  <!-- Outside both panels: the Overview tab is the default, and it used to end
+       with a ghost button and then the footer, so the highest-intent page on the
+       site had no closing action unless you happened to be on Specification. -->
+  <div class="panel-cta">
+    <p>Bring your board to the bench.</p>
+    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+  </div>
 </div>
 
 <footer class="site-foot">
   <div class="foot-inner">
     <div class="foot-map">
       <div>
-        <h4>Product</h4>
+        <h2>Product</h2>
         <a href="/product">Augur One</a>
         <a href="/onboarding">Board bring-up</a>
       </div>
       <div>
-        <h4>Evidence</h4>
+        <h2>Evidence</h2>
         <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>
-        <h4>How it works</h4>
+        <h2>How it works</h2>
         <a href="/#how">The loop</a>
         <a href="/#world">What it emulates</a>
         <a href="/#compare">Against other methods</a>
       </div>
       <div>
-        <h4>Contact</h4>
+        <h2>Contact</h2>
         <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
         <a href="mailto:pooyamn@gmail.com">Email us</a>
       </div>
@@ -715,7 +735,7 @@
   }
   tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i, true); }); });
   var toSpec = document.getElementById('to-spec');
-  if (toSpec) toSpec.addEventListener('click', function (e) { e.preventDefault(); show(1, true); window.scrollTo({top: 0, behavior: 'smooth'}); });
+  if (toSpec) toSpec.addEventListener('click', function (e) { e.preventDefault(); show(1, true); document.querySelector('.tabs').scrollIntoView({behavior: 'smooth', block: 'start'}); });
   if (location.hash === '#spec') show(1, false);
   window.addEventListener('popstate', function () { show(location.hash === '#spec' ? 1 : 0, false); });
   window.addEventListener('hashchange', function () { show(location.hash === '#spec' ? 1 : 0, false); });
@@ -726,7 +746,9 @@
 (function () {
   var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
   if (!b || !m) return;
-  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open);
+    // the panel floats over the page; without this a thumb flick scrolls content behind it
+    document.body.style.overflow = open && window.innerWidth <= 800 ? 'hidden' : ''; }
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });

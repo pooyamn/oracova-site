@@ -28,7 +28,8 @@ CSS = """
   font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
 .site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
 .site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
-  margin-left: 10px; padding: 9px 16px; border-radius: 8px; border: 1px solid transparent;
+  min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
+  border: 1px solid transparent;
   background: #FFB454; color: #1A1204; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
@@ -49,7 +50,8 @@ CSS = """
 .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
 .site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
 .site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
-.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.16); background: #0E0F11;
+  box-shadow: 0 14px 28px rgba(0,0,0,.45); }
 .site-menu.open { display: block; }
 .site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
@@ -65,31 +67,39 @@ CSS = """
     max-height: calc(100vh - 56px); overflow-y: auto; }
 }
 @media (min-width: 801px) { .site-menu { display: none !important; } }
+/* burger + logo + CTA do not fit a 320px viewport at the default metrics */
+@media (max-width: 400px) {
+  .site-nav .nav-inner { padding: 0 16px; }
+  .site-nav .nav-burger { margin-right: 10px; }
+  .site-nav .nav-cta { margin-left: 8px; padding: 9px 12px; font-size: 13px; }
+}
 .site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
 .site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
-  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot h2 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
 .site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
   line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
   margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
-  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
-.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #83888F; }
+.site-foot .foot-base a { display: inline-block; padding: 11px 0; min-height: 44px;
+  color: inherit; font-family: inherit; font-size: inherit; }
 @media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
 @media (prefers-color-scheme: light) {
-  .site-menu { background: #FAFAF9; }
+  .site-menu { background: #FFFFFF; border-bottom-color: rgba(20,22,26,.16);
+    box-shadow: 0 14px 28px rgba(20,22,26,.12); }
   .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
   .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
   .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
   .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
   .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h4 { color: #83888F; }
+  .site-foot h2 { color: #6B7078; }
   .site-foot a { color: #555A63; }
   .site-foot a:hover { color: #16181D; }
-  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
+  .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
 }
 @media (prefers-color-scheme: light) {
   .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
@@ -156,16 +166,19 @@ def markup(page):
             ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
             '<span></span></button>\n'
             '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
-            '    <div class="nav-set">\n%s\n'
+            '    <div class="nav-set">\n%s\n      %s\n'
             '    </div>\n  </div>\n</nav>\n'
-            '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, menu))
+            '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, CTA, menu))
 
 def footer_markup():
     cols = []
     for title, items in SITEMAP:
         rows = '\n'.join('        <a href="%s">%s</a>' % (u, t) for u, t in items)
-        cols.append('      <div>\n        <h4>%s</h4>\n%s\n      </div>' % (title, rows))
+        cols.append('      <div>\n        <h2>%s</h2>\n%s\n      </div>' % (title, rows))
     return ('<footer class="site-foot">\n  <div class="foot-inner">\n'
+            # NOT <nav>: every page carries a bare `nav { position: sticky; top: 0 }`
+            # rule for its own header, which would pin the footer map to the top.
+            # The per-column <h2> headings already give the groups structure.
             '    <div class="foot-map">\n%s\n    </div>\n'
             '    <div class="foot-base">\n'
             '      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>\n'
@@ -177,7 +190,9 @@ SCRIPT = """<script>
 (function () {
   var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
   if (!b || !m) return;
-  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open);
+    // the panel floats over the page; without this a thumb flick scrolls content behind it
+    document.body.style.overflow = open && window.innerWidth <= 800 ? 'hidden' : ''; }
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
