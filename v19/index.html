@@ -544,7 +544,7 @@
         <div class="bench-log static" id="bench-log" aria-label="replay of an agent task: implement and test the gyro driver">
           <div class="bl"><span class="k">$</span> oracova task "implement and test the gyro driver"</div>
           <div class="bl">plan     <b>MPU6000 gyro/accel &middot; SPI1 &middot; DUT STM32F411, real silicon</b></div>
-          <div class="bl">world    <b>mpu6000 model v1.2</b> from the marketplace, validated against real silicon</div>
+          <div class="bl">world    <b>mpu6000 model v1.2</b>, validated against real silicon</div>
           <div class="bl">         synth &rarr; bench FPGA ................ <b>ok</b> &middot; 4 m 12 s</div>
           <div class="bl">bench    <b>DUT board seated</b></div>
           <div class="bl">&nbsp;</div>
@@ -666,8 +666,8 @@
       <div class="card">
         <h3>Motor control</h3>
         <div class="faults">stuck hall &middot; swapped sectors &middot; skipped sector</div>
-        <p>Commutation and hall-sensor faults on real silicon, proven on the Oracova
-        bench.</p>
+        <p>Commutation and hall-sensor faults on real silicon, running today on Oracova
+        development hardware.</p>
       </div>
       <div class="card">
         <h3>BMS</h3>
@@ -760,8 +760,9 @@
     </div>
     </div>
     <div class="cmp-mobile" id="cmp-mobile" aria-label="compare Oracova against one method at a time"></div>
-    <p class="note">Proven today: STM32F411 on the bench, a BLDC + hall fault library,
-    unmodified Betaflight in closed loop. Verdicts come from fixed thresholds, not from the agent.</p>
+    <p class="note">Running today on Oracova development hardware: STM32F411 under test, a BLDC
+    + hall fault library, unmodified Betaflight in closed loop at 8 kHz. Augur One puts all of it on
+    one board and is in fabrication. Verdicts come from fixed thresholds, not from the agent.</p>
   </div>
 </section>
 
@@ -864,7 +865,7 @@
   var P = '<span class="k">$</span> oracova task "implement and test the gyro driver"';
   var steps = [
     [1200, 'plan     <b>MPU6000 gyro/accel &middot; SPI1 &middot; DUT STM32F411, real silicon</b>'],
-    [2300, 'world    <b>mpu6000 model v1.2</b> from the marketplace, validated against real silicon'],
+    [2300, 'world    <b>mpu6000 model v1.2</b>, validated against real silicon'],
     [2100, '         synth &rarr; bench FPGA ................ <b>ok</b> &middot; 4 m 12 s'],
     [1700, 'bench    <b>DUT board seated</b>'],
     [2400, ''],

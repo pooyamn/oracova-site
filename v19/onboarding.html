@@ -460,8 +460,8 @@
     <span class="stepnum">STEP 2</span>
     <h2>The hardware</h2>
     <p class="dim">From your documents, a custom DUT board is designed for your
-    microcontroller and goes onto the Oracova base board. You choose the base board by how
-    much power your system needs. DUT designs are open source.</p>
+    microcontroller and goes onto Augur One, the Oracova base board. DUT designs are open
+    source.</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -471,9 +471,10 @@
       </div>
       <div class="box">
         <span class="tag">Analog front-end modules</span>
-        <h3>DAC and ADC front-ends</h3>
-        <p>DAC and ADC modules come in different resolutions and speeds; you pick the ones
-        your signals need. Unusual signals get a custom module.</p>
+        <h3>Analog output modules</h3>
+        <p>Each of the 10 slots takes a high-speed or a medium-speed module, four channels
+        each; you populate only the slots your signals need. Unusual signals get a custom
+        module.</p>
       </div>
       <div class="box">
         <span class="tag">Custom DUT + debug probe</span>
@@ -533,12 +534,10 @@
       </div>
     </div>
     <div class="honest">
-      <div class="h">The open-source marketplace</div>
-      <div class="list">gyro &middot; LCD &middot; hall encoder &middot; and more</div>
-      <p class="dim" style="font-size:15px; max-width:none">The world rarely starts from
-      zero. Common peripherals come as <b>validated models from Oracova's open-source
-      marketplace</b>, run against real firmware. The AI builds what is unique to your
-      product and pulls the rest; what you build, you can contribute back.</p>
+      <div class="h">The world does not start from zero</div>
+      <div class="list">BLDC + hall &middot; DC servo &middot; pump &middot; thermal</div>
+      <p class="dim" style="font-size:15px; max-width:none">Models that already run on the
+      bench are reused, so the AI builds only what is unique to your product.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
     <div class="boxes">
@@ -556,8 +555,8 @@
         same signals it would see in the product.</p>
       </div>
       <div class="box">
-        <span class="tag ok">Proven today</span>
-        <h3>The closed loop runs on real silicon now</h3>
+        <span class="tag ok">Running today</span>
+        <h3>The closed loop runs on real silicon, on development hardware</h3>
         <div class="list">motor commutation &middot; hall fault library &middot; unmodified Betaflight</div>
       </div>
     </div>

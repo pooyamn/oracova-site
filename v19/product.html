@@ -484,7 +484,7 @@
         <div class="ifitem"><b>148</b><span>digital I/O on adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder.</span></div>
         <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of the 148, in 10 slots of 4, high-speed or medium-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, Kelvin-sensed</span></div>
-        <div class="ifitem"><b>15-bit</b><span>current sense: 250 &micro;A/LSB to 8.19 A awake, 31 nA/LSB to 16.4 mA asleep</span></div>
+        <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB up to 8.19 A on the high range, 31 nA/LSB on the sleep range</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
         <div class="ifitem"><b>3 x Ethernet</b><span>plus 2 x USB OTG and a Wi-Fi/BLE peer, all reaching the DUT</span></div>
       </div>
@@ -543,6 +543,14 @@
       <p class="dim" style="margin-top:16px">Neither the FPGA nor the real-time MCU has a power switch
       anywhere on the board, so half-powered states do not exist to get stuck in. That comes from
       the schematic, not from firmware discipline.</p>
+      <h2 style="margin-top:52px">What runs today</h2>
+      <div class="recovery">
+        <div class="rrow"><div class="rw">Closed loop on real silicon</div><div class="rf">running today on Oracova development hardware: BLDC plant and hall encoder against an STM32F411</div></div>
+        <div class="rrow"><div class="rw">Fault library</div><div class="rf">running: hall faults scored FAIL on the unguarded build, PASS with the guard patch</div></div>
+        <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: full control loop in FPGA fabric at 8 kHz</div></div>
+        <div class="rrow"><div class="rw">Augur One</div><div class="rf">in fabrication, first article pending. Everything above runs today on development hardware; Augur One puts it on one board.</div></div>
+      </div>
+
       <div class="panel-cta">
         <p>Every figure above, part by part.</p>
         <a class="btn btn-ghost" id="to-spec" href="#spec">See the full specification</a>
@@ -564,7 +572,7 @@
       <table class="spec">
         <tr><td>Digital I/O</td><td>148 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
-        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current on two ranges: 250 &micro;A resolution up to 8.19 A active, and 31 nA resolution to 16.4 mA asleep.</td></tr>
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current is sensed on two ranges: 250 &micro;A resolution up to 8.19 A for normal draw, and 31 nA resolution on the low range for sleep currents.</td></tr>
         <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
         <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
