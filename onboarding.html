@@ -40,6 +40,7 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: rgba(255,180,84,.25); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
   .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
   section { padding: 52px 0; border-top: 1px solid var(--line); }
@@ -114,18 +115,12 @@
   }
   .box h3 { color: var(--text); }
   .box p { font-size: 14.5px; color: var(--text-dim); max-width: none; }
-  .box .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
+  .box .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 8px; }
   .box .tag.ok { color: var(--pass); }
   .box .tag.off { color: var(--text-dim); }
-  .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin-top: 10px; }
+  .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
 
   .note { margin-top: 22px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
-
-  a.run-link {
-    color: inherit; text-decoration: underline;
-    text-decoration-color: rgba(255,180,84,.35); text-underline-offset: 3px;
-  }
-  a.run-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
   .doc-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
   .doc {
@@ -221,8 +216,6 @@
     .nav-links a.btn-primary:hover { color: #fff; }
     .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list,
     .doc, .mini-row .n { color: #8F4700; }
-    a.run-link { text-decoration-color: rgba(168,84,0,.45); }
-    a.run-link:hover { color: #8F4700; }
   }
 
   /* ---------- v18 skin ---------- */
@@ -282,6 +275,34 @@
   .logo { font-size: 16px; }
   nav .wrap { height: 56px; }
 
+
+
+  .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .foot-nav a { padding: 10px 0; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -291,9 +312,9 @@
   display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 12px 0; margin: -12px 0; }
+  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
-.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
@@ -304,18 +325,69 @@
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
   font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
 .site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
+.site-menu a[aria-current="page"] { font-weight: 700; }
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
+.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
+.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
+  position: relative; transition: background .15s ease; }
+.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
+  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
+  transition: transform .18s ease, top .18s ease; }
+.site-nav .nav-burger span::before { top: -5px; }
+.site-nav .nav-burger span::after { top: 5px; }
+.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu.open { display: block; }
+.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+.site-menu a:first-child { border-top: 0; }
 @media (max-width: 800px) {
   .site-nav { position: fixed; top: 0; left: 0; right: 0;
     -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
   body { padding-top: 56px; }
   .site-nav .nav-set a:not(.nav-cta) { display: none; }
+  .site-nav .nav-burger { display: flex; }
+  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
+    max-height: calc(100vh - 56px); overflow-y: auto; }
+}
+@media (min-width: 801px) { .site-menu { display: none !important; } }
+.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
+.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
+.site-foot a:hover { color: #EDEEF0; }
+.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
+.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (prefers-color-scheme: light) {
+  .site-menu { background: #FAFAF9; }
+  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
+  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
+  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
+  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+  .site-foot { border-top-color: rgba(20,22,26,.1); }
+  .site-foot h4 { color: #83888F; }
+  .site-foot a { color: #555A63; }
+  .site-foot a:hover { color: #16181D; }
+  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
 }
 @media (prefers-color-scheme: light) {
   .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
   .site-nav .nav-logo { color: #16181D; }
   .site-nav .nav-logo i { color: #B05C00; }
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
@@ -328,15 +400,22 @@
 
 <nav class="site-nav">
   <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
     <div class="nav-set">
       <a href="/">Home</a>
+      <a href="/product">Augur One</a>
+      <a href="/onboarding" aria-current="page">Board bring-up</a>
       <a href="/demo">Demo</a>
-      <a href="/#evidence">Evidence</a>
-      <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
     </div>
   </div>
 </nav>
+<div class="site-menu" id="site-menu">
+    <a href="/">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/onboarding" aria-current="page">Board bring-up</a>
+    <a href="/demo">Demo</a>
+</div>
 
 <header class="hero">
   <div class="wrap">
@@ -364,11 +443,11 @@
         <span class="fd">An AI agent, with your confirmation</span>
       </a>
       <span class="flow-arrow" aria-hidden="true">&rarr;</span>
-      <span class="flow-step final">
+      <a class="flow-step final" href="/demo">
         <span class="fn">RESULT</span>
         <span class="fl">Verdicts</span>
         <span class="fd">PASS or FAIL on the bench</span>
-      </span>
+      </a>
     </div>
   </div>
 </header>
@@ -395,8 +474,8 @@
     <span class="stepnum">STEP 2</span>
     <h2>The hardware</h2>
     <p class="dim">From your documents, a custom DUT board is designed for your
-    microcontroller and goes onto the Oracova base board. You choose the base board by how
-    much power your system needs. DUT designs are open source.</p>
+    microcontroller and goes onto Augur One, the Oracova base board. DUT designs are open
+    source.</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -406,9 +485,10 @@
       </div>
       <div class="box">
         <span class="tag">Analog front-end modules</span>
-        <h3>DAC and ADC front-ends</h3>
-        <p>DAC and ADC modules come in different resolutions and speeds; you pick the ones
-        your signals need. Unusual signals get a custom module.</p>
+        <h3>Analog output modules</h3>
+        <p>Each of the 10 slots takes a high-speed or a medium-speed module, four channels
+        each; you populate only the slots your signals need. Unusual signals get a custom
+        module.</p>
       </div>
       <div class="box">
         <span class="tag">Custom DUT + debug probe</span>
@@ -468,12 +548,10 @@
       </div>
     </div>
     <div class="honest">
-      <div class="h">The open-source marketplace</div>
-      <div class="list">gyro &middot; LCD &middot; hall encoder &middot; and more</div>
-      <p class="dim" style="font-size:15px; max-width:none">The world rarely starts from
-      zero. Common peripherals come as <b>validated models from Oracova's open-source
-      marketplace</b>, run against real firmware. The AI builds what is unique to your
-      product and pulls the rest; what you build, you can contribute back.</p>
+      <div class="h">The world does not start from zero</div>
+      <div class="list">BLDC + hall &middot; DC servo &middot; pump &middot; thermal</div>
+      <p class="dim" style="font-size:15px; max-width:none">Models that already run on the
+      bench are reused, so the AI builds only what is unique to your product.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
     <div class="boxes">
@@ -491,11 +569,9 @@
         same signals it would see in the product.</p>
       </div>
       <div class="box">
-        <span class="tag ok">Proven today</span>
-        <h3>The closed loop runs on real silicon now</h3>
+        <span class="tag ok">Running today</span>
+        <h3>The closed loop runs on real silicon, on development hardware</h3>
         <div class="list">motor commutation &middot; hall fault library &middot; unmodified Betaflight</div>
-        <p style="margin-top:10px"><a class="run-link" href="/runs/bldc-hall-fault-demo">See a
-        scored run from the bench</a></p>
       </div>
     </div>
   </div>
@@ -505,16 +581,52 @@
   <div class="wrap">
     <h2>Want to walk through it on your&nbsp;board?</h2>
     <p class="dim">Bring your schematic to the call. 15 minutes, no deck.</p>
-    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">
-    <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
-    <span><a href="mailto:pooyamn@gmail.com" style="color: inherit; text-decoration: none;">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; © 2026 Oracova</span>
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-map">
+      <div>
+        <h4>Product</h4>
+        <a href="/product">Augur One</a>
+        <a href="/onboarding">Board bring-up</a>
+      </div>
+      <div>
+        <h4>Evidence</h4>
+        <a href="/demo">Live demo</a>
+        <a href="/#evidence">What it caught</a>
+      </div>
+      <div>
+        <h4>How it works</h4>
+        <a href="/#how">The loop</a>
+        <a href="/#world">What it emulates</a>
+        <a href="/#compare">Against other methods</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+        <a href="mailto:pooyamn@gmail.com">Email us</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+      <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+    </div>
   </div>
 </footer>
 
+<script>
+(function () {
+  var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
+  if (!b || !m) return;
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
+})();
+</script>
 </body>
 </html>

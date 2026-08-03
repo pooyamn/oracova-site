@@ -1,0 +1,4 @@
+# The scored run reports are not part of the product site. Production served
+# /runs/bldc-hall-fault-demo until v19; keep bookmarks and shared links alive
+# instead of 404ing them.
+/runs/*  /#evidence  301

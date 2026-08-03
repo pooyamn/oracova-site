@@ -118,6 +118,9 @@ SELF = {
     'product.html':    '/product',
     'onboarding.html': '/onboarding',
     'demo.html':       '/demo',
+    # The 404 carries the chrome too: it is the one page a lost visitor is guaranteed to
+    # hit, and it used to be the only page with no way to navigate anywhere.
+    '404.html':        None,
 }
 LINKS = SELF   # apply()/check iterate over the page list
 
@@ -204,7 +207,7 @@ def header_of(path):
     return hashlib.sha256((css.group(0) + skeleton).encode()).hexdigest()[:12]
 
 if __name__ == '__main__':
-    roots = ['v19']   # staging only; add '.'/'v18' deliberately when promoting
+    roots = ['.', 'v19']   # v19 promoted to production 2026-08-03; both stay in sync
     pages = list(LINKS)
     if '--check' in sys.argv:
         seen = {}
