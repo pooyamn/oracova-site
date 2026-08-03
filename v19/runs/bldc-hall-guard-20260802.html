@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A hall sensor fails. One build shuts down, the other energizes the wrong phase.</title>
+<meta name="description" content="A scored Oracova bench run: one hall line stuck low, the same firmware built with and without its invalid-hall guard. Unguarded energizes the wrong phase 4 times; guarded never does.">
+<link rel="canonical" href="https://oracova.com/runs/bldc-hall-guard-20260802">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Oracova">
+<meta property="og:title" content="A hall sensor fails. One build shuts down, the other energizes the wrong phase.">
+<meta property="og:description" content="Same fault, same rotor, same checker. Unsafe drive: 4 without the guard, 0 with it.">
+<meta property="og:url" content="https://oracova.com/runs/bldc-hall-guard-20260802">
+<meta property="og:image" content="https://oracova.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://oracova.com/og.png">
+<style>
+  :root {
+    --bg: #0E0F11; --surface: #15161A; --border: rgba(255,255,255,.07);
+    --border-strong: rgba(255,255,255,.14);
+    --text: #EDEEF0; --text-dim: #9DA1A8; --text-faint: #6E7278;
+    --brand: #FFB454; --pass: #4ADE80; --fail: #F87171;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 15.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-family: var(--mono); font-size: clamp(22px, 3.2vw, 31px); font-weight: 700;
+    letter-spacing: -.025em; line-height: 1.16; margin-bottom: 12px; max-width: 24ch; }
+  h2 { font-family: var(--mono); font-size: 19px; letter-spacing: -.02em; margin-bottom: 12px; }
+  p { max-width: 68ch; color: var(--text-dim); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 12px; }
+  header.top { padding: 46px 0 8px; }
+  section { padding: 38px 0 0; }
+
+  /* the differential */
+  .diff { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .dcard { border: 1px solid var(--border); border-radius: 14px; background: var(--surface);
+    padding: 20px 22px; }
+  .dcard.bad { border-color: rgba(248,113,113,.35); }
+  .dcard.good { border-color: rgba(74,222,128,.35); }
+  .dcard .build { font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-faint); }
+  .dcard .n { font-family: var(--mono); font-size: 44px; font-weight: 700; line-height: 1.1;
+    letter-spacing: -.03em; margin: 10px 0 2px; }
+  .dcard.bad .n { color: var(--fail); }
+  .dcard.good .n { color: var(--pass); }
+  .dcard .lbl { font-size: 13.5px; color: var(--text-dim); }
+  .dcard .verdict { display: inline-block; margin-top: 14px; font-family: var(--mono);
+    font-weight: 700; font-size: 12px; letter-spacing: .08em; padding: 4px 12px; border-radius: 999px; }
+  .dcard.bad .verdict { background: rgba(248,113,113,.12); color: var(--fail); border: 1px solid rgba(248,113,113,.3); }
+  .dcard.good .verdict { background: rgba(74,222,128,.1); color: var(--pass); border: 1px solid rgba(74,222,128,.3); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-faint); font-weight: 600;
+    padding: 0 10px 9px 0; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 11px 10px 11px 0; border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); }
+  td.k { color: var(--text); }
+  td.bad { color: var(--fail); font-weight: 700; }
+  td.good { color: var(--pass); font-weight: 700; }
+  .tscroll { overflow-x: auto; }
+  .hint { font-family: var(--mono); font-size: 11px; color: var(--text-faint); margin-top: 8px; display: none; }
+
+  .prov { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-top: 8px; }
+  .prov div { background: var(--surface); padding: 13px 16px; }
+  .prov dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 4px; }
+  .prov dd { font-family: var(--mono); font-size: 12.5px; color: var(--text); word-break: break-word; }
+
+  .defs { margin-top: 10px; display: grid; gap: 8px; }
+  .defs div { font-size: 14px; color: var(--text-dim); }
+  .defs b { font-family: var(--mono); font-size: 12.5px; color: var(--text); }
+  .prov-note { font-size: 13.5px; color: var(--text-faint); max-width: 72ch; }
+  .foot-cta { margin: 28px 0 8px; }
+  .btn { display: inline-flex; align-items: center; padding: 11px 20px; border-radius: 8px;
+    background: var(--brand); color: #1A1204; text-decoration: none; font-weight: 600; font-size: 14px; }
+  .btn:hover { background: #FFC276; }
+  @media (max-width: 680px) {
+    .diff { grid-template-columns: 1fr; }
+    .hint { display: block; }
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #FAFAF9; --surface: #FFFFFF; --border: rgba(20,22,26,.09);
+      --border-strong: rgba(20,22,26,.16); --text: #16181D; --text-dim: #555A63;
+      --text-faint: #83888F; --brand: #B05C00; --pass: #16A34A; --fail: #DC2626; }
+  }
+
+/* ===== canonical site header (tools/header.py — do not edit per page) ===== */
+.site-nav { position: sticky; top: 0; z-index: 40;
+  background: rgba(14,15,17,.9);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid rgba(255,255,255,.09); }
+.site-nav .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
+  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
+.site-nav .nav-logo i { font-style: normal; color: #FFB454; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
+.site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+.site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
+.site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 10px; padding: 9px 16px; border-radius: 8px; border: 1px solid transparent;
+  background: #FFB454; color: #1A1204; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
+.site-menu a[aria-current="page"] { font-weight: 700; }
+.site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
+.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
+.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
+  position: relative; transition: background .15s ease; }
+.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
+  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
+  transition: transform .18s ease, top .18s ease; }
+.site-nav .nav-burger span::before { top: -5px; }
+.site-nav .nav-burger span::after { top: 5px; }
+.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu.open { display: block; }
+.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+.site-menu a:first-child { border-top: 0; }
+@media (max-width: 800px) {
+  .site-nav { position: fixed; top: 0; left: 0; right: 0;
+    -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+  body { padding-top: 56px; }
+  .site-nav .nav-set a:not(.nav-cta) { display: none; }
+  .site-nav .nav-burger { display: flex; }
+  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
+    max-height: calc(100vh - 56px); overflow-y: auto; }
+}
+@media (min-width: 801px) { .site-menu { display: none !important; } }
+.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
+.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
+.site-foot a:hover { color: #EDEEF0; }
+.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
+.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (prefers-color-scheme: light) {
+  .site-menu { background: #FAFAF9; }
+  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
+  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
+  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
+  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+  .site-foot { border-top-color: rgba(20,22,26,.1); }
+  .site-foot h4 { color: #83888F; }
+  .site-foot a { color: #555A63; }
+  .site-foot a:hover { color: #16181D; }
+  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
+}
+@media (prefers-color-scheme: light) {
+  .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
+  .site-nav .nav-logo { color: #16181D; }
+  .site-nav .nav-logo i { color: #B05C00; }
+  .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
+  .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav .nav-cta { background: #B05C00; color: #fff; }
+  .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
+  @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
+}
+/* ===== end canonical site header ===== */
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
+    <a class="nav-logo" href="/">oracova<i>_</i></a>
+    <div class="nav-set">
+      <a href="/">Home</a>
+      <a href="/product">Augur One</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a href="/demo">Demo</a>
+    </div>
+  </div>
+</nav>
+<div class="site-menu" id="site-menu">
+    <a href="/">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/onboarding">Board bring-up</a>
+    <a href="/demo">Demo</a>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">Scored run &middot; hall sensor fault &middot; 2026-08-02</div>
+    <h1>A hall line fails. One build stops. The other drives the wrong phase.</h1>
+    <p>One of the three hall sensor lines is held low, the way a broken wire or a dead
+    sensor holds it. Then the identical firmware is run twice: once as written, once with
+    its invalid-hall guard compiled in. Nothing else differs, and the checker does not know
+    which build it is looking at.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="diff">
+      <div class="dcard bad">
+        <div class="build">without the guard</div>
+        <div class="n">4</div>
+        <div class="lbl">times it energized a phase the rotor position did not call for</div>
+        <div class="verdict">FAIL</div>
+      </div>
+      <div class="dcard good">
+        <div class="build">with the guard</div>
+        <div class="n">0</div>
+        <div class="lbl">the invalid code latches the drive off and it stays off</div>
+        <div class="verdict">PASS</div>
+      </div>
+    </div>
+    <p style="margin-top:16px">Same fault, same rotor, same thresholds. The only variable is
+    one compile flag, and the safety count moves from four to zero. That is the whole
+    argument for testing a motor controller against physics instead of a mock: a mock
+    returns what you told it to, so both builds would have passed.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Where the four came from</h2>
+    <p>The rotor turns through six sectors. With hall A held low the firmware sees a
+    different code than the rotor is actually in, and the six-step table answers the code it
+    was given.</p>
+    <div class="tscroll">
+      <table>
+        <tr><th>Rotor sector</th><th>Hall, true</th><th>Hall, as seen</th><th>Phase it should drive</th><th>Phase it drove</th><th>Result</th></tr>
+        <tr><td class="k">1</td><td>001</td><td>000</td><td>U</td><td>none</td><td>invalid code, shut down</td></tr>
+        <tr><td class="k">2</td><td>011</td><td>010</td><td>W</td><td>W</td><td>correct</td></tr>
+        <tr><td class="k">3</td><td>010</td><td>010</td><td>W</td><td>W</td><td>correct</td></tr>
+        <tr><td class="k">4</td><td>110</td><td>110</td><td>V</td><td>V</td><td>correct</td></tr>
+        <tr><td class="k">5</td><td>100</td><td>100</td><td>V</td><td>V</td><td>correct</td></tr>
+        <tr><td class="k">6</td><td>101</td><td>100</td><td>U</td><td class="bad">V</td><td class="bad">wrong phase energized</td></tr>
+      </table>
+    </div>
+    <div class="hint">swipe to see every column</div>
+    <p style="margin-top:14px">One unsafe drive per electrical revolution, four revolutions
+    per case: <b>4</b>. The guarded build never reaches sector 6, because sector 1 already
+    latched it off.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Every case</h2>
+    <div class="tscroll">
+      <table>
+        <tr><th>Injected fault</th><th>Build</th><th>Unsafe drive</th><th>Mismatch</th><th>Invalid&nbsp;shutdown</th><th>Sequence fault</th></tr>
+        <tr><td class="k">none</td><td>as written</td><td class="good">0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td class="k">hall A stuck low</td><td>as written</td><td class="bad">4</td><td>8</td><td>4</td><td>0</td></tr>
+        <tr><td class="k">hall A stuck low</td><td>+ guard</td><td class="good">0</td><td>24</td><td>4</td><td>0</td></tr>
+        <tr><td class="k">all hall lines low</td><td>as written</td><td class="good">0</td><td>24</td><td>24</td><td>0</td></tr>
+        <tr><td class="k">skipped sector</td><td>as written</td><td class="good">0</td><td>0</td><td>0</td><td>7</td></tr>
+        <tr><td class="k">none</td><td>swapped table</td><td class="bad">8</td><td>8</td><td>0</td><td>0</td></tr>
+      </table>
+    </div>
+    <p style="margin-top:14px">The last row is a different bug entirely: two sectors
+    transposed in the commutation table, a copy-paste error that static analysis and a green
+    build both miss. It never reads an invalid code, so the guard does not save it. Eight
+    unsafe drives.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it was scored</h2>
+    <div class="defs">
+      <div><b>unsafe drive</b> &mdash; the firmware energized a phase, and it was not the
+      phase the true rotor position called for. This is the count that matters: wrong-phase
+      torque is what damages a machine or a person.</div>
+      <div><b>mismatch</b> &mdash; the driven phase differs from the expected one, including
+      driving nothing when something was expected. Safe, but not correct.</div>
+      <div><b>invalid shutdown</b> &mdash; the hall code was 000 or 111, which is physically
+      impossible, and the firmware drove nothing. The right answer.</div>
+      <div><b>sequence fault</b> &mdash; the rotor skipped a sector, so the reading was
+      valid but could not follow the previous one.</div>
+    </div>
+    <p style="margin-top:16px">Thresholds were fixed before the run and the comparison is
+    always against the <b>true</b> rotor position, never the corrupted reading. The bench
+    scores by watching the three phase outputs, so the firmware is judged on what it did,
+    not on what it reported.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What ran</h2>
+    <dl class="prov">
+      <div><dt>Firmware under test</dt><dd>six-step BLDC controller, unmodified between builds</dd></div>
+      <div><dt>Target</dt><dd>STM32F411CEUx, real silicon</dd></div>
+      <div><dt>Rotor and fault</dt><dd>hall model in FPGA fabric, Lattice ECP5 LFE5U-45</dd></div>
+      <div><dt>Per case</dt><dd>24 sectors, 20 ms settle, 2 ms phase capture</dd></div>
+      <div><dt>Build, as written</dt><dd>a2892db710e71d35</dd></div>
+      <div><dt>Build, + guard</dt><dd>fcc0368a7307fdf8</dd></div>
+      <div><dt>Build, swapped table</dt><dd>ada2232453210266</dd></div>
+      <div><dt>Captured</dt><dd>2026-08-02, Oracova development hardware</dd></div>
+    </dl>
+    <p class="prov-note" style="margin-top:16px">Augur One, the board on the product page, is
+    in fabrication. The counters above come from the bench, not from a model of it.</p>
+    <div class="foot-cta">
+      <a class="btn" href="/product">See the board that runs it</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-map">
+      <div>
+        <h4>Product</h4>
+        <a href="/product">Augur One</a>
+        <a href="/onboarding">Board bring-up</a>
+      </div>
+      <div>
+        <h4>Evidence</h4>
+        <a href="/demo">Live demo</a>
+        <a href="/#evidence">What it caught</a>
+      </div>
+      <div>
+        <h4>How it works</h4>
+        <a href="/#how">The loop</a>
+        <a href="/#world">What it emulates</a>
+        <a href="/#compare">Against other methods</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+        <a href="mailto:pooyamn@gmail.com">Email us</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+      <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
+  if (!b || !m) return;
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
+})();
+</script>
+</body>
+</html>
