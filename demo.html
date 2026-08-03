@@ -24,7 +24,8 @@
     --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 15.5px; line-height: 1.6; min-height: 100vh; }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
   nav {
@@ -48,7 +49,19 @@
   .nav-links a.btn-primary { color: #14100a; }
   @media (max-width: 800px) { .nav-links a:not(.btn) { display: none; } }
 
-  .stage { max-width: 900px; margin: 0 auto; padding: 40px 24px 64px; }
+  /* Light mode. Without this the injected chrome flips light while the page stays
+     dark, giving a white nav bar butted against a near-black body. The terminal is an
+     instrument and stays dark in both themes, scoped rather than omitted. */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #FAFAF9; --bg-card: #FFFFFF; --line: rgba(20,22,26,.10);
+      --text: #16181D; --text-dim: #555A63; --accent: #B05C00;
+      --pass: #16A34A; --fail: #DC2626;
+    }
+    .term { --text: #E6EAEF; --text-dim: #8E97A3; --line: rgba(255,255,255,.09); }
+    .after a { color: #B05C00; }
+  }
+  .stage { max-width: 1040px; margin: 0 auto; padding: 40px 24px 40px; }
   .kicker { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
     letter-spacing: .14em; color: var(--accent); margin-bottom: 10px; }
   h1 { font-family: var(--mono); font-size: clamp(22px, 3.6vw, 30px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
@@ -89,7 +102,8 @@
     font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
   .bench-ctl { display: flex; align-items: center; gap: 10px; }
   .bench-ctl button { background: none; border: 1px solid var(--line); border-radius: 6px;
-    color: var(--text-dim); font-family: var(--mono); font-size: 12px; padding: 8px 14px; cursor: pointer; }
+    color: var(--text-dim); font-family: var(--mono); font-size: 12px; padding: 8px 14px; cursor: pointer;
+    min-height: 44px; display: inline-flex; align-items: center; }
   .bench-ctl button:hover { border-color: var(--accent); color: var(--accent); }
 
   .after { margin-top: 26px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); }
@@ -118,8 +132,7 @@
     nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11;
       position: fixed; top: 0; left: 0; right: 0; }
     body { padding-top: 56px; }
-    @media (prefers-color-scheme: light) { nav { background: #FAFAF9; } }
-  }
+    }
 
   /* nav metric unification */
   .logo { font-size: 16px; }
@@ -129,6 +142,10 @@
 
   .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-nav a { padding: 10px 0; }
+
+
+
+
 
 
 
@@ -212,7 +229,8 @@
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
+  line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -249,6 +267,7 @@
 <body>
 
 <nav class="site-nav">
+  <noscript><style>@media (max-width: 800px) { .site-nav .nav-burger { display: none !important; } .site-menu { display: block !important; position: static; max-height: none; } }</style></noscript>
   <div class="nav-inner">
     <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
@@ -371,7 +390,7 @@
       </div>
       <div>
         <h4>Evidence</h4>
-        <a href="/demo">Live demo</a>
+        <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>

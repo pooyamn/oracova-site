@@ -50,7 +50,7 @@
   h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 30px; margin-bottom: 12px; letter-spacing: -0.025em; }
   h3 { font-size: 16.5px; margin-bottom: 6px; }
-  p { max-width: 62ch; }
+  p { max-width: 68ch; }
   .dim { color: var(--text-dim); }
   .mono { font-family: var(--mono); }
   .kicker {
@@ -58,7 +58,7 @@
     letter-spacing: .09em; color: var(--text-faint); margin-bottom: 14px;
   }
   .btn {
-    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
     padding: 9px 18px; border-radius: 8px;
     font-family: var(--sans); font-size: 14px; font-weight: 600; letter-spacing: -.01em;
     text-decoration: none; border: 1px solid transparent; cursor: pointer;
@@ -105,7 +105,8 @@
   .bl .fail { color: var(--fail); font-weight: 700; }
   .bench-log .bl { border-radius: 4px; margin: -2px -8px; padding: 2px 8px 2px calc(8px + 9ch); }
   .bench-ctl { display: flex; align-items: center; gap: 12px; }
-  .bench-ctl button { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
+  .bench-ctl button { min-height: 44px; display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
     color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; padding: 8px 13px; cursor: pointer; }
   .bench-ctl button:hover { border-color: var(--accent); color: var(--accent); }
   .bench-ctl a { color: var(--accent); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; }
@@ -258,7 +259,7 @@
   .panel section, .panel > div > section { padding: 0; border-top: 0; }
   .panel > div:first-child { padding-top: 8px; }
   /* Board render. Deliberately matte and orthographic so it reads as an assembly view
-     rather than a product shot, and captioned as a render so the image never has to be
+     rather than a product shot, and tagged as a render so the image never has to be
      taken on trust. */
   /* Desktop: copy left, board right. It is a block in the layout, not a full-width
      band across the page. Stacks below 900px. */
@@ -271,7 +272,16 @@
   }
   .board-shot { margin: 0; border: 1px solid var(--border); border-radius: 12px;
     background: var(--surface); overflow: hidden; }
+  .board-shot { position: relative; }
+  /* house rule: anything not photographed carries a visible label. Corner tag rather
+     than a caption bar, so it does not add a strip under the image. */
+  .board-shot figcaption { position: absolute; top: 10px; left: 14px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text-faint); pointer-events: none; }
   .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 660; }
+  /* stacked, the 2.42:1 letterbox squeezes the board to ~140px tall: a squarer
+     crop from a higher camera gets the parts back to legible size */
+  @media (max-width: 900px) { .board-shot img { aspect-ratio: 900 / 620; } }
   .panel-cta { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
     display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .panel-cta p { color: var(--text-dim); margin: 0; }
@@ -295,20 +305,25 @@
   .rrow .rw { font-family: var(--mono); font-size: 13px; color: var(--fail); }
   .rrow .rf { font-size: 14px; color: var(--text-dim); }
   .rrow .rf b { color: var(--text); }
+  /* status, not faults: --fail here reads as a list of things that broke */
+  .runs-today .rw { color: var(--ok, #3FB950); }
+  .runs-today .rrow:last-child .rw { color: var(--text-dim); }
   @media (max-width: 700px) { .rrow { grid-template-columns: 1fr; gap: 4px; } }
   .iface { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 18px; }
   .ifitem { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
     padding: 12px 16px; display: block; }
   .ifitem b { display: block; margin-bottom: 4px; }
   .ifitem span { display: block; }
-  .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--brand); font-weight: 700;
+  .ifitem b { font-family: var(--mono); font-size: 18px; color: var(--text); font-weight: 700;
     flex: 0 0 auto; white-space: nowrap; }
   .ifitem span { font-size: 13.5px; color: var(--text-dim); }
   @media (max-width: 700px) { .iface { grid-template-columns: 1fr; } }
   .callout { border: 1px solid var(--border); border-left: 3px solid var(--brand);
     border-radius: 10px; background: var(--surface); padding: 16px 20px; margin-top: 18px;
-    font-size: 14.5px; color: var(--text-dim); max-width: 74ch; }
+    font-size: 14.5px; color: var(--text-dim); max-width: 660px; }
   .callout b { color: var(--text); }
+  .tabs button { min-height: 44px; }
+  a.run-link { display: inline-block; padding: 13px 0; }
   .spec-h { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
     color: var(--brand); margin: 30px 0 8px; }
   table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -334,6 +349,10 @@
 
   .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-nav a { padding: 10px 0; }
+
+
+
+
 
 
 
@@ -417,7 +436,8 @@
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
+  line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -450,9 +470,11 @@
 }
 /* ===== end canonical site header ===== */
 </style>
+<noscript><style>.panel[hidden] { display: block !important; } .tabs { display: none; }</style></noscript>
 </head>
 <body>
 <nav class="site-nav">
+  <noscript><style>@media (max-width: 800px) { .site-nav .nav-burger { display: none !important; } .site-menu { display: block !important; position: static; max-height: none; } }</style></noscript>
   <div class="nav-inner">
     <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
@@ -502,17 +524,23 @@
           from the network.</p>
         </div>
         <figure class="board-shot">
-          <img src="/board-augur-one.jpg"
-               srcset="/board-augur-one-700.jpg 800w, /board-augur-one.jpg 1600w"
+        <picture>
+          <source media="(max-width: 900px)" type="image/webp"
+                  srcset="/board-augur-one-m-600.webp 600w, /board-augur-one-m-900.webp 900w"
+                  sizes="100vw">
+          <img src="/board-augur-one-1600.webp"
+               srcset="/board-augur-one-800.webp 800w, /board-augur-one-1600.webp 1600w"
                sizes="(max-width: 900px) 100vw, 44vw"
                width="1600" height="660" decoding="async"
-               alt="Augur One at a low angle: Ethernet and USB-C at the left edge, power section along the near edge, FPGA and memory across the centre, ten analog modules fitted right of centre, and the DUT connector strips along the far edge.">
-        </figure>
+               alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten mimic analog modules in green, and the DUT connectors along the far edge.">
+        </picture>
+        <figcaption>CAD render &middot; in fabrication</figcaption>
+      </figure>
       </div>
       <div class="iface top3">
         <div class="ifitem"><b>210 x 130 mm</b><span>one base board</span></div>
         <div class="ifitem"><b>One Cat-6</b><span>power and network</span></div>
-        <div class="ifitem"><b>148 I/O + 40 analog</b><span>to the DUT</span></div>
+        <div class="ifitem"><b>148 I/O + up to 40 analog</b><span>to the DUT</span></div>
       </div>
 
     </div>
@@ -585,7 +613,7 @@
       anywhere on the board, so half-powered states do not exist to get stuck in. That comes from
       the schematic, not from firmware discipline.</p>
       <h2 style="margin-top:52px">What runs today</h2>
-      <div class="recovery">
+      <div class="recovery runs-today">
         <div class="rrow"><div class="rw">Closed loop on real silicon</div><div class="rf">running today on Oracova development hardware: BLDC plant and hall encoder against an STM32F411</div></div>
         <div class="rrow"><div class="rw">Fault library</div><div class="rf">running: hall faults scored FAIL on the unguarded build, PASS with the guard patch</div></div>
         <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: full control loop in FPGA fabric at 8 kHz</div></div>
@@ -654,7 +682,7 @@
       </div>
       <div>
         <h4>Evidence</h4>
-        <a href="/demo">Live demo</a>
+        <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>

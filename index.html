@@ -80,7 +80,7 @@
   .nav-links .btn { margin-left: 10px; }
 
   .btn {
-    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
     padding: 9px 18px; border-radius: 8px;
     font-family: var(--sans); font-size: 14px; font-weight: 600; letter-spacing: -.01em;
     text-decoration: none; border: 1px solid transparent; cursor: pointer;
@@ -172,7 +172,8 @@
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
     font-size: 11.5px; color: var(--text-dim); letter-spacing: .03em; }
   .bench-ctl { display: flex; align-items: center; gap: 12px; }
-  .bench-ctl button { background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
+  .bench-ctl button { min-height: 44px; display: inline-flex; align-items: center;
+    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
     color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; padding: 8px 13px; cursor: pointer; }
   .bench-ctl button:hover { border-color: var(--accent); color: var(--accent); }
   .bench-ctl a { color: var(--accent); text-decoration: none; display: inline-block; padding: 13px 4px; margin: -13px -4px; }
@@ -244,7 +245,8 @@
 
   /* ---------- evidence ---------- */
   .evidence-list { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+  .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px;
+    align-self: start; }
   .ev .ev-head { display: grid; gap: 5px; }
   .ev .tag { font-size: 11.5px; font-weight: 600; color: var(--text-faint); letter-spacing: .09em; text-transform: uppercase; }
   .ev .claim { font-weight: 600; font-size: 16px; color: var(--text); letter-spacing: -.01em; }
@@ -278,7 +280,7 @@
 
   /* ---------- founder / cta ---------- */
   .founder { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;
-    padding-bottom: 88px; }
+    padding-bottom: 24px; }
   .founder-cta {
     background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
     padding: 28px; text-align: center;
@@ -424,6 +426,10 @@
 
 
 
+
+
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -483,7 +489,8 @@
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
+  line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -520,6 +527,7 @@
 <body>
 
 <nav class="site-nav">
+  <noscript><style>@media (max-width: 800px) { .site-nav .nav-burger { display: none !important; } .site-menu { display: block !important; position: static; max-height: none; } }</style></noscript>
   <div class="nav-inner">
     <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
@@ -810,7 +818,7 @@
       </div>
       <div>
         <h4>Evidence</h4>
-        <a href="/demo">Live demo</a>
+        <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>

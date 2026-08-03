@@ -70,7 +70,8 @@ CSS = """
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
+  line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -129,7 +130,7 @@ MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-u
 
 SITEMAP = [
     ('Product',  [('/product', 'Augur One'), ('/onboarding', 'Board bring-up')]),
-    ('Evidence', [('/demo', 'Live demo'), ('/#evidence', 'What it caught')]),
+    ('Evidence', [('/demo', 'Watch a run'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),
     ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
@@ -142,7 +143,15 @@ def markup(page):
         return ' aria-current="page"' if u == here else ''
     links = '\n'.join('      <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in NAV)
     menu = '\n'.join('    <a href="%s"%s>%s</a>' % (u, mark(u), t) for u, t in MENU)
-    return ('<nav class="site-nav">\n  <div class="nav-inner">\n'
+    # Without JS the burger is inert and the inline links are hidden below 800px,
+    # which leaves the whole site navigable only from the footer sitemap. Kept inside
+    # <nav> so apply()'s NAV_RE still replaces it cleanly on re-run.
+    return ('<nav class="site-nav">\n'
+            '  <noscript><style>@media (max-width: 800px) {'
+            ' .site-nav .nav-burger { display: none !important; }'
+            ' .site-menu { display: block !important; position: static; max-height: none; }'
+            ' }</style></noscript>\n'
+            '  <div class="nav-inner">\n'
             '    <button class="nav-burger" id="nav-burger" type="button"'
             ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
             '<span></span></button>\n'

@@ -42,7 +42,7 @@
   ::selection { background: rgba(255,180,84,.25); }
   a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
-  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
   section { padding: 52px 0; border-top: 1px solid var(--line); }
   h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 34px; margin-bottom: 14px; }
@@ -70,7 +70,8 @@
   .nav-links a.btn-primary:hover { color: #14100a; }
 
   .btn {
-    display: inline-block; padding: 12px 22px; border-radius: 6px;
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+    padding: 12px 22px; border-radius: 6px;
     font-family: var(--mono); font-size: 15px; font-weight: 600;
     text-decoration: none; border: 1px solid transparent;
   }
@@ -234,6 +235,7 @@
   .hero h1 { font-size: clamp(26px, 3.8vw, 40px); }
   h2 { font-size: 22px; }
   .btn {
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
     font-family: var(--sans); font-weight: 600; font-size: 14px; border-radius: 8px;
     padding: 9px 18px; letter-spacing: -.01em;
   }
@@ -279,6 +281,10 @@
 
   .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
   .foot-nav a { padding: 10px 0; }
+
+
+
+
 
 
 
@@ -362,7 +368,8 @@
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
+  line-height: 1.5; padding: 11px 0; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
@@ -399,6 +406,7 @@
 <body>
 
 <nav class="site-nav">
+  <noscript><style>@media (max-width: 800px) { .site-nav .nav-burger { display: none !important; } .site-menu { display: block !important; position: static; max-height: none; } }</style></noscript>
   <div class="nav-inner">
     <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
     <a class="nav-logo" href="/">oracova<i>_</i></a>
@@ -434,7 +442,7 @@
       <a class="flow-step" href="#step2">
         <span class="fn">STEP 2</span>
         <span class="fl">Hardware</span>
-        <span class="fd">A DUT board from your documents, a base board sized to your power</span>
+        <span class="fd">A DUT board from your documents, onto Augur One</span>
       </a>
       <span class="flow-arrow" aria-hidden="true">&rarr;</span>
       <a class="flow-step" href="#step3">
@@ -595,7 +603,7 @@
       </div>
       <div>
         <h4>Evidence</h4>
-        <a href="/demo">Live demo</a>
+        <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>
