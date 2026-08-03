@@ -142,7 +142,7 @@
   .bench-log {
     flex: 0 0 auto; display: grid; gap: 8px; align-content: start;
     padding: 20px 18px; overflow: hidden;
-    height: auto; min-height: 200px; max-height: min(46vh, 430px);
+    height: min(46vh, 430px);
   }
   @media (max-height: 860px) and (min-width: 561px) {
     header.hero { padding: 48px 0 48px; }
@@ -179,7 +179,7 @@
   @media (max-width: 560px) {
     .bench-foot > span:first-child { display: none; }
     .bench-foot { justify-content: flex-end; }
-    .bench-log { height: auto; min-height: 160px; max-height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
+    .bench-log { height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
     .bench-replay { font-size: 11.5px; }
     .la-card svg text { display: none; }
     .la-card.bits svg { display: none; }
