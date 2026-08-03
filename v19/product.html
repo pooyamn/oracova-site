@@ -257,6 +257,14 @@
   .panel::before { display: none; }
   .panel section, .panel > div > section { padding: 0; border-top: 0; }
   .panel > div:first-child { padding-top: 8px; }
+  /* Board render. Deliberately matte and orthographic so it reads as an assembly view
+     rather than a product shot, and captioned as a render so the image never has to be
+     taken on trust. */
+  .board-shot { margin: 26px 0 0; border: 1px solid var(--border); border-radius: 12px;
+    background: var(--surface); overflow: hidden; }
+  .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 685; }
+  .board-shot figcaption { border-top: 1px solid var(--border); padding: 11px 16px;
+    font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); }
   .panel-cta { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
     display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .panel-cta p { color: var(--text-dim); margin: 0; }
@@ -488,6 +496,15 @@
         <div class="ifitem"><b>One Cat-6</b><span>power and network</span></div>
         <div class="ifitem"><b>148 I/O + 40 analog</b><span>to the DUT</span></div>
       </div>
+
+      <figure class="board-shot">
+        <picture>
+          <source media="(max-width: 700px)" srcset="/board-augur-one-700.jpg">
+          <img src="/board-augur-one.jpg" width="1200" height="685" loading="lazy" decoding="async"
+               alt="Augur One base board seen from a low angle: Ethernet and USB-C at one edge, the FPGA and memory in the centre, and the DUT and module connectors along the right.">
+        </picture>
+        <figcaption>CAD render &middot; Augur One &middot; 2026-08-03</figcaption>
+      </figure>
     </div>
 
     <div style="padding-top:52px">
