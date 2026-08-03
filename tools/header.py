@@ -20,7 +20,7 @@ CSS = """
   display: flex; align-items: center; justify-content: space-between; height: 56px; }
 .site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 12px 0; margin: -12px 0; margin-right: auto; }
+  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
 .site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
@@ -37,7 +37,7 @@ CSS = """
 .site-menu a[aria-current="page"] { font-weight: 700; }
 .site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
 .site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
-  border-radius: 8px; width: 40px; height: 40px; cursor: pointer; padding: 0;
+  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
   align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
 .site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
   position: relative; transition: background .15s ease; }
@@ -70,7 +70,7 @@ CSS = """
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
 .site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 5px 0;
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
 .site-foot a:hover { color: #EDEEF0; }
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
