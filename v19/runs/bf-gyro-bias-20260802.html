@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run 20260802-215522: a gyro fault, countered by the firmware under test</title>
+<meta name="description" content="A scored Oracova bench run: a phantom gyro bias is injected mid-hover and unmodified Betaflight drives its motor mix against it. Verdict from fixed thresholds, traces rendered from the captured samples.">
+<link rel="canonical" href="https://oracova.com/runs/bf-gyro-bias-20260802">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="robots" content="noindex">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Oracova">
+<meta property="og:title" content="Run 20260802-215522: a gyro fault, countered by the firmware under test">
+<meta property="og:description" content="Injected +2000 LSB on gyro X mid-hover. Betaflight&#39;s motor mix answers within 60 ms. Scored by a checker with no AI in it.">
+<meta property="og:url" content="https://oracova.com/runs/bf-gyro-bias-20260802">
+<meta property="og:image" content="https://oracova.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://oracova.com/og.png">
+<style>
+  :root {
+    --bg: #0E0F11; --surface: #15161A; --border: rgba(255,255,255,.07);
+    --border-strong: rgba(255,255,255,.14);
+    --text: #EDEEF0; --text-dim: #9DA1A8; --text-faint: #6E7278;
+    --brand: #FFB454; --pass: #4ADE80; --fail: #F87171;
+    --panel: #0C0E12; --line: #23262D;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans);
+    font-size: 15.5px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-family: var(--mono); font-size: clamp(23px, 3.4vw, 32px); font-weight: 700;
+    letter-spacing: -.025em; line-height: 1.15; margin-bottom: 10px; }
+  h2 { font-family: var(--mono); font-size: 19px; letter-spacing: -.02em; margin-bottom: 12px; }
+  p { max-width: 68ch; color: var(--text-dim); }
+  .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 12px; }
+  header.top { padding: 46px 0 30px; }
+  .verdict-line { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+  .badge { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: .08em;
+    padding: 5px 14px; border-radius: 999px; }
+  .badge.pass { background: rgba(74,222,128,.1); color: var(--pass); border: 1px solid rgba(74,222,128,.3); }
+  .rid { font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  section { padding: 34px 0 0; }
+  .prov { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 1px;
+    background: var(--border); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-top: 8px; }
+  .prov div { background: var(--surface); padding: 13px 16px; }
+  .prov dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 4px; }
+  .prov dd { font-family: var(--mono); font-size: 12.5px; color: var(--text); word-break: break-word; }
+  .scope { border: 1px solid var(--border); border-radius: 12px; background: var(--panel);
+    padding: 16px 18px 10px; margin-top: 8px; overflow: hidden; }
+  .scope svg { display: block; width: 100%; height: auto; }
+  .lanes { display: grid; gap: 2px; font-family: var(--mono); font-size: 11px;
+    color: var(--text-faint); margin-top: 8px; }
+  .lanes b { color: var(--text-dim); font-weight: 500; }
+  table.v { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13.5px; }
+  table.v th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-faint); font-weight: 600;
+    padding: 0 12px 9px 0; border-bottom: 1px solid var(--border); }
+  table.v td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); vertical-align: top; }
+  table.v td.ch { color: var(--text); }
+  table.v td.ok { color: var(--pass); font-weight: 700; }
+  .note { border-left: 2px solid var(--brand); background: var(--surface);
+    border-radius: 0 10px 10px 0; padding: 16px 20px; margin-top: 14px; }
+  .note h3 { font-family: var(--mono); font-size: 13.5px; color: var(--text); margin-bottom: 7px; }
+  .note p { font-size: 14px; max-width: none; }
+  .note p + p { margin-top: 9px; }
+  .stab { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+  .stab span { display: inline-block; padding: 3px 9px; border: 1px solid var(--border);
+    border-radius: 6px; margin: 0 5px 5px 0; }
+  .stab span.y { color: var(--pass); border-color: rgba(74,222,128,.3); }
+  .stab span.n { color: var(--fail); border-color: rgba(248,113,113,.3); }
+  .foot-cta { margin: 40px 0 8px; }
+  .btn { display: inline-flex; align-items: center; padding: 11px 20px; border-radius: 8px;
+    background: var(--brand); color: #1A1204; text-decoration: none; font-weight: 600; font-size: 14px; }
+  .btn:hover { background: #FFC276; }
+  .lanes .fault-key { display: none; }
+  @media (max-width: 620px) {
+    .scope { padding: 12px 12px 8px; }
+    /* SVG text scales with the viewBox and drops under the legible floor here, so the
+       in-frame labels are replaced below, never just hidden. */
+    .scope svg text { display: none; }
+    .lanes .fault-key { display: block; color: #ff5252; }
+    .lanes .fault-key b { color: #ff5252; }
+    table.v th:nth-child(3), table.v td:nth-child(3) { display: none; }
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #FAFAF9; --surface: #FFFFFF; --border: rgba(20,22,26,.09);
+      --border-strong: rgba(20,22,26,.16); --text: #16181D; --text-dim: #555A63;
+      --text-faint: #83888F; --brand: #B05C00; --pass: #16A34A; --fail: #DC2626; }
+    .scope { --text: #E6EAEF; --text-dim: #8E97A3; }
+  }
+
+/* ===== canonical site header (tools/header.py — do not edit per page) ===== */
+.site-nav { position: sticky; top: 0; z-index: 40;
+  background: rgba(14,15,17,.9);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid rgba(255,255,255,.09); }
+.site-nav .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
+  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
+.site-nav .nav-logo i { font-style: normal; color: #FFB454; }
+.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
+.site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+.site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
+.site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 10px; padding: 9px 16px; border-radius: 8px; border: 1px solid transparent;
+  background: #FFB454; color: #1A1204; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
+.site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
+.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
+.site-menu a[aria-current="page"] { font-weight: 700; }
+.site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
+.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
+  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
+.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
+  position: relative; transition: background .15s ease; }
+.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
+  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
+  transition: transform .18s ease, top .18s ease; }
+.site-nav .nav-burger span::before { top: -5px; }
+.site-nav .nav-burger span::after { top: 5px; }
+.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.09); background: #0E0F11; }
+.site-menu.open { display: block; }
+.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
+  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
+.site-menu a:first-child { border-top: 0; }
+@media (max-width: 800px) {
+  .site-nav { position: fixed; top: 0; left: 0; right: 0;
+    -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
+  body { padding-top: 56px; }
+  .site-nav .nav-set a:not(.nav-cta) { display: none; }
+  .site-nav .nav-burger { display: flex; }
+  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
+    max-height: calc(100vh - 56px); overflow-y: auto; }
+}
+@media (min-width: 801px) { .site-menu { display: none !important; } }
+.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
+.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+.site-foot h4 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: #6E7278; font-weight: 600; margin-bottom: 10px; }
+.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px; padding: 11px 0;
+  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
+.site-foot a:hover { color: #EDEEF0; }
+.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
+  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #6E7278; }
+.site-foot .foot-base a { display: inline; color: inherit; font-family: inherit; font-size: inherit; }
+@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
+@media (prefers-color-scheme: light) {
+  .site-menu { background: #FAFAF9; }
+  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
+  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
+  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
+  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
+  .site-foot { border-top-color: rgba(20,22,26,.1); }
+  .site-foot h4 { color: #83888F; }
+  .site-foot a { color: #555A63; }
+  .site-foot a:hover { color: #16181D; }
+  .site-foot .foot-base { color: #83888F; border-top-color: rgba(20,22,26,.08); }
+}
+@media (prefers-color-scheme: light) {
+  .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
+  .site-nav .nav-logo { color: #16181D; }
+  .site-nav .nav-logo i { color: #B05C00; }
+  .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
+  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
+  .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav .nav-cta { background: #B05C00; color: #fff; }
+  .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
+  @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
+}
+/* ===== end canonical site header ===== */
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
+    <a class="nav-logo" href="/">oracova<i>_</i></a>
+    <div class="nav-set">
+      <a href="/">Home</a>
+      <a href="/product">Augur One</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a href="/demo">Demo</a>
+    </div>
+  </div>
+</nav>
+<div class="site-menu" id="site-menu">
+    <a href="/">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/onboarding">Board bring-up</a>
+    <a href="/demo">Demo</a>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="kicker">Scored run &middot; Oracova development hardware</div>
+    <h1>A gyro fault the firmware had to fly through.</h1>
+    <p>A phantom <b>+2000 LSB bias</b> is forced onto the gyro X axis while unmodified
+    Betaflight is holding a hover. Nothing tells the firmware. It reads the rotation as
+    real and drives its motor mix against it, which is the whole point: the fault reaches
+    the control loop the way a broken sensor would.</p>
+    <div class="verdict-line">
+      <span class="badge pass">PASS</span>
+      <span class="rid">RUN 20260802-215522 &middot; gyro_bias_step &middot; 3/3 assertions met</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>What ran</h2>
+    <dl class="prov">
+      <div><dt>Firmware under test</dt><dd>Betaflight, unmodified</dd></div>
+      <div><dt>Target</dt><dd>STM32F411CEUx, real silicon</dd></div>
+      <div><dt>Plant</dt><dd>quadx_i9 in FPGA fabric, 8 kHz</dd></div>
+      <div><dt>Fabric</dt><dd>Lattice ECP5 LFE5U-45</dd></div>
+      <div><dt>Fault</dt><dd>gyro X bias +2000 LSB at t+8.0 s</dd></div>
+      <div><dt>Manifest</dt><dd>960889c6494d</dd></div>
+      <div><dt>Captured</dt><dd>2026-08-02 21:55:22 -0700</dd></div>
+      <div><dt>Samples</dt><dd>1883 per channel, 466 Hz</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The run</h2>
+    <div class="scope">
+      <svg viewBox="0 0 1000 246" width="100%" preserveAspectRatio="none" role="img"
+           aria-label="Three traces over 13 seconds: gyro X rate, roll mix, and collective throttle. At 8 seconds the injected bias drives gyro X up and the roll mix immediately moves the opposite way.">
+        <line x1="615" y1="4" x2="615" y2="242" stroke="#ff5252" stroke-width="1.5" stroke-dasharray="4 4" opacity=".85"/>
+        <text x="622" y="14" fill="#ff5252" font-size="11" font-family="monospace">fault injected  t+8.0 s</text>
+        <line x1="0" y1="38" x2="1000" y2="38" stroke="#23262D" stroke-width="1"/>
+        <polyline fill="none" stroke="#ffb454" stroke-width="1.8" points="0.0,38.0 3.3,38.0 7.9,38.0 11.2,38.0 14.2,38.0 19.0,38.0 22.1,38.0 25.4,38.0 30.0,38.0 33.3,38.0 38.0,38.0 41.1,38.0 44.2,38.0 48.9,38.0 52.2,38.0 56.8,38.0 59.9,38.0 63.2,38.0 67.8,38.0 71.0,38.0 74.1,38.0 78.9,38.0 82.0,38.0 85.2,38.0 90.0,38.0 92.9,38.0 96.2,38.0 100.9,38.0 104.2,38.0 108.8,38.0 112.1,38.0 115.2,38.0 120.0,38.0 123.0,38.0 127.6,38.0 130.9,38.0 135.5,38.0 138.8,38.0 142.0,38.0 146.8,38.0 149.9,38.0 153.0,38.0 157.6,38.0 160.9,38.0 165.6,38.0 168.9,38.0 172.0,38.0 175.1,38.0 179.8,38.0 183.1,38.0 186.2,38.0 191.0,38.0 194.1,38.0 198.9,38.0 201.9,38.0 206.8,38.0 209.8,38.0 214.4,38.0 217.7,38.0 220.9,38.0 225.7,38.0 228.8,38.0 231.9,38.0 236.6,38.0 239.9,38.0 244.5,38.0 247.8,38.0 250.9,38.0 255.7,38.0 258.8,38.0 261.8,38.0 266.6,38.0 269.7,38.0 273.0,38.0 277.7,38.0 281.0,38.0 285.6,38.0 288.5,38.0 291.8,38.0 296.5,38.0 299.8,38.0 304.4,38.0 307.7,38.0 312.3,38.0 315.6,38.0 318.6,38.0 323.4,38.0 326.5,38.0 329.7,38.0 334.4,38.0 337.6,38.0 340.7,38.0 343.8,38.0 348.6,38.0 351.8,38.0 355.1,38.0 359.7,38.0 362.8,38.0 366.0,38.0 370.8,38.0 373.9,38.0 378.7,38.0 381.8,38.0 385.0,38.0 389.7,38.0 392.7,38.0 397.5,38.0 400.6,38.0 403.8,38.0 407.1,38.0 411.7,38.0 414.8,38.0 419.6,38.0 422.8,38.0 427.4,38.0 430.7,38.0 433.8,38.0 436.9,38.0 441.7,38.0 444.9,38.0 448.0,38.0 452.8,38.0 455.9,38.0 460.7,38.0 463.9,38.0 466.8,38.0 471.8,38.0 474.8,38.0 479.5,38.0 482.8,38.0 486.0,38.0 490.8,38.0 493.9,38.0 497.0,38.0 500.2,38.0 505.0,38.0 508.1,38.0 511.4,38.0 516.2,38.0 519.2,38.0 522.3,38.0 525.6,38.0 530.4,38.0 533.5,38.0 538.1,38.0 541.3,38.0 544.4,38.0 549.2,38.0 552.3,38.0 557.1,38.0 560.3,38.0 563.4,38.0 566.5,38.0 571.3,38.0 574.5,38.0 577.8,38.0 582.4,38.0 585.7,38.0 590.3,38.0 595.4,38.0 598.6,38.0 601.7,38.0 606.5,38.0 609.6,38.0 612.8,38.0 617.5,38.0 620.5,16.5 623.8,30.9 626.9,37.7 631.7,40.0 634.9,39.7 638.0,38.8 642.6,37.2 645.9,36.1 650.6,34.7 653.9,33.7 657.0,32.9 661.8,31.8 664.9,31.1 668.1,30.4 672.8,29.6 676.0,29.1 679.3,28.7 682.2,28.3 687.2,16.5 690.2,16.5 695.0,16.6 698.1,16.6 702.9,16.7 706.0,16.7 709.3,16.7 714.1,16.7 717.1,16.7 720.2,16.7 725.0,16.7 728.1,16.7 731.4,16.7 736.2,16.7 739.2,16.7 744.2,16.7 747.1,16.7 750.4,16.7 755.0,16.7 758.3,16.7 761.5,16.7 764.6,16.7 769.2,16.7 772.5,16.7 777.3,16.7 780.5,16.7 785.3,16.7 788.4,16.7 793.2,16.7 796.1,16.7 799.5,16.7 804.2,16.7 807.4,16.7 810.5,16.7 815.3,16.7 818.4,16.7 823.2,16.7 826.2,16.7 829.5,16.7 832.6,16.7 837.4,16.7 840.6,16.7 845.3,16.7 848.3,16.7 853.1,16.7 856.2,16.7 861.0,10.0 864.3,10.0 868.9,10.0 872.2,10.0 875.4,10.0 880.2,10.0 883.1,12.2 886.4,16.6 891.1,23.4 894.4,24.9 897.5,23.9 902.1,21.5 905.3,20.8 910.1,20.9 913.2,21.4 916.3,21.9 921.1,22.7 924.2,23.3 929.0,24.5 932.2,25.3 937.0,26.3 939.9,26.9 943.1,27.3 947.9,27.8 951.0,27.9 955.8,27.9 958.9,27.8 962.0,27.7 967.0,27.4 970.0,16.5 973.1,16.5 977.9,16.5 981.0,16.5 984.3,16.5 989.1,16.5 992.1,16.5 995.2,16.5"/>
+        <text x="6" y="22" fill="#8E97A3" font-size="11" font-family="monospace">gyro X</text>
+        <line x1="0" y1="120" x2="1000" y2="120" stroke="#23262D" stroke-width="1"/>
+        <polyline fill="none" stroke="#7aa2c4" stroke-width="1.8" points="0.0,120.0 3.3,120.0 7.9,120.0 11.2,120.0 14.2,120.0 19.0,120.0 22.1,120.0 25.4,120.0 30.0,120.0 33.3,120.0 38.0,120.0 41.1,120.0 44.2,120.0 48.9,120.0 52.2,120.0 56.8,120.0 59.9,120.0 63.2,120.0 67.8,120.0 71.0,120.0 74.1,120.0 78.9,120.0 82.0,120.0 85.2,120.0 90.0,120.0 92.9,120.0 96.2,120.0 100.9,120.0 104.2,120.0 108.8,120.0 112.1,120.0 115.2,120.0 120.0,120.0 123.0,120.0 127.6,120.0 130.9,120.0 135.5,120.0 138.8,120.0 142.0,120.0 146.8,120.0 149.9,120.0 153.0,120.0 157.6,120.0 160.9,120.0 165.6,120.0 168.9,120.0 172.0,120.0 175.1,120.0 179.8,120.0 183.1,120.0 186.2,120.0 191.0,120.0 194.1,120.0 198.9,120.0 201.9,120.0 206.8,120.0 209.8,120.0 214.4,120.0 217.7,120.0 220.9,120.0 225.7,120.0 228.8,120.0 231.9,120.0 236.6,120.0 239.9,120.0 244.5,120.0 247.8,120.0 250.9,120.0 255.7,120.0 258.8,120.0 261.8,120.0 266.6,120.0 269.7,120.0 273.0,120.0 277.7,120.0 281.0,120.0 285.6,120.0 288.5,120.0 291.8,120.0 296.5,120.0 299.8,120.0 304.4,120.0 307.7,120.0 312.3,120.0 315.6,120.0 318.6,120.0 323.4,120.0 326.5,120.0 329.7,120.0 334.4,120.0 337.6,120.0 340.7,120.0 343.8,120.0 348.6,120.0 351.8,120.0 355.1,120.0 359.7,120.0 362.8,120.0 366.0,120.0 370.8,120.0 373.9,120.0 378.7,120.0 381.8,120.0 385.0,120.0 389.7,120.0 392.7,120.0 397.5,120.0 400.6,120.0 403.8,120.0 407.1,120.0 411.7,120.0 414.8,120.0 419.6,120.0 422.8,120.0 427.4,120.0 430.7,120.0 433.8,120.0 436.9,120.0 441.7,120.0 444.9,120.0 448.0,120.0 452.8,120.0 455.9,120.0 460.7,120.0 463.9,120.0 466.8,120.0 471.8,120.0 474.8,120.0 479.5,120.0 482.8,120.0 486.0,120.0 490.8,120.0 493.9,120.0 497.0,120.0 500.2,120.0 505.0,120.0 508.1,120.0 511.4,120.0 516.2,120.0 519.2,120.0 522.3,120.0 525.6,120.0 530.4,120.0 533.5,120.0 538.1,120.0 541.3,120.0 544.4,120.0 549.2,120.0 552.3,120.0 557.1,120.0 560.3,120.0 563.4,120.0 566.5,120.0 571.3,120.0 574.5,120.0 577.8,120.0 582.4,120.0 585.7,120.0 590.3,120.0 595.4,120.0 598.6,120.0 601.7,120.0 606.5,120.0 609.6,120.0 612.8,120.0 617.5,120.0 620.5,134.1 623.8,125.6 626.9,124.9 631.7,124.4 634.9,124.2 638.0,123.9 642.6,123.7 645.9,123.5 650.6,123.2 653.9,123.1 657.0,122.9 661.8,122.7 664.9,122.6 668.1,122.5 672.8,122.4 676.0,122.3 679.3,122.2 682.2,122.1 687.2,126.7 690.2,130.3 695.0,135.0 698.1,138.3 702.9,144.1 706.0,146.2 709.3,146.2 714.1,146.2 717.1,146.2 720.2,146.2 725.0,146.2 728.1,146.2 731.4,146.2 736.2,146.2 739.2,146.2 744.2,146.2 747.1,146.2 750.4,146.2 755.0,146.2 758.3,146.2 761.5,146.2 764.6,146.2 769.2,146.1 772.5,146.1 777.3,146.1 780.5,146.0 785.3,146.0 788.4,146.0 793.2,146.0 796.1,145.9 799.5,145.9 804.2,145.9 807.4,145.8 810.5,145.8 815.3,145.7 818.4,145.7 823.2,145.6 826.2,145.6 829.5,145.5 832.6,145.5 837.4,145.3 840.6,145.3 845.3,145.2 848.3,145.1 853.1,145.1 856.2,145.0 861.0,95.1 864.3,110.2 868.9,116.7 872.2,118.0 875.4,119.1 880.2,120.7 883.1,121.4 886.4,123.0 891.1,122.1 894.4,121.2 897.5,120.6 902.1,120.7 905.3,120.9 910.1,121.0 913.2,121.1 916.3,121.3 921.1,121.5 924.2,121.7 929.0,121.9 932.2,122.1 937.0,122.2 939.9,122.2 943.1,122.3 947.9,122.3 951.0,122.3 955.8,122.2 958.9,122.2 962.0,122.1 967.0,122.1 970.0,128.0 973.1,130.6 977.9,135.3 981.0,138.6 984.3,142.5 989.1,145.9 992.1,145.9 995.2,145.9"/>
+        <text x="6" y="104" fill="#8E97A3" font-size="11" font-family="monospace">roll mix</text>
+        <polyline fill="none" stroke="#9a8cc9" stroke-width="1.8" points="0.0,230.0 3.3,230.0 7.9,230.0 11.2,230.0 14.2,230.0 19.0,230.0 22.1,230.0 25.4,230.0 30.0,230.0 33.3,230.0 38.0,230.0 41.1,230.0 44.2,230.0 48.9,230.0 52.2,230.0 56.8,230.0 59.9,230.0 63.2,230.0 67.8,230.0 71.0,230.0 74.1,230.0 78.9,230.0 82.0,230.0 85.2,224.1 90.0,224.1 92.9,224.1 96.2,224.1 100.9,224.1 104.2,224.1 108.8,224.1 112.1,224.1 115.2,224.1 120.0,224.1 123.0,224.1 127.6,224.1 130.9,224.1 135.5,224.1 138.8,224.1 142.0,224.1 146.8,224.1 149.9,224.1 153.0,224.1 157.6,224.1 160.9,224.1 165.6,224.1 168.9,224.1 172.0,224.1 175.1,224.1 179.8,224.1 183.1,224.1 186.2,224.1 191.0,224.1 194.1,224.1 198.9,224.1 201.9,224.1 206.8,224.1 209.8,224.1 214.4,224.1 217.7,224.1 220.9,224.1 225.7,224.1 228.8,224.1 231.9,224.1 236.6,224.1 239.9,224.1 244.5,224.1 247.8,224.1 250.9,224.1 255.7,224.1 258.8,224.1 261.8,224.1 266.6,224.1 269.7,224.1 273.0,224.1 277.7,224.1 281.0,224.1 285.6,224.1 288.5,224.1 291.8,224.1 296.5,224.1 299.8,224.1 304.4,224.1 307.7,224.1 312.3,224.1 315.6,224.1 318.6,224.1 323.4,224.1 326.5,224.1 329.7,224.1 334.4,224.1 337.6,224.1 340.7,224.1 343.8,224.1 348.6,224.1 351.8,224.1 355.1,224.1 359.7,224.1 362.8,224.1 366.0,224.1 370.8,224.1 373.9,224.1 378.7,224.1 381.8,224.1 385.0,224.1 389.7,224.1 392.7,193.8 397.5,194.4 400.6,194.4 403.8,194.4 407.1,194.4 411.7,194.4 414.8,194.4 419.6,194.4 422.8,194.4 427.4,194.4 430.7,194.4 433.8,194.4 436.9,194.4 441.7,194.4 444.9,194.4 448.0,194.4 452.8,194.4 455.9,194.4 460.7,194.4 463.9,194.4 466.8,194.4 471.8,194.4 474.8,194.4 479.5,194.4 482.8,194.4 486.0,194.4 490.8,194.4 493.9,194.4 497.0,194.4 500.2,194.4 505.0,194.4 508.1,194.4 511.4,194.4 516.2,194.4 519.2,194.4 522.3,194.4 525.6,194.4 530.4,194.4 533.5,194.4 538.1,194.4 541.3,194.4 544.4,194.4 549.2,194.4 552.3,194.4 557.1,194.4 560.3,194.4 563.4,194.4 566.5,194.4 571.3,194.4 574.5,194.4 577.8,194.4 582.4,194.4 585.7,194.4 590.3,194.4 595.4,194.4 598.6,194.4 601.7,194.4 606.5,194.4 609.6,194.4 612.8,194.4 617.5,194.4 620.5,194.4 623.8,194.4 626.9,194.4 631.7,194.4 634.9,194.4 638.0,194.4 642.6,194.4 645.9,194.4 650.6,194.4 653.9,194.4 657.0,194.4 661.8,194.4 664.9,194.4 668.1,194.4 672.8,194.4 676.0,194.4 679.3,194.4 682.2,194.4 687.2,194.4 690.2,194.4 695.0,194.4 698.1,194.4 702.9,191.6 706.0,188.8 709.3,188.8 714.1,188.8 717.1,188.8 720.2,188.8 725.0,188.9 728.1,188.9 731.4,188.9 736.2,189.0 739.2,189.0 744.2,189.0 747.1,189.1 750.4,189.1 755.0,189.1 758.3,189.2 761.5,189.2 764.6,189.2 769.2,189.2 772.5,189.2 777.3,189.2 780.5,189.2 785.3,189.2 788.4,189.2 793.2,189.2 796.1,189.2 799.5,189.2 804.2,189.2 807.4,189.2 810.5,189.2 815.3,189.2 818.4,189.2 823.2,189.2 826.2,189.2 829.5,189.2 832.6,189.2 837.4,189.2 840.6,189.2 845.3,189.3 848.3,189.3 853.1,189.3 856.2,189.3 861.0,188.4 864.3,194.4 868.9,194.4 872.2,194.4 875.4,194.4 880.2,194.4 883.1,194.4 886.4,194.4 891.1,194.4 894.4,194.4 897.5,194.4 902.1,194.4 905.3,194.4 910.1,194.4 913.2,194.4 916.3,194.4 921.1,194.4 924.2,194.4 929.0,194.4 932.2,194.4 937.0,194.4 939.9,194.4 943.1,194.4 947.9,194.4 951.0,194.4 955.8,194.4 958.9,194.4 962.0,194.4 967.0,194.4 970.0,194.4 973.1,194.4 977.9,194.4 981.0,194.4 984.3,193.9 989.1,189.4 992.1,189.4 995.2,189.4"/>
+        <text x="6" y="186" fill="#8E97A3" font-size="11" font-family="monospace">collective</text>
+      </svg>
+      <div class="lanes">
+        <div class="fault-key"><b>red dashed line</b> fault injected at t+8.0 s</div>
+        <div><b>gyro X</b> plant rate served to the firmware &middot; &plusmn;2600 LSB full scale</div>
+        <div><b>roll mix</b> (M3+M4) &minus; (M1+M2), decoded from the DShot outputs &middot; &plusmn;4000</div>
+        <div><b>collective</b> sum of the four motor outputs &middot; 0 to 6000 &middot; 13 s of run</div>
+      </div>
+    </div>
+    <p style="margin-top:16px">Hover is flat: gyro X at 0, roll mix at 4. The bias lands at
+    t+8.0 and the mix answers within <b>60 ms</b>, reaching <b>&minus;3596</b> by t+11 while the
+    firmware fights a rotation that is not happening. A build that ignored the gyro would
+    have left the mix flat.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it was scored</h2>
+    <p>Fixed thresholds, checked against the captured samples. No model reads this run and
+    no threshold was chosen after seeing it.</p>
+    <table class="v">
+      <tr><th>Channel</th><th>Threshold</th><th>Window</th><th>First match</th><th>Result</th></tr>
+      <tr><td class="ch">plant.coll</td><td>value &gt; 1000</td><td>within 4.0 s after t+5.0</td><td>t = 5.086 s</td><td class="ok">PASS</td></tr>
+      <tr><td class="ch">plant.gx</td><td>abs(value) &gt; 1500</td><td>within 2.0 s after t+8.0</td><td>t = 8.067 s</td><td class="ok">PASS</td></tr>
+      <tr><td class="ch">plant.mix_roll</td><td>abs(value) &gt; 300</td><td>within 2.5 s after t+8.0</td><td>t = 8.067 s</td><td class="ok">PASS</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What this is, exactly</h2>
+    <div class="note">
+      <h3>Read this before you weigh the run</h3>
+      <p>Every number and every trace above comes from one captured run on the bench. The
+      traces are drawn from the 1883 stored samples per channel, not illustrated.</p>
+      <p><b>It does not yet reproduce.</b> Three back to back runs of this scenario gave
+      PASS, FAIL, PASS. The known cause is on our side, not the firmware's: after a
+      scenario that tumbles the model, Betaflight's attitude estimate can stay tilted while
+      the plant is level, so the next run either refuses to arm or fights a phantom lean.
+      Until that is closed we would not put this forward as proof of anything.</p>
+      <p>This ran on <b>Oracova development hardware</b>. Augur One, the board on the
+      product page, is in fabrication.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The rest of the suite</h2>
+    <p>Same harness, twelve scenarios, five consecutive runs. These four passed every
+    time:</p>
+    <div class="stab">
+      <span class="y">hover_hold 5/5</span><span class="y">arm_gate_thr_high 5/5</span><span class="y">gyro_bias_step 5/5</span><span class="y">gyro_dropout 5/5</span>
+    </div>
+    <div class="stab">
+      <span>angle_selflevel 4/5</span><span>yaw_step 4/5</span><span>arm_disarm_cycle 4/5</span><span>mix_roll_right 4/5</span><span>throttle_monotonic 4/5</span><span>roll_step_acro 4/5</span><span>gyro_noise_reject 2/5</span><span class="n">failsafe_rc_loss 0/5</span>
+    </div>
+    <p style="margin-top:14px; font-size:14px"><b>failsafe_rc_loss fails by construction
+    here</b>, and it is worth saying why: the scenario stops sending RC to simulate a lost
+    link, but on this gateware the fabric keeps re-emitting the last frame, so the firmware
+    never sees a loss. The test is invalid on this signal path, not failing.</p>
+    <div class="foot-cta">
+      <a class="btn" href="/">Back to oracova_</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <div class="foot-map">
+      <div>
+        <h4>Product</h4>
+        <a href="/product">Augur One</a>
+        <a href="/onboarding">Board bring-up</a>
+      </div>
+      <div>
+        <h4>Evidence</h4>
+        <a href="/demo">Live demo</a>
+        <a href="/#evidence">What it caught</a>
+      </div>
+      <div>
+        <h4>How it works</h4>
+        <a href="/#how">The loop</a>
+        <a href="/#world">What it emulates</a>
+        <a href="/#compare">Against other methods</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+        <a href="mailto:pooyamn@gmail.com">Email us</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+      <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
+  if (!b || !m) return;
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open); }
+  b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
+})();
+</script>
+</body>
+</html>
