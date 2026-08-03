@@ -160,6 +160,7 @@
     letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
   .la-card svg { display: block; width: 100%; height: 72px; }
   .la-card .la-note { font-size: 11.5px; color: var(--fail); margin-top: 4px; }
+  .la-bits, .la-bits-key { display: none; }
   .bl { color: var(--text-dim); white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; }
   .bl b { color: var(--text); font-weight: 500; }
   .bl .k { color: var(--accent); }
@@ -181,6 +182,14 @@
     .bench-log { height: auto; min-height: 160px; max-height: min(52vh, 460px); gap: 7px; padding: 14px 12px; }
     .bench-replay { font-size: 11.5px; }
     .la-card svg text { display: none; }
+    .la-card.bits svg { display: none; }
+    .la-card.bits .la-bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+      font-family: var(--mono); font-size: 13px; text-align: center; margin: 4px 0 0; }
+    .la-card.bits .la-bits span { padding: 7px 0; border: 1px solid var(--line); border-radius: 3px; color: var(--text); }
+    .la-card.bits .la-bits span:first-child { color: var(--fail); font-weight: 700;
+      background: rgba(255,82,82,.15); border-color: var(--fail); }
+    .la-card.bits .la-bits-key { display: block; font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); margin-top: 5px; }
     .bench-head { font-size: 11.5px; padding: 9px 14px; }
   }
 
@@ -202,7 +211,7 @@
   .cred-card .cc-t { font-weight: 600; font-size: 15px; letter-spacing: -.01em; }
   .cred-card .cc-t::after { content: " \2192"; color: var(--brand); }
   .cred-card .cc-d { font-size: 13px; color: var(--text-dim); }
-  @media (max-width: 800px) { .cred-cards { grid-template-columns: 1fr; } }
+  @media (max-width: 800px) { .cred-cards { grid-template-columns: 1fr; } .evidence-list { grid-template-columns: 1fr; } }
 
   /* ---------- sections ---------- */
   .whatis { font-size: 24px; line-height: 1.45; max-width: 30ch; color: var(--text);
@@ -233,7 +242,7 @@
   .note { margin-top: 20px; font-size: 13.5px; color: var(--text-faint); max-width: none; line-height: 1.6; }
 
   /* ---------- evidence ---------- */
-  .evidence-list { margin-top: 20px; display: grid; gap: 12px; }
+  .evidence-list { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
   .ev .ev-head { display: grid; gap: 5px; }
   .ev .tag { font-size: 11.5px; font-weight: 600; color: var(--text-faint); letter-spacing: .09em; text-transform: uppercase; }
@@ -398,6 +407,8 @@
 
 
 
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -508,7 +519,6 @@
 <div class="site-menu" id="site-menu">
     <a href="/" aria-current="page">Home</a>
     <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
     <a href="/onboarding">Board bring-up</a>
     <a href="/demo">Demo</a>
 </div>
@@ -556,7 +566,7 @@
           <div class="bl">iter 2   flash <b>ok</b> &middot; test running &middot; t+21 min</div>
           <div class="bl">  who_am_i ................................. <span class="pass">PASS</span>   0x68</div>
           <div class="bl">  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always</div>
-          <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text></svg><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
+          <div class="la-card bits"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text></svg><div class="la-bits" aria-hidden="true"><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x43 &middot; <b>bit 7</b> first</div><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
           <div class="bl">la       <span class="k">addr 0x43 sent without the 0x80 read bit</span></div>
           <div class="bl">fix      set the 0x80 read flag in the burst path &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
@@ -767,7 +777,7 @@
     </div>
     <div class="founder-cta">
       <div class="mono" style="margin-top:0">engineer to engineer</div>
-      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
       <div class="mono">You'll watch a live run, not a deck.</div>
 
     </div>
@@ -780,7 +790,6 @@
       <div>
         <h4>Product</h4>
         <a href="/product">Augur One</a>
-        <a href="/product#spec">Specification</a>
         <a href="/onboarding">Board bring-up</a>
       </div>
       <div>
@@ -830,7 +839,7 @@
     '</div>';
 
   var LA2 =
-    '<div class="la-card">' +
+    '<div class="la-card bits">' +
     '<div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div>' +
     '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low">' +
     '<text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text>' +
@@ -848,6 +857,7 @@
     '<text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text>' +
     '<text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text>' +
     '</svg>' +
+    '<div class="la-bits" aria-hidden="true"><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x43 &middot; <b>bit 7</b> first</div>' +
     '<div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div>' +
     '</div>';
 

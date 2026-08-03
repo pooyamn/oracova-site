@@ -105,7 +105,7 @@ CSS = """
 """
 
 CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
-       '?subject=Oracova%20%E2%80%94%2015%20minutes">Book 15 minutes</a>')
+       '?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>')
 
 # page -> its link set (self-link always omitted)
 # One nav for every page. The current page is marked, never removed.
@@ -121,12 +121,11 @@ SELF = {
 }
 LINKS = SELF   # apply()/check iterate over the page list
 
-MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/product#spec', 'Specification'),
-        ('/onboarding', 'Board bring-up'), ('/demo', 'Demo')]
+MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
+        ('/demo', 'Demo')]
 
 SITEMAP = [
-    ('Product',  [('/product', 'Augur One'), ('/product#spec', 'Specification'),
-                  ('/onboarding', 'Board bring-up')]),
+    ('Product',  [('/product', 'Augur One'), ('/onboarding', 'Board bring-up')]),
     ('Evidence', [('/demo', 'Live demo'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),

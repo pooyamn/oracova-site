@@ -40,6 +40,7 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: rgba(255,180,84,.25); }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
   .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
   section { padding: 52px 0; border-top: 1px solid var(--line); }
@@ -114,10 +115,10 @@
   }
   .box h3 { color: var(--text); }
   .box p { font-size: 14.5px; color: var(--text-dim); max-width: none; }
-  .box .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 8px; }
+  .box .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); display: block; margin-bottom: 8px; }
   .box .tag.ok { color: var(--pass); }
   .box .tag.off { color: var(--text-dim); }
-  .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--accent); margin-top: 10px; }
+  .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
 
   .note { margin-top: 22px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
 
@@ -286,6 +287,8 @@
 
 
 
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -396,7 +399,6 @@
 <div class="site-menu" id="site-menu">
     <a href="/">Home</a>
     <a href="/product">Augur One</a>
-    <a href="/product#spec">Specification</a>
     <a href="/onboarding" aria-current="page">Board bring-up</a>
     <a href="/demo">Demo</a>
 </div>
@@ -427,11 +429,11 @@
         <span class="fd">An AI agent, with your confirmation</span>
       </a>
       <span class="flow-arrow" aria-hidden="true">&rarr;</span>
-      <span class="flow-step final">
+      <a class="flow-step final" href="/demo">
         <span class="fn">RESULT</span>
         <span class="fl">Verdicts</span>
         <span class="fd">PASS or FAIL on the bench</span>
-      </span>
+      </a>
     </div>
   </div>
 </header>
@@ -576,7 +578,6 @@
       <div>
         <h4>Product</h4>
         <a href="/product">Augur One</a>
-        <a href="/product#spec">Specification</a>
         <a href="/onboarding">Board bring-up</a>
       </div>
       <div>
