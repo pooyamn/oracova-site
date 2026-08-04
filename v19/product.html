@@ -358,7 +358,7 @@
   <header class="p-hero">
     <div class="kicker">The base board</div>
     <h1>Augur One</h1>
-    <p class="sub">Augur One is everything your firmware expects to find around it: sensors
+    <p class="sub">Everything your firmware expects to find around it: sensors
     that answer, loads that push back, buses that respond, and faults that arrive when the agent
     decides they should.</p>
     <div class="cta-row" style="margin-top:26px">
@@ -376,10 +376,9 @@
       <div class="ov-intro">
         <div>
           <h2>The rig you would have built by hand</h2>
-          <p class="dim">Testing a control loop means having a plant to close it against, so
-          someone builds one: a sensor breakout on a jumper harness, a motor with a load on it, a
-          bench supply, a logic analyzer, and a person to power-cycle the whole thing when the DUT
-          locks up.</p>
+          <p class="dim">A sensor breakout on a jumper harness, a motor with a load on it, a
+          bench supply, a logic analyzer, and a person to power-cycle the whole thing when the
+          DUT locks up.</p>
           <p class="dim" style="margin-top:10px">Augur One is that bench as one board. Your DUT
           board plugs in, and the world your firmware reads is generated in hardware and driven
           from the network.</p>
@@ -443,8 +442,8 @@
         </tr>
       </table>
       <p class="dim" style="margin-top:14px">The first two rows are Augur One. The third is a
-      Linux machine with gigabit Ethernet that you supply: we do not sell it, and nothing about
-      it is special, so a lab that already has machines does not buy another one.</p>
+      Linux machine with gigabit Ethernet that you supply: we do not sell it, and a lab that
+      already has machines does not buy another one.</p>
     </div>
 
     <div style="padding-top:52px">
@@ -453,15 +452,14 @@
       power and network, so a bench is a switch port. USB-C is the backup link and the recovery path when there
       is no PoE switch on hand.</p>
       <div class="callout">Benches multiply. One per pull request, one per agent, as many as the
-      team runs at once. <b>A rack of one-cable benches is something a lab can operate.</b> A rack
-      where each board needs a brick, a hub, and a hand on a button is not.</div>
+      team runs at once. <b>A rack of one-cable benches is something a lab can operate.</b></div>
     </div>
 
     <div style="padding-top:52px; padding-bottom:24px">
       <h2>It comes back without you</h2>
       <p class="dim">A dedicated supervisor MCU, an STM32H563, sits on its own rail and owns recovery and DUT
       power. The board is built around one rule: Ethernet must not drop while something is being
-      recovered. So the FPGA and the real-time MCU are always powered and are recovered by reset. Only DUT power is switched.</p>
+      recovered.</p>
       <div class="recovery">
         <div class="rrow"><div class="rw">DUT wedged</div><div class="rf">supervisor cuts and restores DUT power: the exact case you used to walk over for</div></div>
         <div class="rrow"><div class="rw">Real-time MCU wedged</div><div class="rf">supervisor asserts its reset line</div></div>
@@ -482,7 +480,7 @@
       <div class="recovery runs-today">
         <div class="rrow"><div class="rw">Closed loop on real silicon</div><div class="rf">running today on Oracova development hardware: BLDC plant and hall encoder against an STM32F411</div></div>
         <div class="rrow"><div class="rw">Fault library</div><div class="rf">running: hall faults scored FAIL on the unguarded build, PASS with the guard patch</div></div>
-        <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: unmodified Betaflight on real silicon, closing its 8 kHz loop against the world in FPGA fabric</div></div>
+        <div class="rrow"><div class="rw">Unmodified Betaflight</div><div class="rf">running: on real silicon, closing its 8 kHz loop against the world in FPGA fabric</div></div>
         <div class="rrow"><div class="rw">Augur One</div><div class="rf">in fabrication, first article pending. Everything above runs today on development hardware; Augur One puts it on one board.</div></div>
       </div>
 
@@ -496,7 +494,7 @@
         <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
         <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly.</td></tr>
         <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
-        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE, so the bench is the other end of the DUT's link.</td></tr>
+        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE test peer.</td></tr>
       </table>
 
       <div class="spec-h">DUT interface</div>
@@ -511,8 +509,8 @@
           controller, so the bench sits on the wire itself: bus faults arrive as bus
           faults, not as scripted mocks.</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
-        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, up to 3 A, Kelvin-sensed. Current is sensed on two ranges:
-          250 &micro;A/LSB for normal draw and 31 nA/LSB on the sleep range for sleep currents.
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, up to 3 A, Kelvin-sensed. Current sense on two ranges:
+          250 &micro;A/LSB for normal draw, 31 nA/LSB for sleep currents.
           Range full scales will be confirmed at first article.</td></tr>
         <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>

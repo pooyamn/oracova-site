@@ -470,7 +470,6 @@
       </div>
       <div class="run-stats instrument">
         <span><b>gyro driver implemented &middot; DMA-accelerated &middot; tested</b></span><span>8 iterations</span><span class="stat-key">1 h 12 min unattended</span>
-        <span>verdicts from fixed thresholds, not from the agent</span>
       </div>
     </div>
   </div>
@@ -485,9 +484,9 @@
       <div class="mini-row">
         <span class="n">01</span>
         <div class="t">Tests come from the spec, not the code</div>
-        <div class="d">However the change arrives, its tests are written <b>from the spec
-        rather than from the implementation</b>, so passing means matching the datasheet,
-        not matching the bug. They run on the bench, not in a mock.</div>
+        <div class="d">Tests are written <b>from the spec rather than from the
+        implementation</b>, so passing means matching the datasheet, not matching the bug.
+        They run on the bench, not in a mock.</div>
       </div>
       <div class="mini-row">
         <span class="n">02</span>
@@ -497,9 +496,8 @@
       <div class="mini-row">
         <span class="n">03</span>
         <div class="t">Every test keeps running</div>
-        <div class="d">Tests and their thresholds are files in the test repo, reviewed like
-        code. They stay in the suite forever, so <b>regressions get caught</b> on every
-        future PR.</div>
+        <div class="d">Tests and thresholds are files in the test repo, reviewed like code,
+        and stay in the suite, so <b>regressions get caught</b> on every future PR.</div>
       </div>
     </div>
   </div>
@@ -524,8 +522,8 @@
         <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
         <p>Your MCU comes to the bench; the cell monitor is played at its digital interface,
         cell and thermal physics behind it. Protection logic is tested by reaching the fault,
-        not by faking it, and the 31 nA/LSB sleep range catches the firmware change that
-        raises ship-mode drain before it becomes a field return.</p>
+        not faking it; the 31 nA/LSB sleep range catches the firmware change that raises
+        ship-mode drain.</p>
       </div>
       <div class="card">
         <h3>Power and thermal</h3>
@@ -541,10 +539,10 @@
   <div class="wrap">
     <div class="kicker">The hardware</div>
     <h2>Augur One</h2>
-    <p class="dim">One board plays that world. Your microcontroller sits on a small DUT board and
-    plugs in; the sensors, loads, buses and faults on the other side are generated in hardware and
-    driven over the network. Power and network arrive on one Cat-6 cable, and when a run wedges the
-    board, it recovers itself instead of waiting for someone to walk over.</p>
+    <p class="dim">One board plays that world: your microcontroller sits on a small DUT board and
+    plugs in; the sensors, loads, buses and faults are generated in hardware and driven over the
+    network. Power and network arrive on one Cat-6 cable, and when a run wedges the board, it
+    recovers itself.</p>
     <div class="cred-cards" style="margin-top:22px">
       <a class="cred-card" href="/product">
         <span class="cc-t">The board</span>
@@ -566,8 +564,8 @@
   <div class="wrap">
     <div class="kicker">Evidence</div>
     <h2>What the bench does that a mock cannot.</h2>
-    <p class="dim">Both of these ran on real silicon against a live emulated world, on Oracova development hardware. Augur One is in fabrication. Verdicts
-    come from fixed thresholds, not from the agent.</p>
+    <p class="dim">Both ran on real silicon against a live emulated world, on Oracova development
+    hardware; Augur One is in fabrication. Verdicts come from fixed thresholds, not from the agent.</p>
     <div class="evidence-list">
       <div class="ev" id="simulator">
         <div class="ev-head">
@@ -576,8 +574,7 @@
         </div>
         <div class="nums">gyro + accel over SPI &middot; 4 motor outputs decoded &middot; ANGLE mode &middot; 8 kHz loop</div>
         <p class="ev-note"><b>To the firmware, it is flying.</b> Gyro and accel come from live
-        physics; its motor commands move that world. Every board on the bench gets the same:
-        a simulator of its own world, faults included.</p>
+        physics; its motor commands move that world.</p>
       </div>
       <div class="ev">
         <div class="ev-head">
@@ -614,7 +611,7 @@
     <div class="cmp-mobile" id="cmp-mobile" aria-label="compare Oracova against one method at a time"></div>
     <p class="note">Running today on Oracova development hardware: STM32F411 under test, a BLDC
     + hall fault library, unmodified Betaflight in closed loop at 8 kHz. Augur One puts all of it on
-    one board and is in fabrication. Verdicts come from fixed thresholds, not from the agent.</p>
+    one board and is in fabrication.</p>
   </div>
 </section>
 

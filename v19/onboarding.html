@@ -235,9 +235,8 @@
   <div class="wrap">
     <div class="kicker">Board bring-up</div>
     <h1>From your PCB to verdicts.</h1>
-    <p class="sub">What it takes to get your board onto the Oracova bench: the documents,
-    the hardware, and the bring-up. Two paths, depending on whether you already have
-    working firmware.</p>
+    <p class="sub">What it takes to get your board onto the Oracova bench. Two paths,
+    depending on whether you already have working firmware.</p>
     <div class="flow" aria-label="The board bring-up process">
       <a class="flow-step" href="#step1">
         <span class="fn">STEP 1</span>
@@ -270,8 +269,7 @@
   <div class="wrap">
     <span class="stepnum">STEP 1</span>
     <h2>The documents</h2>
-    <p class="dim">First, collecting information. This is what the bench will stand in
-    for. A DUT board PCB counts as a document too, if you already have one.</p>
+    <p class="dim">This is what the bench will stand in for.</p>
     <div class="doc-strip">
       <span class="doc">your actual PCB</span>
       <span class="doc">schematics</span>
@@ -288,8 +286,8 @@
     <span class="stepnum">STEP 2</span>
     <h2>The hardware</h2>
     <p class="dim">From your documents, a custom DUT board is designed for your
-    microcontroller and goes onto Augur One, the Oracova base board (in fabrication, first
-    article pending). DUT board designs will be published open source.</p>
+    microcontroller and goes onto Augur One (in fabrication, first article pending).
+    DUT board designs will be published open source.</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -300,9 +298,8 @@
       <div class="box">
         <span class="tag">Analog modules</span>
         <h3>Four channels per slot</h3>
-        <p>Each of the 10 slots takes a high-speed or a medium-speed module, four channels
-        each; you populate only the slots your signals need. Unusual signals get a custom
-        module.</p>
+        <p>Each of the 10 slots takes a high-speed or a medium-speed module; populate only
+        the slots your signals need. Unusual signals get a custom module.</p>
       </div>
       <div class="box">
         <span class="tag">Custom DUT board + debug probe</span>
@@ -322,9 +319,9 @@
   <div class="wrap">
     <span class="stepnum">STEP 3</span>
     <h2>The bring-up</h2>
-    <p class="dim" style="margin-bottom:26px">Now the world comes up. An AI agent does the
-    work, with your confirmation along the way; it asks about your hardware and its physics
-    rather than guessing. How long depends on your board: we scope it, with a number, on the
+    <p class="dim" style="margin-bottom:26px">An AI agent does the work, with your
+    confirmation along the way; it asks about your hardware and its physics rather than
+    guessing. How long depends on your board: we scope it, with a number, on the
     call.</p>
     <div class="grid2">
       <div class="path-card">
@@ -364,9 +361,9 @@
     <div class="honest">
       <div class="h">The world does not start from zero</div>
       <div class="list">gateware buses &middot; capture &middot; fault injection &middot; plant framework</div>
-      <p class="dim" style="font-size:15px; max-width:none">The buses, the capture engine and
-      the fault machinery are already proven on Oracova development hardware. The physics that
-      closes your loop is built for your product, not picked from a shelf.</p>
+      <p class="dim" style="font-size:15px; max-width:none">Already proven on Oracova
+      development hardware. The physics that closes your loop is built for your product, not
+      picked from a shelf.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
     <div class="boxes">
