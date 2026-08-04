@@ -3,68 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The loop: Oracova gyro driver demo</title>
-<meta name="description" content="One prompt, eight iterations: the Oracova agent implements and tests a gyro driver on real silicon: wire test, logic-analyzer captures, deterministic verdict.">
+<title>The loop: a recreated Oracova gyro driver run</title>
+<meta name="description" content="A recreated walkthrough of the Oracova loop: one prompt, eight iterations, wire test first, logic-analyzer captures, and a deterministic verdict.">
 <link rel="canonical" href="https://oracova.com/demo">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oracova">
 <meta property="og:title" content="The loop: Oracova gyro driver demo">
-<meta property="og:description" content="One prompt, eight iterations, PASS. Wire test first, logic analyzer on the bus, the world catches the scale bug.">
+<meta property="og:description" content="One prompt, eight iterations, PASS. Recreated from the bench flow and sped up.">
 <meta property="og:url" content="https://oracova.com/demo">
 <meta property="og:image" content="https://oracova.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://oracova.com/og.png">
 <link rel="stylesheet" href="/site.css">
 <style>
-  :root {
-    --bg: #0E0F11; --bg-panel: #101216; --bg-card: #15161A; --line: rgba(255,255,255,.09);
-    --text: #EDEEF0; --text-dim: #9DA1A8; --accent: #FFB454;
-    --pass: #4ADE80; --fail: #F87171; --blue: #7aa2c4; --violet: #9a8cc9;
-    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans);
-    font-size: 15.5px; line-height: 1.6; min-height: 100vh; }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-
-  nav {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(14,15,17,.9); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between; height: 58px; }
-  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none;
-    padding: 12px 0; margin: -12px 0; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 26px; align-items: center; margin-left: 18px; }
-  .nav-links a:not(.btn) { color: var(--text-dim); text-decoration: none; font-size: 14.5px; white-space: nowrap; padding: 12px 0; margin: -12px 0; }
-  .nav-links a:hover { color: var(--text); }
-  .btn { display: inline-block; padding: 8px 16px; border-radius: 8px;
-    font-family: var(--sans); font-size: 13.5px; font-weight: 600;
-    text-decoration: none; border: 1px solid transparent; flex-shrink: 0; white-space: nowrap; }
-  .btn-primary { background: var(--accent); color: #14100a; }
-  .btn-primary:hover { filter: brightness(1.08); }
-  .nav-links a.btn-primary { color: #14100a; }
+  html { scroll-padding-top: 68px; }
   @media (max-width: 800px) { .nav-links a:not(.btn) { display: none; } }
 
-  /* Light mode. Without this the injected chrome flips light while the page stays
-     dark, giving a white nav bar butted against a near-black body. The terminal is an
-     instrument and stays dark in both themes, scoped rather than omitted. */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #FAFAF9; --bg-card: #FFFFFF; --line: rgba(20,22,26,.10);
-      --text: #16181D; --text-dim: #555A63; --accent: #B05C00;
-      --pass: #16A34A; --fail: #DC2626;
-    }
-    .term { --text: #E6EAEF; --text-dim: #8E97A3; --line: rgba(255,255,255,.09); }
-    .after a { color: #B05C00; }
-  }
   .stage { max-width: 1040px; margin: 0 auto; padding: 40px 24px 40px; }
-  .kicker { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
-    letter-spacing: .14em; color: var(--accent); margin-bottom: 10px; }
   h1 { font-family: var(--mono); font-size: clamp(22px, 3.6vw, 30px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
   .lede { color: var(--text-dim); font-size: 16px; max-width: 62ch; margin-bottom: 28px; }
 
@@ -75,13 +31,11 @@
     font-family: var(--mono); font-size: 12px; color: var(--text-dim); letter-spacing: .04em; }
   .term-head .t { color: var(--text); }
   /* px, not vh: a mobile URL bar hiding on scroll changes vh and resizes the panel */
-  .term-log { height: 560px; overflow: hidden; padding: 18px;
-    font-family: var(--mono); font-size: 13.5px; line-height: 1.65; }
+  /* px, not vh. Log metrics come from site.css. */
+  .term-log { height: 560px; }
   .term-log.static { overflow-y: auto; }
   .term-log:not(.static) { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
     mask-image: linear-gradient(180deg, transparent 0, #000 16px); }
-  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
-  .term-log .ln { white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; color: var(--text-dim); }
   .ln b { color: var(--text); font-weight: 500; }
   .ln .k { color: var(--accent); }
   .ln .pass { color: var(--pass); font-weight: 700; }
@@ -111,13 +65,11 @@
   .after a { color: var(--accent); text-decoration: none; }
   .after a:hover { text-decoration: underline; }
 
-  footer { border-top: 1px solid var(--line); margin-top: 56px; padding: 30px 0;
-    color: var(--text-dim); font-family: var(--mono); font-size: 13px; }
-  footer .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  footer a { color: inherit; text-decoration: none; }
   @media (max-width: 560px) {
     .term-log { height: 440px; font-size: 11.5px; padding: 14px; }
+    /* the honesty label must not set in a 153px three-line trough */
+    .term-foot { flex-wrap: wrap; }
+    .term-foot > span:first-child { display: none; }
     .la-card svg text { display: none; }
     .la-card.bits svg { display: none; }
     .la-card.bits .la-bits { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
@@ -180,6 +132,22 @@
 
 
 
+  /* Overrides live at the end of the sheet: declared earlier they lose to the
+     unconditional rules they are meant to override, which is how the
+     reduced-motion suppression below silently never applied. */
+  /* Light mode. Without this the injected chrome flips light while the page stays
+     dark, giving a white nav bar butted against a near-black body. The terminal is an
+     instrument and stays dark in both themes, scoped rather than omitted. */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #FAFAF9; --bg-card: #FFFFFF; --line: rgba(20,22,26,.10);
+      --text: #16181D; --text-dim: #555A63; --accent: #B05C00;
+      --pass: #16A34A; --fail: #DC2626;
+    }
+    .after a { color: #B05C00; }
+    .btn-primary { color: #FFFFFF; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
 </style>
 </head>
 <body>
@@ -209,10 +177,11 @@
   <div class="kicker">The loop</div>
   <h1>One prompt. Eight iterations. PASS.</h1>
   <p class="lede">Wire test first, logic analyzer on the bus, the emulated world catching what
-  the bus can't. Recreated from the bench flow, sped up; Betaflight already flies against this
-  same FPGA fabric.</p>
+  the bus can't. Recreated from the bench flow, sped up. The loop it recreates runs today on
+  Oracova development hardware, where unmodified Betaflight already flies against the same
+  ECP5 fabric. Augur One puts that fabric on one board and is in fabrication.</p>
 
-  <div class="term">
+  <div class="term instrument">
     <div class="term-head">
       <span class="t">oracova bench</span>
       <span class="bench-ctl">
@@ -239,15 +208,15 @@
       <div class="ln">iter 1   write driver: spi init &middot; read WHO_AM_I @ 12.5 MHz &middot; t+7 min</div>
       <div class="ln">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
       <div class="ln">  who_am_i ................................. <span class="fail">FAIL</span>   read 0x9C then 0xE3, expected 0x68</div>
-      <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">12.5 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 12.5 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div></div>
+      <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: SCLK at 12.5 MHz on a bus that caps register reads at 1 MHz"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">12.5 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 12.5 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div></div>
       <div class="ln">la       <span class="k">register reads cap at 1 MHz on this part; data reads may run to 20 MHz</span></div>
       <div class="ln">fix      config clock &rarr; &divide;128 = 0.78 MHz, under the cap &middot; sensor burst 12.5 MHz &rarr; rebuild</div>
       <div class="ln">&nbsp;</div>
       <div class="ln">iter 2   flash <b>ok</b> &middot; test running &middot; t+21 min</div>
       <div class="ln">  who_am_i ................................. <span class="pass">PASS</span>   0x68</div>
       <div class="ln">  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always</div>
-      <div class="la-card bits"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text></svg><div class="la-bits" aria-hidden="true"><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x43 &middot; <b>bit 7</b> first</div><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
-      <div class="ln">la       <span class="k">addr 0x43 sent without the 0x80 read bit</span></div>
+      <div class="la-card bits"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x3B, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">0</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">1</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">1</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">1</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x3B</text></svg><div class="la-bits" aria-hidden="true"><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x3B &middot; <b>bit 7</b> first</div><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
+      <div class="ln">la       <span class="k">addr 0x3B sent without the 0x80 read bit</span></div>
       <div class="ln">fix      set the 0x80 read flag in the burst path &rarr; rebuild</div>
       <div class="ln">&nbsp;</div>
       <div class="ln">iter 3   flash <b>ok</b> &middot; test running &middot; t+34 min</div>
@@ -295,7 +264,7 @@
 
   <p class="after">Every board on the bench gets this same loop.</p>
   <div style="margin-top:20px">
-    <a class="btn btn-primary" href="/product">See the board that plays it</a>
+    <a class="btn btn-primary" href="/product">See the board built to play it</a>
   </div>
 </div>
 
@@ -342,7 +311,7 @@
   var LA1 =
     '<div class="la-card">' +
     '<div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div>' +
-    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: clock idles low">' +
+    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: SCLK at 12.5 MHz on a bus that caps register reads at 1 MHz">' +
     '<text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text>' +
     '<polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/>' +
     '<text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text>' +
@@ -357,23 +326,23 @@
   var LA2 =
     '<div class="la-card bits">' +
     '<div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div>' +
-    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x43, bit 7 low">' +
+    '<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x3B, bit 7 low">' +
     '<text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text>' +
     '<g font-family="monospace" font-size="13" text-anchor="middle">' +
     '<rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/>' +
     '<text x="110" y="57" fill="#ff5252" font-weight="bold">0</text>' +
-    '<rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">1</text>' +
-    '<rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">0</text>' +
-    '<rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">0</text>' +
-    '<rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">0</text>' +
+    '<rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">1</text>' +
+    '<rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">1</text>' +
+    '<rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">1</text>' +
     '<rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text>' +
     '<rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text>' +
     '<rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text>' +
     '</g>' +
     '<text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text>' +
-    '<text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x43</text>' +
+    '<text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x3B</text>' +
     '</svg>' +
-    '<div class="la-bits" aria-hidden="true"><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x43 &middot; <b>bit 7</b> first</div>' +
+    '<div class="la-bits" aria-hidden="true"><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x3B &middot; <b>bit 7</b> first</div>' +
     '<div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div>' +
     '</div>';
 
@@ -404,7 +373,7 @@
     [1800, '  who_am_i ................................. <span class="pass">PASS</span>   0x68'],
     [1900, '  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always'],
     [2400, LA2, true],
-    [4200, 'la       <span class="k">addr 0x43 sent without the 0x80 read bit</span>'],
+    [4200, 'la       <span class="k">addr 0x3B sent without the 0x80 read bit</span>'],
     [2200, 'fix      set the 0x80 read flag in the burst path &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 3   flash <b>ok</b> &middot; test running &middot; t+34 min'],

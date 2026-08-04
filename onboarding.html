@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oracova board bring-up. From your PCB to verdicts.</title>
-<meta name="description" content="How a board gets onto the Oracova Bench: a custom DUT board for your microcontroller, the world brought up by AI against your firmware.">
+<meta name="description" content="How a board gets onto the Oracova bench: a custom DUT board for your microcontroller, and an AI agent that brings up the world your firmware expects.">
 <link rel="canonical" href="https://oracova.com/onboarding">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -17,69 +17,16 @@
 <meta name="twitter:image" content="https://oracova.com/og.png">
 <link rel="stylesheet" href="/site.css">
 <style>
-  :root {
-    --bg: #0a0e12;
-    --bg-panel: #0f151c;
-    --bg-card: #121a23;
-    --line: #1e2a36;
-    --text: #d7dee6;
-    --text-dim: #8a97a5;
-    --accent: #ffb454;
-    --pass: #2ee06f;
-    --fail: #ff5252;
-    --mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 68px; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  ::selection { background: rgba(255,180,84,.25); }
-  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
   section { padding: 52px 0; border-top: 1px solid var(--line); }
-  h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 34px; margin-bottom: 14px; }
   h3 { font-size: 19px; margin-bottom: 8px; }
   p  { max-width: 68ch; }
   .dim { color: var(--text-dim); }
-  .kicker {
-    font-family: var(--mono); font-size: 13px; text-transform: uppercase;
-    letter-spacing: .14em; color: var(--accent); margin-bottom: 16px;
-  }
   .stepnum { font-family: var(--mono); color: var(--accent); font-size: 14px; display: block; margin-bottom: 10px; }
 
-  nav {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(10,14,18,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
-  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none; padding: 12px 0; margin: -12px 0; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 26px; align-items: center; }
-  .nav-links a:not(.btn) { color: var(--text-dim); text-decoration: none; font-size: 14.5px; white-space: nowrap; padding: 12px 0; margin: -12px 0; }
-  .nav-links a:hover { color: var(--text); }
-  .nav-links a.btn-primary { color: #14100a; }
-  .nav-links a.btn-primary:hover { color: #14100a; }
 
-  .btn {
-    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-    padding: 12px 22px; border-radius: 6px;
-    font-family: var(--mono); font-size: 15px; font-weight: 600;
-    text-decoration: none; border: 1px solid transparent;
-  }
-  .btn-primary { background: var(--accent); color: #14100a; }
   .btn-primary:hover { filter: brightness(1.08); }
-  .btn-sm { padding: 11px 16px; font-size: 13.5px; }
-
   header.hero {
     padding: 72px 0 60px;
     background:
@@ -135,7 +82,7 @@
   .path-card {
     background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 26px;
   }
-  .path-card h2 { font-size: 21px; margin-bottom: 18px; }
+  .path-card h2 { font-size: 21px; margin-bottom: 18px; min-height: 2.4em; }
   .path-card p { font-size: 15.5px; color: var(--text-dim); max-width: none; }
   .path-card p + p { margin-top: 12px; }
   .mini { display: grid; gap: 0; }
@@ -190,84 +137,23 @@
   }
   @media (max-width: 560px) {
     section { padding: 44px 0; }
-    h2 { font-size: 27px; }
   }
   @media (max-width: 480px) {
     .nav-links { gap: 12px; }
     .nav-links a:not(.btn) { font-size: 13.5px; }
-    .btn-sm { padding: 6px 10px; font-size: 12px; white-space: nowrap; }
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #F7F7F4; --bg-panel: #FFFFFF; --bg-card: #FFFFFF; --line: #C9CDD3;
-      --text: #15181D; --text-dim: #4A5260;
-      --accent: #A85400; --pass: #0E7A3C; --fail: #C0262C;
-    }
-    ::selection { background: rgba(168,84,0,.18); }
-    nav { background: rgba(247,247,244,.94); }
-    header.hero {
-      background:
-        linear-gradient(rgba(247,247,244,0) 0%, var(--bg) 85%),
-        repeating-linear-gradient(0deg, transparent 0 39px, rgba(185,192,202,.38) 39px 40px),
-        repeating-linear-gradient(90deg, transparent 0 39px, rgba(185,192,202,.38) 39px 40px);
-    }
-    .btn-primary { color: #fff; }
-    .btn-primary:hover { filter: none; background: #8F4700; }
-    .nav-links a.btn-primary { color: #fff; }
-    .nav-links a.btn-primary:hover { color: #fff; }
-    .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list,
-    .doc, .mini-row .n { color: #8F4700; }
   }
 
   /* ---------- v18 skin ---------- */
-  :root {
-    --bg: #0E0F11; --bg-panel: #15161A; --bg-card: #15161A;
-    --line: rgba(255,255,255,.09); --text: #EDEEF0; --text-dim: #9DA1A8;
-    --accent: #FFB454; --pass: #4ADE80; --fail: #F87171;
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
-  }
-  body { font-size: 15.5px; }
-  nav { background: rgba(14,15,17,.9); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); border-bottom-color: var(--line); }
-  header.hero {
-    background: radial-gradient(560px 320px at 70% 30%, rgba(255,180,84,.09), transparent 70%);
-  }
   h1, h2, h3, .flow-step .fl, .box h3, .mini-row .t { font-family: var(--mono); letter-spacing: -0.02em; }
   .hero h1 { font-size: clamp(26px, 3.8vw, 40px); }
   h2 { font-size: 22px; }
-  .btn {
-    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-    font-family: var(--sans); font-weight: 600; font-size: 14px; border-radius: 8px;
-    padding: 9px 18px; letter-spacing: -.01em;
-  }
-  .btn-sm { padding: 7px 14px; font-size: 13.5px; }
-  .btn-primary { color: #1A1204; }
   .btn-primary:hover { filter: none; background: #FFC276; }
-  .nav-links a.btn-primary { color: #1A1204; }
-  .nav-links a.btn-primary:hover { color: #1A1204; }
   .flow-step, .box, .path-card, .doc { border-radius: 12px; }
   .honest { border-radius: 12px; }
-  .kicker { color: #6E7278; font-family: var(--mono); }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #FAFAF9; --bg-panel: #FFFFFF; --bg-card: #FFFFFF;
-      --line: rgba(20,22,26,.1); --text: #16181D; --text-dim: #555A63;
-      --accent: #B05C00; --pass: #16A34A; --fail: #DC2626;
-    }
-    nav { background: rgba(250,250,249,.8); }
-    header.hero { background: radial-gradient(560px 320px at 70% 30%, rgba(176,92,0,.06), transparent 70%); }
-    .btn-primary { color: #fff; }
-    .btn-primary:hover { background: #C96A02; }
-    .nav-links a.btn-primary { color: #fff; }
-    .kicker, .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list, .doc, .mini-row .n { color: #8a6a45; }
-    .box .list, .honest .list, .doc { color: #B05C00; }
-  }
-
   @media (max-width: 800px) {
     nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11;
       position: fixed; top: 0; left: 0; right: 0; }
     body { padding-top: 56px; }
-    @media (prefers-color-scheme: light) { nav { background: #FAFAF9; } }
   }
   /* nav collapse */
   @media (max-width: 800px) {
@@ -275,8 +161,6 @@
   }
 
   /* nav metric unification */
-  .logo { font-size: 16px; }
-  nav .wrap { height: 56px; }
 
 
 
@@ -319,6 +203,11 @@
 
 
 
+  /* Page-specific light tweaks only; the palette lives in site.css. */
+  @media (prefers-color-scheme: light) {
+    header.hero { background: radial-gradient(560px 320px at 70% 30%, rgba(176,92,0,.06), transparent 70%); }
+    .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list, .doc, .mini-row .n { color: #B05C00; }
+  }
 </style>
 </head>
 <body>
@@ -401,8 +290,8 @@
     <span class="stepnum">STEP 2</span>
     <h2>The hardware</h2>
     <p class="dim">From your documents, a custom DUT board is designed for your
-    microcontroller and goes onto Augur One, the Oracova base board. DUT designs are open
-    source.</p>
+    microcontroller and goes onto Augur One, the Oracova base board (in fabrication, first
+    article pending).</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -411,8 +300,8 @@
         time.</p>
       </div>
       <div class="box">
-        <span class="tag">Analog front-end modules</span>
-        <h3>Analog output modules</h3>
+        <span class="tag">Analog modules</span>
+        <h3>Analog modules</h3>
         <p>Each of the 10 slots takes a high-speed or a medium-speed module, four channels
         each; you populate only the slots your signals need. Unusual signals get a custom
         module.</p>
@@ -485,7 +374,7 @@
       <div class="box">
         <span class="tag">Emulated</span>
         <h3>Everything your MCU senses and drives</h3>
-        <p>Digital buses connect directly; analog signals go through front-end modules built
+        <p>Digital buses connect directly; analog signals go through analog modules built
         for your board.</p>
         <div class="list">GPIO &middot; PWM &middot; UART &middot; I2C &middot; SPI &middot; CAN</div>
       </div>
@@ -508,7 +397,7 @@
   <div class="wrap">
     <h2>Want to walk through it on your&nbsp;board?</h2>
     <p class="dim">Bring your schematic to the call. 15 minutes, no deck.</p>
-    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
   </div>
 </section>
 

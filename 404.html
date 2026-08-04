@@ -8,23 +8,13 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="stylesheet" href="/site.css">
 <style>
-  :root { --bg:#0E0F11; --text:#d7dee6; --dim:#8a97a5; --accent:#ffb454; --line:#1e2a36;
-    --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:var(--mono);
-    font-size:15.5px; line-height:1.6; }
-  @media (prefers-color-scheme: light) {
-    :root { --bg:#FAFAF9; --text:#16181D; --dim:#555A63; --accent:#B05C00;
-      --line:rgba(20,22,26,.12); }
-  }
+  body { font-family: var(--mono); }
   main.mid { min-height:58vh; display:grid; place-items:center; padding:56px 24px; }
   .card { max-width:520px; }
-  a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
   .code { color:var(--accent); font-size:15px; margin-bottom:14px; }
+  .v-fail { color:var(--fail); font-weight:700; }
   h1 { font-size:26px; margin-bottom:10px; letter-spacing:-0.01em; }
   p { color:var(--dim); font-size:15px; line-height:1.6; margin-bottom:22px; }
-  a.btn { display:inline-block; padding:14px 20px; border-radius:6px; background:var(--accent);
-    color:#14100a; text-decoration:none; font-weight:600; font-size:14px; }
   a.plain { display:inline-block; color:var(--dim); text-decoration:underline; text-underline-offset:3px;
     font-size:14px; padding:14px 8px; margin:-14px 8px -14px 8px; }
 
@@ -70,11 +60,11 @@
 
 <main class="mid">
   <div class="card">
-    <div class="code">verdict&nbsp;&nbsp;FAIL&nbsp;&nbsp;404 &middot; page not found</div>
+    <div class="code">verdict&nbsp;&nbsp;<b class="v-fail">FAIL</b>&nbsp;&nbsp;404 &middot; page not found</div>
     <h1>This page isn't on the bench.</h1>
     <p>The URL didn't match any page. What you're probably looking for is on the
     homepage.</p>
-    <a class="btn" href="/">oracova_ home</a>
+    <a class="btn btn-primary" href="/">oracova_ home</a>
     <a class="plain" href="/demo">watch a run</a>
   </div>
 </main>
