@@ -1,9 +1,30 @@
 # oracova-site
 
 Marketing site for Oracova. `v19/` is staging, the repo root mirrors production
-(oracova.com / oracova-site.pages.dev). `tools/header.py` owns the nav, hamburger menu and
-footer sitemap on every page: edit it, never the per-page chrome, then run
-`python3 tools/header.py` (and `--check` to verify no drift). Its `roots` is `['.', 'v19']`
+(oracova.com / oracova-site.pages.dev).
+
+`tools/header.py` owns two things: the shared stylesheet and the chrome. Running it
+generates `site.css` (palette, light theme, type scale, kicker, button, the `.instrument`
+scope for terminals, and the nav/menu/footer chrome) into every root, injects one
+`<link rel="stylesheet" href="/site.css">` ahead of each page's own `<style>`, and rewrites
+the nav, menu and footer markup. Never edit `site.css` or per-page chrome by hand: edit
+`header.py` and re-run it. Page stylesheets load after the shared sheet and may extend it;
+they must not restate it.
+
+`--check` verifies no drift and runs two lints, both of which caught real bugs the day they
+were written:
+
+- **unbalanced braces**, which is what an edit that removes the first line of a two-line
+  rule leaves behind. The orphan `}` closes the enclosing `@media` early and silently
+  corrupts every rule after it.
+- **shadowed selectors**: a selector declared inside any `@media` block and redeclared
+  unguarded later in the same file. The later rule wins at every width and in every theme,
+  so the guarded intent never ships. This shape accounted for the phone evidence grid, the
+  hero h1 floor, the /demo terminal footer, /demo's reduced-motion suppression, and
+  onboarding's light-mode hero.
+
+An override must come after the rule it overrides. Put page-level `@media` blocks at the
+end of the page's `<style>`. Its `roots` is `['.', 'v19']`
 so the chrome can never drift between the two trees. Page bodies are copied root-ward only
 at promote time, so between promotions the root carries staged chrome and shipped bodies.
 

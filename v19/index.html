@@ -17,82 +17,17 @@
 <meta name="twitter:title" content="Oracova. AI agents test your firmware on real hardware.">
 <meta name="twitter:description" content="A hundred iterations, unattended. You review the one that passed.">
 <meta name="twitter:image" content="https://oracova.com/og.png">
+<link rel="stylesheet" href="/site.css">
 <style>
-  :root {
-    --bg: #0E0F11;
-    --surface: #15161A;
-    --surface-2: #191B20;
-    --border: rgba(255,255,255,.07);
-    --border-strong: rgba(255,255,255,.14);
-    --text: #EDEEF0;
-    --text-dim: #9DA1A8;
-    --text-faint: #83888F;
-    --brand: #FFB454;
-    --brand-ink: #1A1204;
-    --pass: #4ADE80;
-    --fail: #F87171;
-    --glow: rgba(255,180,84,.10);
-    --nav-bg: rgba(14,15,17,.9);
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    /* terminal instrument palette — fixed in both themes */
-    --bg-panel: #101216; --bg-card: #15171C; --line: #23262D;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 68px; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: var(--sans); font-size: 15.5px; line-height: 1.6;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-  }
-  ::selection { background: rgba(255,180,84,.28); }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
 
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
   section { padding: 88px 0 0; }
-  h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
   h2 { font-size: 30px; margin-bottom: 12px; letter-spacing: -0.025em; }
   h3 { font-size: 16.5px; margin-bottom: 6px; }
   p { max-width: 62ch; text-wrap: pretty; }
   .dim { color: var(--text-dim); }
   .mono { font-family: var(--mono); }
-  .kicker {
-    font-size: 12.5px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: .09em; color: var(--text-faint); margin-bottom: 14px;
-  }
 
-  /* ---------- nav ---------- */
-  nav {
-    position: sticky; top: 0; z-index: 20;
-    background: var(--nav-bg); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-    border-bottom: 1px solid var(--border);
-  }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
-  .logo { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--text);
-    text-decoration: none; padding: 12px 0; margin: -12px 0; letter-spacing: -.01em; }
-  .logo span { color: var(--brand); }
-  .nav-links { display: flex; gap: 4px; align-items: center; margin-left: 16px; }
-  .nav-links a:not(.btn) {
-    color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500;
-    white-space: nowrap; padding: 8px 12px; border-radius: 8px;
-  }
-  .nav-links a:not(.btn):hover { color: var(--text); background: rgba(255,255,255,.05); }
-  .nav-links .btn { margin-left: 10px; }
-
-  .btn {
-    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
-    padding: 9px 18px; border-radius: 8px;
-    font-family: var(--sans); font-size: 14px; font-weight: 600; letter-spacing: -.01em;
-    text-decoration: none; border: 1px solid transparent; cursor: pointer;
-    transition: background-color .15s ease, border-color .15s ease, color .15s ease;
-  }
-  .btn-primary { background: var(--brand); color: var(--brand-ink); }
-  .btn-primary:hover { background: #FFC276; }
-  .btn-ghost { border-color: var(--border-strong); color: var(--text); background: transparent; }
-  .btn-ghost:hover { border-color: rgba(255,255,255,.28); background: rgba(255,255,255,.04); }
-  .btn-sm { padding: 7px 14px; font-size: 13.5px; }
-  .nav-links a.btn-primary { color: var(--brand-ink); }
-  .nav-links a.btn-primary:hover { color: var(--brand-ink); }
 
   /* ---------- hero ---------- */
   header.hero { position: relative; padding: 84px 0 64px; overflow: hidden; }
@@ -129,7 +64,6 @@
     display: flex; flex-direction: column;
     font-family: var(--mono); font-size: 13px;
     background: radial-gradient(ellipse at 30% 0%, rgba(255,180,84,.05), transparent 60%), var(--bg-panel);
-    --text: #E6EAEF; --text-dim: #8E97A3; --accent: #FFB454; --pass: #4ADE80; --fail: #F87171;
   }
   .bench-head {
     display: flex; justify-content: space-between; align-items: center;
@@ -138,12 +72,9 @@
     font-size: 11.5px; color: var(--text-dim); letter-spacing: .04em;
   }
   .bench-head .bench-title { color: var(--text); }
-  .bench-log {
-    flex: 0 0 auto; display: grid; gap: 8px; align-content: start;
-    padding: 20px 18px; overflow: hidden;
-    height: 430px;            /* px, not vh: vh changes as the mobile URL bar
-                                 hides on scroll and the panel resizes under the reader */
-  }
+  /* px, not vh: vh changes as the mobile URL bar hides on scroll and the panel
+     resizes under the reader. Log metrics come from site.css. */
+  .bench-log { flex: 0 0 auto; height: 430px; }
   @media (max-height: 860px) and (min-width: 561px) {
     header.hero { padding: 48px 0 48px; }
     .bench-log { height: 330px; }
@@ -161,7 +92,6 @@
   .la-card svg { display: block; width: 100%; height: 72px; }
   .la-card .la-note { font-size: 11.5px; color: var(--fail); margin-top: 4px; }
   .la-bits, .la-bits-key { display: none; }
-  .bl { color: var(--text-dim); white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; }
   .bl b { color: var(--text); font-weight: 500; }
   .bl .k { color: var(--accent); }
   .bl .pass { color: var(--pass); font-weight: 700; }
@@ -289,32 +219,18 @@
   @media (max-width: 800px) {
     .grid3 { grid-template-columns: 1fr; }
     .founder { grid-template-columns: 1fr; }
-    section { padding: 64px 0 0; }
     .nav-links a.link { display: none; }
   }
 
 
   /* ---------- system light theme ---------- */
+  /* Page-specific light tweaks only. The palette itself lives in site.css, and
+     the terminal keeps its own via the shared .instrument class. */
   @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #FAFAF9; --surface: #FFFFFF; --surface-2: #F5F5F3;
-      --border: rgba(20,22,26,.09); --border-strong: rgba(20,22,26,.18);
-      --text: #16181D; --text-dim: #555A63; --text-faint: #6B7078;
-      --brand: #B05C00; --brand-ink: #FFFFFF;
-      --pass: #15803D; --fail: #DC2626;
-      --glow: rgba(176,92,0,.07); --nav-bg: rgba(250,250,249,.92);
-    }
-    ::selection { background: rgba(176,92,0,.18); }
-    .nav-links a:not(.btn):hover { background: rgba(20,22,26,.05); }
-    .btn-primary:hover { background: #C96A02; }
-    .btn-ghost:hover { border-color: rgba(20,22,26,.3); background: rgba(20,22,26,.03); }
     .bench-foot button { background: rgba(255,255,255,.04); }
     .video-frame { box-shadow: 0 24px 60px rgba(20,22,26,.18), 0 2px 8px rgba(20,22,26,.08); }
-    /* instrument surfaces stay dark */
-    .bench-replay, .run-stats { --text: #E6EAEF; --text-dim: #8E97A3; --text-faint: #8E97A3;
-      --brand: #FFB454; --accent: #FFB454; --pass: #4ADE80; --fail: #F87171; }
     .cmp .hl { background: rgba(176,92,0,.08); }
-    .card .faults { min-height: 2.6em; color: #B05C00; }
+    .card .faults { color: #B05C00; }
   }
 
   /* ---------- mono-as-display variant ---------- */
@@ -437,112 +353,6 @@
 
 
 
-/* ===== canonical site header (tools/header.py — do not edit per page) ===== */
-.site-nav { position: sticky; top: 0; z-index: 40;
-  background: rgba(14,15,17,.9);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-  border-bottom: 1px solid rgba(255,255,255,.09); }
-.site-nav .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
-.site-nav .nav-logo i { font-style: normal; color: #FFB454; }
-.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
-.site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
-  display: inline-flex; align-items: center; min-height: 44px;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 0 12px; border-radius: 8px; }
-.site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
-.site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
-  border: 1px solid transparent;
-  background: #FFB454; color: #1A1204; text-decoration: none;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
-.site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
-.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
-.site-menu a[aria-current="page"] { font-weight: 700; }
-.site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
-.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
-  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
-  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
-.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
-  position: relative; transition: background .15s ease; }
-.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
-  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
-  transition: transform .18s ease, top .18s ease; }
-.site-nav .nav-burger span::before { top: -5px; }
-.site-nav .nav-burger span::after { top: 5px; }
-.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
-.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
-.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
-.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.16); background: #0E0F11;
-  box-shadow: 0 14px 28px rgba(0,0,0,.45); }
-.site-menu.open { display: block; }
-.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
-.site-menu a:first-child { border-top: 0; }
-@media (max-width: 800px) {
-  .site-nav { position: fixed; top: 0; left: 0; right: 0;
-    -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
-  body { padding-top: 56px; }
-  .site-nav .nav-set a:not(.nav-cta) { display: none; }
-  .site-nav .nav-burger { display: flex; }
-  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
-    max-height: calc(100vh - 56px); overflow-y: auto; }
-}
-@media (min-width: 801px) { .site-menu { display: none !important; } }
-/* burger + logo + CTA do not fit a 320px viewport at the default metrics */
-@media (max-width: 400px) {
-  .site-nav .nav-inner { padding: 0 16px; }
-  .site-nav .nav-burger { margin-right: 10px; }
-  .site-nav .nav-cta { margin-left: 8px; padding: 9px 12px; font-size: 13px; }
-}
-.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
-.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
-.site-foot .foot-sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
-.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h3 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
-  letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
-  line-height: 1.5; padding: 11px 0; min-height: 44px;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
-.site-foot a:hover { color: #EDEEF0; }
-.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
-  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #83888F; }
-.site-foot .foot-base a { display: inline-block; padding: 11px 0; min-height: 44px;
-  color: inherit; font-family: inherit; font-size: inherit; }
-@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
-@media (prefers-color-scheme: light) {
-  .site-menu { background: #FFFFFF; border-bottom-color: rgba(20,22,26,.16);
-    box-shadow: 0 14px 28px rgba(20,22,26,.12); }
-  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
-  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
-  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
-  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
-  .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h3 { color: #6B7078; }
-  .site-foot a { color: #555A63; }
-  .site-foot a:hover { color: #16181D; }
-  .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
-}
-@media (prefers-color-scheme: light) {
-  .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
-  .site-nav .nav-logo { color: #16181D; }
-  .site-nav .nav-logo i { color: #B05C00; }
-  .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
-  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
-  .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
-  .site-nav a:focus-visible { outline-color: #B05C00; }
-  .site-nav .nav-cta { background: #B05C00; color: #fff; }
-  .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
-  @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
-}
-/* ===== end canonical site header ===== */
 </style>
 </head>
 <body>
@@ -577,7 +387,7 @@
       <a class="btn btn-primary" href="/onboarding">See your board on the bench</a>
     </div>
     <div class="video-frame">
-      <div class="bench-replay">
+      <div class="bench-replay instrument">
         <div class="bench-head">
           <span class="bench-title">oracova bench</span>
           <span class="bench-ctl">
@@ -658,7 +468,7 @@
           <span>replay &middot; recreated &middot; sped up &middot; not live video</span>
         </div>
       </div>
-      <div class="run-stats">
+      <div class="run-stats instrument">
         <span><b>gyro driver implemented &middot; DMA-accelerated &middot; tested</b></span><span>8 iterations</span><span class="stat-key">1 h 12 min unattended</span>
         <span>verdicts from fixed thresholds, not from the agent</span>
       </div>

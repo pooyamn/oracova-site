@@ -15,58 +15,12 @@
 <meta property="og:image" content="https://oracova.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://oracova.com/og.png">
+<link rel="stylesheet" href="/site.css">
 <style>
-  :root {
-    --bg: #0E0F11; --bg-panel: #101216; --bg-card: #15161A; --line: rgba(255,255,255,.09);
-    --text: #EDEEF0; --text-dim: #9DA1A8; --accent: #FFB454;
-    --pass: #4ADE80; --fail: #F87171; --blue: #7aa2c4; --violet: #9a8cc9;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
-  }
   html { scroll-padding-top: 68px; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans);
-    font-size: 15.5px; line-height: 1.6; min-height: 100vh; }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-
-  nav {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(14,15,17,.9); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-    border-bottom: 1px solid var(--line);
-  }
-  nav .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px;
-    display: flex; align-items: center; justify-content: space-between; height: 58px; }
-  .logo { font-family: var(--mono); font-size: 17px; font-weight: 700; color: var(--text); text-decoration: none;
-    padding: 12px 0; margin: -12px 0; }
-  .logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 26px; align-items: center; margin-left: 18px; }
-  .nav-links a:not(.btn) { color: var(--text-dim); text-decoration: none; font-size: 14.5px; white-space: nowrap; padding: 12px 0; margin: -12px 0; }
-  .nav-links a:hover { color: var(--text); }
-  .btn { display: inline-flex; align-items: center; justify-content: center;
-    min-height: 44px; padding: 9px 18px; border-radius: 8px;
-    font-family: var(--sans); font-size: 13.5px; font-weight: 600;
-    text-decoration: none; border: 1px solid transparent; flex-shrink: 0; white-space: nowrap; }
-  .btn-primary { background: var(--accent); color: #14100a; }
-  .btn-primary:hover { filter: brightness(1.08); }
-  .nav-links a.btn-primary { color: #14100a; }
   @media (max-width: 800px) { .nav-links a:not(.btn) { display: none; } }
 
-  /* Light mode. Without this the injected chrome flips light while the page stays
-     dark, giving a white nav bar butted against a near-black body. The terminal is an
-     instrument and stays dark in both themes, scoped rather than omitted. */
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #FAFAF9; --bg-card: #FFFFFF; --line: rgba(20,22,26,.10);
-      --text: #16181D; --text-dim: #555A63; --accent: #B05C00;
-      --pass: #16A34A; --fail: #DC2626;
-    }
-    .term { --text: #E6EAEF; --text-dim: #8E97A3; --line: rgba(255,255,255,.09); }
-    .after a { color: #B05C00; }
-    .btn-primary { color: #FFFFFF; }
-  }
   .stage { max-width: 1040px; margin: 0 auto; padding: 40px 24px 40px; }
-  .kicker { font-family: var(--mono); font-size: 13px; text-transform: uppercase;
-    letter-spacing: .14em; color: var(--accent); margin-bottom: 10px; }
   h1 { font-family: var(--mono); font-size: clamp(22px, 3.6vw, 30px); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
   .lede { color: var(--text-dim); font-size: 16px; max-width: 62ch; margin-bottom: 28px; }
 
@@ -77,14 +31,11 @@
     font-family: var(--mono); font-size: 12px; color: var(--text-dim); letter-spacing: .04em; }
   .term-head .t { color: var(--text); }
   /* px, not vh: a mobile URL bar hiding on scroll changes vh and resizes the panel */
-  .term-log { height: 560px; overflow: hidden; padding: 20px 18px;
-    display: flex; flex-direction: column; gap: 8px;
-    font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+  /* px, not vh. Log metrics come from site.css. */
+  .term-log { height: 560px; }
   .term-log.static { overflow-y: auto; }
   .term-log:not(.static) { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
     mask-image: linear-gradient(180deg, transparent 0, #000 16px); }
-  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
-  .term-log .ln { white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; color: var(--text-dim); }
   .ln b { color: var(--text); font-weight: 500; }
   .ln .k { color: var(--accent); }
   .ln .pass { color: var(--pass); font-weight: 700; }
@@ -114,11 +65,6 @@
   .after a { color: var(--accent); text-decoration: none; }
   .after a:hover { text-decoration: underline; }
 
-  footer { border-top: 1px solid var(--line); margin-top: 56px; padding: 30px 0;
-    color: var(--text-dim); font-family: var(--mono); font-size: 13px; }
-  footer .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px;
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  footer a { color: inherit; text-decoration: none; }
   @media (max-width: 560px) {
     .term-log { height: 440px; font-size: 11.5px; padding: 14px; }
     /* the honesty label must not set in a 153px three-line trough */
@@ -186,112 +132,22 @@
 
 
 
-/* ===== canonical site header (tools/header.py — do not edit per page) ===== */
-.site-nav { position: sticky; top: 0; z-index: 40;
-  background: rgba(14,15,17,.9);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
-  border-bottom: 1px solid rgba(255,255,255,.09); }
-.site-nav .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.site-nav .nav-logo { font-family: ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  font-size: 16px; font-weight: 700; letter-spacing: -.01em; color: #EDEEF0;
-  text-decoration: none; padding: 13px 6px; margin: -13px -6px; margin-right: auto; }
-.site-nav .nav-logo i { font-style: normal; color: #FFB454; }
-.site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
-.site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
-  display: inline-flex; align-items: center; min-height: 44px;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 0 12px; border-radius: 8px; }
-.site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
-.site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
-  border: 1px solid transparent;
-  background: #FFB454; color: #1A1204; text-decoration: none;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; flex-shrink: 0; }
-.site-nav .nav-cta:hover { background: #FFC276; color: #1A1204; }
-.site-nav .nav-set a[aria-current="page"] { color: #EDEEF0; font-weight: 700; }
-.site-menu a[aria-current="page"] { font-weight: 700; }
-.site-nav a:focus-visible { outline: 2px solid #FFB454; outline-offset: 2px; }
-.site-nav .nav-burger { display: none; background: none; border: 1px solid rgba(255,255,255,.14);
-  border-radius: 8px; width: 44px; height: 44px; cursor: pointer; padding: 0;
-  align-items: center; justify-content: center; margin-right: 14px; flex: 0 0 auto; }
-.site-nav .nav-burger span { display: block; width: 16px; height: 1.5px; background: #EDEEF0;
-  position: relative; transition: background .15s ease; }
-.site-nav .nav-burger span::before, .site-nav .nav-burger span::after {
-  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: #EDEEF0;
-  transition: transform .18s ease, top .18s ease; }
-.site-nav .nav-burger span::before { top: -5px; }
-.site-nav .nav-burger span::after { top: 5px; }
-.site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
-.site-nav .nav-burger[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
-.site-nav .nav-burger[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
-.site-menu { display: none; border-bottom: 1px solid rgba(255,255,255,.16); background: #0E0F11;
-  box-shadow: 0 14px 28px rgba(0,0,0,.45); }
-.site-menu.open { display: block; }
-.site-menu a { display: block; padding: 14px 24px; color: #EDEEF0; text-decoration: none;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 16px; border-top: 1px solid rgba(255,255,255,.06); }
-.site-menu a:first-child { border-top: 0; }
-@media (max-width: 800px) {
-  .site-nav { position: fixed; top: 0; left: 0; right: 0;
-    -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11; }
-  body { padding-top: 56px; }
-  .site-nav .nav-set a:not(.nav-cta) { display: none; }
-  .site-nav .nav-burger { display: flex; }
-  .site-menu { position: fixed; top: 56px; left: 0; right: 0; z-index: 39;
-    max-height: calc(100vh - 56px); overflow-y: auto; }
-}
-@media (min-width: 801px) { .site-menu { display: none !important; } }
-/* burger + logo + CTA do not fit a 320px viewport at the default metrics */
-@media (max-width: 400px) {
-  .site-nav .nav-inner { padding: 0 16px; }
-  .site-nav .nav-burger { margin-right: 10px; }
-  .site-nav .nav-cta { margin-left: 8px; padding: 9px 12px; font-size: 13px; }
-}
-.site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
-.site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
-.site-foot .foot-sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
-.site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h3 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
-  letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
-.site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
-  line-height: 1.5; padding: 11px 0; min-height: 44px;
-  font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif; }
-.site-foot a:hover { color: #EDEEF0; }
-.site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
-  margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.06);
-  font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 12.5px; color: #83888F; }
-.site-foot .foot-base a { display: inline-block; padding: 11px 0; min-height: 44px;
-  color: inherit; font-family: inherit; font-size: inherit; }
-@media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
-@media (prefers-color-scheme: light) {
-  .site-menu { background: #FFFFFF; border-bottom-color: rgba(20,22,26,.16);
-    box-shadow: 0 14px 28px rgba(20,22,26,.12); }
-  .site-menu a { color: #16181D; border-top-color: rgba(20,22,26,.08); }
-  .site-nav .nav-burger { border-color: rgba(20,22,26,.18); }
-  .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
-  .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
-  .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h3 { color: #6B7078; }
-  .site-foot a { color: #555A63; }
-  .site-foot a:hover { color: #16181D; }
-  .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
-}
-@media (prefers-color-scheme: light) {
-  .site-nav { background: rgba(250,250,249,.92); border-bottom-color: rgba(20,22,26,.1); }
-  .site-nav .nav-logo { color: #16181D; }
-  .site-nav .nav-logo i { color: #B05C00; }
-  .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
-  .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
-  .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
-  .site-nav a:focus-visible { outline-color: #B05C00; }
-  .site-nav .nav-cta { background: #B05C00; color: #fff; }
-  .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
-  @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
-}
-/* ===== end canonical site header ===== */
+  /* Overrides live at the end of the sheet: declared earlier they lose to the
+     unconditional rules they are meant to override, which is how the
+     reduced-motion suppression below silently never applied. */
+  /* Light mode. Without this the injected chrome flips light while the page stays
+     dark, giving a white nav bar butted against a near-black body. The terminal is an
+     instrument and stays dark in both themes, scoped rather than omitted. */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #FAFAF9; --bg-card: #FFFFFF; --line: rgba(20,22,26,.10);
+      --text: #16181D; --text-dim: #555A63; --accent: #B05C00;
+      --pass: #16A34A; --fail: #DC2626;
+    }
+    .after a { color: #B05C00; }
+    .btn-primary { color: #FFFFFF; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
 </style>
 </head>
 <body>
@@ -325,7 +181,7 @@
   Oracova development hardware, where unmodified Betaflight already flies against the same
   ECP5 fabric. Augur One puts that fabric on one board and is in fabrication.</p>
 
-  <div class="term">
+  <div class="term instrument">
     <div class="term-head">
       <span class="t">oracova bench</span>
       <span class="bench-ctl">
