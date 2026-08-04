@@ -178,6 +178,12 @@ write zone settings, so this needs the dashboard: oracova.com -> Scrape Shield -
 - No em-dashes in human-facing copy, including mailto subjects. `&middot;` separators are fine.
 - Every number that appears twice must agree everywhere, and must survive the reader's
   mental arithmetic. This audience divides specs in their head.
+- One home per fact within a page. Cross-page echoes are fine (each page must stand
+  alone) but keep them to a summary; the detail lives where it converts. Exception:
+  the homepage compare-note's enumeration stays precise, because its precision is what
+  keeps "running today" from overclaiming.
+- Site copy passes run through the installed `copy-editing` skill (Seven Sweeps,
+  ~/.claude/skills/copy-editing); new sections through `copywriting`.
 - Anything recreated, simulated or sped up carries a visible label, and no adjacent copy may
   contradict that label.
 - Tap targets 44px minimum, including generated chrome. Text floor ~11px.
