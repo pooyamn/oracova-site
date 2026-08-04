@@ -8,26 +8,37 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
   :root { --bg:#0E0F11; --text:#d7dee6; --dim:#8a97a5; --accent:#ffb454; --line:#1e2a36;
-    --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
+    --fail:#F87171;
+    --mono:ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif; }
   html { scroll-padding-top: 68px; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:var(--bg); color:var(--text); font-family:var(--mono);
     font-size:15.5px; line-height:1.6; }
   @media (prefers-color-scheme: light) {
     :root { --bg:#FAFAF9; --text:#16181D; --dim:#555A63; --accent:#B05C00;
-      --line:rgba(20,22,26,.12); }
+      --line:rgba(20,22,26,.12); --fail:#DC2626; }
     a.btn { color:#FFFFFF; }
+    a.btn:hover { background:#C96A02; }
   }
   main.mid { min-height:58vh; display:grid; place-items:center; padding:56px 24px; }
   .card { max-width:520px; }
   a:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
   .code { color:var(--accent); font-size:15px; margin-bottom:14px; }
+  .v-fail { color:var(--fail); font-weight:700; }
   h1 { font-size:26px; margin-bottom:10px; letter-spacing:-0.01em; }
   p { color:var(--dim); font-size:15px; line-height:1.6; margin-bottom:22px; }
-  a.btn { display:inline-block; padding:14px 20px; border-radius:6px; background:var(--accent);
+  a.btn { display:inline-flex; align-items:center; justify-content:center; min-height:44px;
+    padding:0 20px; border-radius:6px; background:var(--accent);
     color:#14100a; text-decoration:none; font-weight:600; font-size:14px; }
+  a.btn:hover { background:#FFC276; }
   a.plain { display:inline-block; color:var(--dim); text-decoration:underline; text-underline-offset:3px;
     font-size:14px; padding:14px 8px; margin:-14px 8px -14px 8px; }
+
+
+
+
+
 
 
 
@@ -52,8 +63,9 @@
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
 .site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 0 12px; border-radius: 8px; }
 .site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
 .site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
   min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
@@ -103,8 +115,10 @@
 }
 .site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
 .site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h2 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+.site-foot h3 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
 .site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
   line-height: 1.5; padding: 11px 0; min-height: 44px;
@@ -124,7 +138,7 @@
   .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
   .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
   .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h2 { color: #6B7078; }
+  .site-foot h3 { color: #6B7078; }
   .site-foot a { color: #555A63; }
   .site-foot a:hover { color: #16181D; }
   .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
@@ -136,6 +150,7 @@
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
   .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav a:focus-visible { outline-color: #B05C00; }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
   @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
@@ -168,7 +183,7 @@
 
 <main class="mid">
   <div class="card">
-    <div class="code">verdict&nbsp;&nbsp;FAIL&nbsp;&nbsp;404 &middot; page not found</div>
+    <div class="code">verdict&nbsp;&nbsp;<b class="v-fail">FAIL</b>&nbsp;&nbsp;404 &middot; page not found</div>
     <h1>This page isn't on the bench.</h1>
     <p>The URL didn't match any page. What you're probably looking for is on the
     homepage.</p>
@@ -179,26 +194,27 @@
 
 <footer class="site-foot">
   <div class="foot-inner">
+    <h2 class="foot-sr">Site map</h2>
     <div class="foot-map">
       <div>
-        <h2>Product</h2>
+        <h3>Product</h3>
         <a href="/product">Augur One</a>
         <a href="/onboarding">Board bring-up</a>
       </div>
       <div>
-        <h2>Evidence</h2>
+        <h3>Evidence</h3>
         <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>
-        <h2>How it works</h2>
+        <h3>How it works</h3>
         <a href="/#how">The loop</a>
         <a href="/#world">What it emulates</a>
         <a href="/#compare">Against other methods</a>
       </div>
       <div>
-        <h2>Contact</h2>
-        <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+        <h3>Contact</h3>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
         <a href="mailto:pooyamn@gmail.com">Email us</a>
       </div>
     </div>

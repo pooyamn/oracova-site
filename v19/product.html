@@ -25,6 +25,7 @@
     --text: #EDEEF0;
     --text-dim: #9DA1A8;
     --text-faint: #83888F;
+    --board-rim: rgba(255,255,255,.45);
     --brand: #FFB454;
     --brand-ink: #1A1204;
     --pass: #4ADE80;
@@ -162,11 +163,6 @@
     .grid3 { grid-template-columns: 1fr; }
     section { padding: 64px 0 0; }
   }
-  footer { border-top: 1px solid var(--border); margin-top: 0; padding: 28px 0;
-    color: var(--text-faint); font-family: var(--mono); font-size: 12.5px; }
-  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  footer a { color: inherit; text-decoration: none; display: inline-block; padding: 12px 2px; margin: -12px -2px; }
-  footer a:hover { color: var(--text-dim); }
   /* ---------- system light theme ---------- */
   @media (prefers-color-scheme: light) {
     :root {
@@ -175,6 +171,7 @@
       --text: #16181D; --text-dim: #555A63; --text-faint: #6B7078;
       --brand: #B05C00; --brand-ink: #FFFFFF;
       --pass: #15803D; --fail: #DC2626;
+      --board-rim: rgba(20,22,26,.30);
       --glow: rgba(176,92,0,.07); --nav-bg: rgba(250,250,249,.92);
     }
     ::selection { background: rgba(176,92,0,.18); }
@@ -244,7 +241,7 @@
   }
   /* ---------- product page ---------- */
   .p-hero { padding: 72px 0 8px; }
-  .p-hero h1 { font-family: var(--mono); font-size: clamp(40px, 6.4vw, 68px); font-weight: 700;
+  .p-hero h1 { font-family: var(--mono); font-size: clamp(34px, 4.2vw, 46px); font-weight: 700;
     letter-spacing: -.04em; margin-bottom: 12px; }
   .p-hero .sub { font-size: clamp(16px, 2vw, 18.5px); color: var(--text-dim); max-width: 60ch;
     text-wrap: pretty; }
@@ -253,7 +250,7 @@
     font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase;
     color: var(--text-faint); padding: 12px 14px; }
   .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--brand); }
-  .tabs button:hover { color: var(--text-dim); }
+  .tabs button:not([aria-selected="true"]):hover { color: var(--text-dim); }
   .panel[hidden] { display: none; }
   .panel { padding: 0; }
   .panel::before { display: none; }
@@ -279,11 +276,14 @@
   .board-shot figcaption { position: absolute; top: 10px; left: 14px;
     font-family: var(--mono); font-size: 11px; letter-spacing: .08em;
     text-transform: uppercase; color: var(--text-faint); pointer-events: none; }
-  .board-shot img { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 660; }
+  .board-shot img { filter: drop-shadow(0 0 1px var(--board-rim));
+    display: block; width: 100%; height: auto; aspect-ratio: 1600 / 660; }
   /* stacked, the 2.42:1 letterbox squeezes the board to ~140px tall: a squarer
      crop from a higher camera gets the parts back to legible size */
   @media (max-width: 900px) { .board-shot img { aspect-ratio: 900 / 620; } }
-  .panel-cta { margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
+  .cta-pair { display: flex; gap: 10px; flex-wrap: wrap; }
+  .panel-cta { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
+    margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
     display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
   .panel-cta p { color: var(--text-dim); margin: 0; }
   .layer { border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
@@ -303,7 +303,7 @@
     border-radius: 12px; overflow: hidden; }
   .rrow { display: grid; grid-template-columns: 220px 1fr; gap: 16px; padding: 14px 18px; }
   .rrow + .rrow { border-top: 1px solid var(--border); }
-  .rrow .rw { font-family: var(--mono); font-size: 13px; color: var(--fail); }
+  .rrow .rw { font-family: var(--mono); font-size: 13px; color: var(--text); }
   .rrow .rf { font-size: 14px; color: var(--text-dim); }
   .rrow .rf b { color: var(--text); }
   /* status, not faults: --fail here reads as a list of things that broke */
@@ -382,6 +382,11 @@
 
 
 
+
+
+
+
+
 /* ===== canonical site header (tools/header.py — do not edit per page) ===== */
 .site-nav { position: sticky; top: 0; z-index: 40;
   background: rgba(14,15,17,.9);
@@ -395,8 +400,9 @@
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
 .site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 0 12px; border-radius: 8px; }
 .site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
 .site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
   min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
@@ -446,8 +452,10 @@
 }
 .site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
 .site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h2 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+.site-foot h3 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
 .site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
   line-height: 1.5; padding: 11px 0; min-height: 44px;
@@ -467,7 +475,7 @@
   .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
   .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
   .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h2 { color: #6B7078; }
+  .site-foot h3 { color: #6B7078; }
   .site-foot a { color: #555A63; }
   .site-foot a:hover { color: #16181D; }
   .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
@@ -479,6 +487,7 @@
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
   .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav a:focus-visible { outline-color: #B05C00; }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
   @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
@@ -517,7 +526,7 @@
     that answer, loads that push back, buses that respond, and faults that arrive when the agent
     decides they should.</p>
     <div class="cta-row" style="margin-top:26px">
-      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
     </div>
   </header>
 
@@ -546,7 +555,7 @@
                   sizes="100vw">
           <img src="/board-augur-one-1600.webp"
                srcset="/board-augur-one-800.webp 800w, /board-augur-one-1600.webp 1600w"
-               sizes="(max-width: 900px) 100vw, 44vw"
+               sizes="(max-width: 900px) 100vw, 448px"
                width="1600" height="660" decoding="async"
                alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten analog module slots, populated in green, and the DUT connectors along the far edge.">
         </picture>
@@ -636,10 +645,6 @@
         <div class="rrow"><div class="rw">Augur One</div><div class="rf">in fabrication, first article pending. Everything above runs today on development hardware; Augur One puts it on one board.</div></div>
       </div>
 
-      <div class="panel-cta">
-        <p>Every figure above, part by part.</p>
-        <a class="btn btn-ghost" id="to-spec" href="#spec">See the full specification</a>
-      </div>
     </div>
   </section>
 
@@ -688,32 +693,36 @@
        site had no closing action unless you happened to be on Specification. -->
   <div class="panel-cta">
     <p>Bring your board to the bench.</p>
-    <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+    <span class="cta-pair">
+      <a class="btn btn-ghost" id="to-spec" href="#spec">See the full specification</a>
+      <a class="btn btn-primary" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
+    </span>
   </div>
 </div>
 
 <footer class="site-foot">
   <div class="foot-inner">
+    <h2 class="foot-sr">Site map</h2>
     <div class="foot-map">
       <div>
-        <h2>Product</h2>
+        <h3>Product</h3>
         <a href="/product">Augur One</a>
         <a href="/onboarding">Board bring-up</a>
       </div>
       <div>
-        <h2>Evidence</h2>
+        <h3>Evidence</h3>
         <a href="/demo">Watch a run</a>
         <a href="/#evidence">What it caught</a>
       </div>
       <div>
-        <h2>How it works</h2>
+        <h3>How it works</h3>
         <a href="/#how">The loop</a>
         <a href="/#world">What it emulates</a>
         <a href="/#compare">Against other methods</a>
       </div>
       <div>
-        <h2>Contact</h2>
-        <a href="mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One">Request a quote</a>
+        <h3>Contact</h3>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
         <a href="mailto:pooyamn@gmail.com">Email us</a>
       </div>
     </div>
@@ -731,11 +740,13 @@
   function show(i, push) {
     tabs.forEach(function (t, k) { t.setAttribute('aria-selected', String(k === i)); });
     panels.forEach(function (p, k) { p.hidden = k !== i; });
+    if (typeof syncSpecLink === 'function') syncSpecLink(i);
     if (push) history.pushState(null, '', i === 1 ? '#spec' : location.pathname);
   }
   tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i, true); }); });
   var toSpec = document.getElementById('to-spec');
   if (toSpec) toSpec.addEventListener('click', function (e) { e.preventDefault(); show(1, true); document.querySelector('.tabs').scrollIntoView({behavior: 'smooth', block: 'start'}); });
+  function syncSpecLink(i) { if (toSpec) toSpec.style.display = i === 1 ? 'none' : ''; }
   if (location.hash === '#spec') show(1, false);
   window.addEventListener('popstate', function () { show(location.hash === '#spec' ? 1 : 0, false); });
   window.addEventListener('hashchange', function () { show(location.hash === '#spec' ? 1 : 0, false); });

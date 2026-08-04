@@ -24,8 +24,9 @@ CSS = """
 .site-nav .nav-logo i { font-style: normal; color: #FFB454; }
 .site-nav .nav-set { display: flex; gap: 4px; align-items: center; margin-left: 16px; flex: 0 0 auto; }
 .site-nav .nav-set a:not(.nav-cta) { color: #9DA1A8; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 44px;
   font-family: -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,Roboto,sans-serif;
-  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 8px 12px; border-radius: 8px; }
+  font-size: 14px; font-weight: 500; white-space: nowrap; padding: 0 12px; border-radius: 8px; }
 .site-nav .nav-set a:not(.nav-cta):hover { color: #EDEEF0; background: rgba(255,255,255,.05); }
 .site-nav .nav-cta { display: inline-flex; align-items: center; justify-content: center;
   min-height: 44px; margin-left: 10px; padding: 9px 16px; border-radius: 8px;
@@ -75,8 +76,10 @@ CSS = """
 }
 .site-foot { border-top: 1px solid rgba(255,255,255,.09); margin-top: 64px; padding: 40px 0 48px; }
 .site-foot .foot-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+.site-foot .foot-sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .site-foot .foot-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-.site-foot h2 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
+.site-foot h3 { font-family: ui-monospace,"SF Mono",Menlo,monospace; font-size: 11.5px;
   letter-spacing: .1em; text-transform: uppercase; color: #83888F; font-weight: 600; margin-bottom: 10px; }
 .site-foot a { display: block; color: #9DA1A8; text-decoration: none; font-size: 14px;
   line-height: 1.5; padding: 11px 0; min-height: 44px;
@@ -96,7 +99,7 @@ CSS = """
   .site-nav .nav-burger span, .site-nav .nav-burger span::before, .site-nav .nav-burger span::after { background: #16181D; }
   .site-nav .nav-burger[aria-expanded="true"] span { background: transparent; }
   .site-foot { border-top-color: rgba(20,22,26,.1); }
-  .site-foot h2 { color: #6B7078; }
+  .site-foot h3 { color: #6B7078; }
   .site-foot a { color: #555A63; }
   .site-foot a:hover { color: #16181D; }
   .site-foot .foot-base { color: #6B7078; border-top-color: rgba(20,22,26,.08); }
@@ -108,6 +111,7 @@ CSS = """
   .site-nav .nav-set a:not(.nav-cta) { color: #555A63; }
   .site-nav .nav-set a[aria-current="page"] { color: #16181D; }
   .site-nav .nav-set a:not(.nav-cta):hover { color: #16181D; background: rgba(20,22,26,.05); }
+  .site-nav a:focus-visible { outline-color: #B05C00; }
   .site-nav .nav-cta { background: #B05C00; color: #fff; }
   .site-nav .nav-cta:hover { background: #C96A02; color: #fff; }
   @media (max-width: 800px) { .site-nav { background: #FAFAF9; } }
@@ -143,7 +147,7 @@ SITEMAP = [
     ('Evidence', [('/demo', 'Watch a run'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),
-    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%20Augur%20One', 'Request a quote'),
+    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes', 'Book 15 minutes'),
                   ('mailto:pooyamn@gmail.com', 'Email us')]),
 ]
 
@@ -174,11 +178,12 @@ def footer_markup():
     cols = []
     for title, items in SITEMAP:
         rows = '\n'.join('        <a href="%s">%s</a>' % (u, t) for u, t in items)
-        cols.append('      <div>\n        <h2>%s</h2>\n%s\n      </div>' % (title, rows))
+        cols.append('      <div>\n        <h3>%s</h3>\n%s\n      </div>' % (title, rows))
     return ('<footer class="site-foot">\n  <div class="foot-inner">\n'
             # NOT <nav>: every page carries a bare `nav { position: sticky; top: 0 }`
             # rule for its own header, which would pin the footer map to the top.
             # The per-column <h2> headings already give the groups structure.
+            '    <h2 class="foot-sr">Site map</h2>\n'
             '    <div class="foot-map">\n%s\n    </div>\n'
             '    <div class="foot-base">\n'
             '      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>\n'
