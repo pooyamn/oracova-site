@@ -140,6 +140,7 @@ p { text-wrap: pretty; }
   font-family: var(--mono); font-size: 13px; line-height: 1.6; }
 .bench-log .bl, .term-log .ln { white-space: pre-wrap;
   padding-left: 9ch; text-indent: -9ch; color: var(--text-dim); }
+@media (max-width: 560px) { .bench-log, .term-log { font-size: 11.5px; padding: 14px; } }
 """
 
 CSS = """
@@ -217,7 +218,7 @@ CSS = """
 .site-foot .foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
   margin-top: 34px; padding-top: 18px; border-top: 1px solid var(--border);
   font-family: var(--mono); font-size: 12.5px; color: var(--text-faint); }
-.site-foot .foot-base a { display: inline-block; padding: 11px 0; min-height: 44px;
+.site-foot .foot-base a { display: inline-block; padding: 11px 0; margin: -11px 0; min-height: 44px;
   color: inherit; font-family: inherit; font-size: inherit; }
 @media (max-width: 700px) { .site-foot .foot-map { grid-template-columns: 1fr 1fr; gap: 20px; } }
 @media (prefers-color-scheme: light) {
@@ -308,6 +309,13 @@ SCRIPT = """<script>
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>"""

@@ -128,30 +128,43 @@ Plan:
 5. **Label it accurately.** A real capture needs no "recreated" label - instead state the
    date, the firmware commit, and that it ran on development hardware.
 
-### Open questions blocking copy fixes (raised by review 2026-08-03)
-Each of these is a claim on the live site that cannot be verified from the repo:
+### Open questions: answered 2026-08-03 (review round 3 Q&A with Pouya)
 
-1. **Is the test-agent split real?** The homepage says "A separate agent writes the tests,
-   working from the spec rather than the code", but the replay above it shows a single
-   `oracova task "implement and test the gyro driver"`. Either the replay shows the split
-   or the claim comes off.
-2. **Can the bench read analog out of the DUT?** Onboarding promises "everything your MCU
-   senses and drives"; the spec lists only DACs plus the Kelvin-sensed supply current.
-3. **The internal logic analyzer has no specification.** It is the replay's hero feature
-   and appears nowhere in the spec tab: channels, depth, sample rate, trigger model.
-4. **How does a run reach the bench from CI?** No GitHub / GitLab / webhook / pipeline
-   mention exists anywhere, yet "every firmware PR gets its own bench" is the core pitch.
-5. **Where does firmware source go and where does the agent run?** No mention of cloud,
-   on-prem or self-hosted. Reviewers rate this the silent deal-killer above the engineer.
-6. **"A hundred iterations, unattended"** in the hero against `8 iterations, 1 h 12 min`
-   in the artifact below it. 100 implies a 15 hour run.
-7. **Sensorless FOC.** Every motor claim on the site is hall-sensored. No latency, analog
-   update rate or bandwidth figure is published anywhere.
-8. **DUT power budget in watts.** "up to 8.19 A" reads as a supply rating next to
-   "1.8-5 V DUT supply"; 5 V x 8.19 A = 41 W against a 71.3 W PoE budget shared with
-   everything else on the board.
-9. **"DUT designs are open source"** was removed from onboarding on 2026-08-03 for having
-   no link, same rule as the marketplace. Restore it with a repository URL.
+All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
+
+1. **Test-agent split**: planned, not built. Claim softened to "tests come from the spec,
+   not the code". Restore the separate-agent claim when it ships.
+2. **Analog capture**: on-board ADC channels exist; spec row added, counts and rates
+   "confirmed at first article". Publish figures when known.
+3. **Logic analyzer**: in fabric, sim-proven (n=0 on silicon, `bench/fpga/cores/la/`).
+   Spec row states edge/level/pattern triggers with channels/depth as gateware parameters,
+   per Pouya: flexible by need, no fixed caps published.
+4. **CI integration**: intentionally silent until built. BUILD ITEM: a CI hook (webhook or
+   repo watcher) is the missing operational mechanism both personas rated top-3.
+5. **Data handling**: agent runs on-prem on the customer's bench computer; source never
+   leaves; iteration records (verdicts, captures, commit hash) are uploaded. Published as
+   "Where your source goes" on /product.
+6. **"A hundred iterations"**: real capacity claim, stays. The 8-iteration artifact is one
+   example run, not a contradiction.
+7. **Analog figures**: high-speed module 8 MSPS/channel, 0-5 V incl. true 0 V (from
+   `SHEET-EDITS-ad3542r-rework.md`). Sensorless FOC itself remains unclaimed until run.
+8. **DUT supply**: the old "up to 8.19 A" was sense full scale, NOT deliverable; real cap
+   is ~3 A. Site now says "up to 3 A" and publishes sense resolutions without full scales.
+9. **Open-source DUT designs**: repo coming soon; future-tense sentence restored on
+   onboarding. Add the link when public.
+10. **World model library**: no finished models exist; they will be built per first
+    customers. Copy reframed to the proven machinery (buses/capture/fault injection) with
+    built-for-your-product as the pitch. Do not reintroduce a model list.
+11. **BMS boundary**: AFE modeled digitally at its interface (like the MPU6000), MCU on
+    the bench, pack physics behind the model. Published on the BMS card. "Pack voltages"
+    removed from the DAC row.
+12. **Determinism**: DESIGN REQUIREMENT, not yet claimable. Design the world to be
+    cycle-deterministic (seeded scenarios, same stimuli per run); measure, then publish.
+13. **Tests are files in a test repo**, versioned and reviewed like code. Published.
+14. **CAN**: no transceivers; DUT TX/RX land in fabric, then route to the N6's real CAN
+    controller. The fabric owns the wire, so bus faults are physical. Published in spec.
+15. **Temperatures**: legitimate (DAC modules drive analog temps; digital sensors emulated
+    in fabric). Sleep-range/ship-mode-drain line added to the BMS card.
 
 ### Cloudflare zone setting
 Scrape Shield "Email Address Obfuscation" is ON for oracova.com. It rewrites every

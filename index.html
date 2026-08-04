@@ -193,15 +193,15 @@
   .cmp tr:first-child th { border-top: none; color: var(--text-faint); font-weight: 600;
     font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; }
   .cmp td:first-child { color: var(--text-dim); }
-  .cmp td:first-child, .cmp th:first-child { position: sticky; left: 0; background: var(--surface-2); z-index: 1; }
+  .cmp td:first-child, .cmp th:first-child { position: sticky; left: 0; background: var(--surface); z-index: 1; }
   .cmp .y { color: var(--pass); font-weight: 600; }
   .cmp .n { color: var(--fail); font-weight: 600; }
   .cmp .dim { color: var(--text-dim); font-weight: 400; }
   .cmp .hl { background: rgba(255,180,84,.09); box-shadow: inset 2px 0 0 var(--brand); }
-  .cmp th.hl { color: var(--brand); }
+  .cmp tr:first-child th.hl { color: var(--brand); }
   .cmp tbody tr, .cmp tr { background: var(--surface); }
   .tbl-hint, .table-hint { display: none; font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); margin: 6px 0; }
-  .cmp-outer::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 48px;
+  .cmp-outer::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: 28px;
     border-radius: 0 12px 12px 0;
     background: linear-gradient(270deg, var(--bg) 20%, transparent); pointer-events: none; opacity: 0; }
   @media (max-width: 700px) { .cmp-outer::after { opacity: .9; } .table-hint { display: block; } }
@@ -386,7 +386,7 @@
     <div class="cta-row">
       <a class="btn btn-primary" href="/onboarding">See your board on the bench</a>
     </div>
-    <div class="video-frame">
+    <div class="video-frame instrument">
       <div class="bench-replay instrument">
         <div class="bench-head">
           <span class="bench-title">oracova bench</span>
@@ -414,13 +414,13 @@
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 1   write driver: spi init &middot; read WHO_AM_I @ 12.5 MHz &middot; t+7 min</div>
           <div class="bl">build    <b>ok</b>    flash    <b>ok</b>    test    running</div>
-          <div class="bl">  who_am_i ................................. <span class="fail">FAIL</span>   read 0x9C then 0xE3, expected 0x68</div>
+          <div class="bl">  who_am_i .................................. <span class="fail">FAIL</span>   read 0x9C then 0xE3, expected 0x68</div>
           <div class="la-card"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 1</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: SCLK at 12.5 MHz on a bus that caps register reads at 1 MHz"><text x="4" y="16" fill="#8a97a5" font-size="11" font-family="monospace">nCS</text><polyline fill="none" stroke="#7aa2c4" stroke-width="2" points="30,10 120,10 120,22 990,22"/><text x="4" y="49" fill="#8a97a5" font-size="11" font-family="monospace">SCLK</text><polyline fill="none" stroke="#ffb454" stroke-width="2" points="30,58 160,58 160,44 200,44 200,58 240,58 240,44 280,44 280,58 320,58 320,44 360,44 360,58 400,58 400,44 440,44 440,58 480,58 480,44 520,44 520,58 990,58"/><text x="4" y="86" fill="#8a97a5" font-size="11" font-family="monospace">MISO</text><polyline fill="none" stroke="#9a8cc9" stroke-width="2" points="30,78 990,78"/><text x="545" y="52" fill="#ff5252" font-size="11" font-family="monospace">12.5 MHz on a 1 MHz register bus</text></svg><div class="la-note">Config read clocked at 12.5 MHz. This part caps register reads at 1 MHz; 20 MHz is for sensor data only.</div></div>
           <div class="bl">la       <span class="k">register reads cap at 1 MHz on this part; data reads may run to 20 MHz</span></div>
           <div class="bl">fix      config clock &rarr; &divide;128 = 0.78 MHz, under the cap &middot; sensor burst 12.5 MHz &rarr; rebuild</div>
           <div class="bl">&nbsp;</div>
           <div class="bl">iter 2   flash <b>ok</b> &middot; test running &middot; t+21 min</div>
-          <div class="bl">  who_am_i ................................. <span class="pass">PASS</span>   0x68</div>
+          <div class="bl">  who_am_i .................................. <span class="pass">PASS</span>   0x68</div>
           <div class="bl">  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always</div>
           <div class="la-card bits"><div class="la-label">internal logic analyzer &middot; spi1 &middot; iter 2</div><svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-label="SPI capture: address byte 0x3B, bit 7 low"><text x="4" y="20" fill="#8a97a5" font-size="11" font-family="monospace">MOSI</text><g font-family="monospace" font-size="13" text-anchor="middle"><rect x="60"  y="34" width="100" height="34" fill="rgba(255,82,82,.15)" stroke="#ff5252"/><text x="110" y="57" fill="#ff5252" font-weight="bold">0</text><rect x="160" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="210" y="57" fill="#d7dee6">0</text><rect x="260" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="310" y="57" fill="#d7dee6">1</text><rect x="360" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="410" y="57" fill="#d7dee6">1</text><rect x="460" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="510" y="57" fill="#d7dee6">1</text><rect x="560" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="610" y="57" fill="#d7dee6">0</text><rect x="660" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="710" y="57" fill="#d7dee6">1</text><rect x="760" y="34" width="100" height="34" fill="none" stroke="#1e2a36"/><text x="810" y="57" fill="#d7dee6">1</text></g><text x="110" y="88" fill="#ff5252" font-size="11" font-family="monospace" text-anchor="middle">bit 7</text><text x="460" y="24" fill="#8a97a5" font-size="11" font-family="monospace">addr byte = 0x3B</text></svg><div class="la-bits" aria-hidden="true"><span>0</span><span>0</span><span>1</span><span>1</span><span>1</span><span>0</span><span>1</span><span>1</span></div><div class="la-bits-key" aria-hidden="true">MOSI &middot; addr byte = 0x3B &middot; <b>bit 7</b> first</div><div class="la-note">bit 7 = 0 &rarr; that&#39;s a write, not a read. The 0x80 read flag is missing.</div></div>
           <div class="bl">la       <span class="k">addr 0x3B sent without the 0x80 read bit</span></div>
@@ -458,7 +458,7 @@
           <div class="bl">  self test ................................. <span class="pass">PASS</span></div>
           <div class="bl">  rate step 90 &deg;/s .......................... <span class="pass">PASS</span></div>
           <div class="bl">  burst read @ 8 kHz over DMA ............... <span class="pass">PASS</span></div>
-          <div class="bl">  cpu cycles moving gyro bytes ............. <b>0</b></div>
+          <div class="bl">  cpu cycles moving gyro bytes .............. <b>0</b></div>
           <div class="bl">&nbsp;</div>
           <div class="bl">result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; <b>1 h 12 min unattended</b></div>
           <div class="bl">checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b></div>
@@ -484,10 +484,10 @@
     <div class="mini">
       <div class="mini-row">
         <span class="n">01</span>
-        <div class="t">A separate agent writes the tests</div>
-        <div class="d">However the change arrives, its tests are written by a <b>dedicated
-        test agent</b>, working from the spec rather than the code. They run on the bench,
-        not in a mock.</div>
+        <div class="t">Tests come from the spec, not the code</div>
+        <div class="d">However the change arrives, its tests are written <b>from the spec
+        rather than from the implementation</b>, so passing means matching the datasheet,
+        not matching the bug. They run on the bench, not in a mock.</div>
       </div>
       <div class="mini-row">
         <span class="n">02</span>
@@ -497,8 +497,9 @@
       <div class="mini-row">
         <span class="n">03</span>
         <div class="t">Every test keeps running</div>
-        <div class="d">Tests stay in the suite forever, so <b>regressions get caught</b> on
-        every future PR.</div>
+        <div class="d">Tests and their thresholds are files in the test repo, reviewed like
+        code. They stay in the suite forever, so <b>regressions get caught</b> on every
+        future PR.</div>
       </div>
     </div>
   </div>
@@ -521,8 +522,10 @@
       <div class="card">
         <h3>BMS</h3>
         <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
-        <p>The pack is physics, so protection logic is tested by reaching the fault, not by
-        faking it.</p>
+        <p>Your MCU comes to the bench; the cell monitor is played at its digital interface,
+        cell and thermal physics behind it. Protection logic is tested by reaching the fault,
+        not by faking it, and the 31 nA/LSB sleep range catches the firmware change that
+        raises ship-mode drain before it becomes a field return.</p>
       </div>
       <div class="card">
         <h3>Power and thermal</h3>
@@ -573,7 +576,7 @@
         </div>
         <div class="nums">gyro + accel over SPI &middot; 4 motor outputs decoded &middot; ANGLE mode &middot; 8 kHz loop</div>
         <p class="ev-note"><b>To the firmware, it is flying.</b> Gyro and accel come from live
-        physics; its motor commands move that world. Every board on Oracova gets the same:
+        physics; its motor commands move that world. Every board on the bench gets the same:
         a simulator of its own world, faults included.</p>
       </div>
       <div class="ev">
@@ -729,13 +732,13 @@
     [3000, ''],
     [300,  'iter 1   write driver: spi init &middot; read WHO_AM_I @ 12.5 MHz &middot; t+7 min'],
     [2200, 'build    <b>ok</b>    flash    <b>ok</b>    test    running'],
-    [1800, '  who_am_i ................................. <span class="fail">FAIL</span>   read 0x9C then 0xE3, expected 0x68'],
+    [1800, '  who_am_i .................................. <span class="fail">FAIL</span>   read 0x9C then 0xE3, expected 0x68'],
     [2400, LA1, true],
     [4500, 'la       <span class="k">register reads cap at 1 MHz on this part; data reads may run to 20 MHz</span>'],
     [2300, 'fix      config clock &rarr; &divide;128 = 0.78 MHz, under the cap &middot; sensor burst 12.5 MHz &rarr; rebuild'],
     [2800, ''],
     [300,  'iter 2   flash <b>ok</b> &middot; test running &middot; t+21 min'],
-    [1800, '  who_am_i ................................. <span class="pass">PASS</span>   0x68'],
+    [1800, '  who_am_i .................................. <span class="pass">PASS</span>   0x68'],
     [1900, '  gyro_x .................................... <span class="fail">FAIL</span>   reads 0x0000, always'],
     [2400, LA2, true],
     [4200, 'la       <span class="k">addr 0x3B sent without the 0x80 read bit</span>'],
@@ -773,7 +776,7 @@
     [1300, '  self test ................................. <span class="pass">PASS</span>'],
     [1300, '  rate step 90 &deg;/s .......................... <span class="pass">PASS</span>'],
     [1400, '  burst read @ 8 kHz over DMA ............... <span class="pass">PASS</span>'],
-    [1400, '  cpu cycles moving gyro bytes ............. <b>0</b>'],
+    [1400, '  cpu cycles moving gyro bytes .............. <b>0</b>'],
     [2200, ''],
     [400,  'result   <span class="pass">gyro driver implemented &middot; DMA-accelerated &middot; tested</span> &middot; 8 iterations &middot; <b>1 h 12 min unattended</b>'],
     [2600, 'checker  deterministic, fixed thresholds. <b>The agent never grades its own work</b>']
@@ -865,8 +868,10 @@
   var pauseBtn = document.getElementById('bench-pause');
   if (pauseBtn) pauseBtn.addEventListener('click', function () {
     if (reduced) return;
-    if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;'; }
-    else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;'; if (resumeFn) resumeFn(); }
+    if (!paused) { clearTimers(); paused = true; pauseBtn.innerHTML = 'play &#9654;';
+      log.classList.add('static');   // paused = readable: let the reader scroll back
+    } else { paused = false; pauseBtn.innerHTML = 'pause &#10073;&#10073;';
+      log.classList.remove('static'); log.scrollTop = log.scrollHeight; if (resumeFn) resumeFn(); }
   });
   if (replayBtn) replayBtn.addEventListener('click', function () {
     if (pauseBtn) pauseBtn.innerHTML = 'pause &#10073;&#10073;';
@@ -959,6 +964,13 @@
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>

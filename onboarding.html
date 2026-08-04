@@ -51,7 +51,7 @@
   }
   .flow-step .fl { display: block; font-weight: 600; font-size: 15.5px; color: var(--text); line-height: 1.3; }
   .flow-step .fd { display: block; font-size: 12.5px; color: var(--text-dim); margin-top: 3px; line-height: 1.45; }
-  .flow-step.final { border-color: rgba(46,224,111,.35); }
+  .flow-step.final { border-color: color-mix(in srgb, var(--pass) 45%, transparent); }
   .flow-step.final .fn { color: var(--pass); }
   .flow-arrow {
     align-self: center; flex: 0 0 auto; display: inline-block;
@@ -147,7 +147,6 @@
   h1, h2, h3, .flow-step .fl, .box h3, .mini-row .t { font-family: var(--mono); letter-spacing: -0.02em; }
   .hero h1 { font-size: clamp(26px, 3.8vw, 40px); }
   h2 { font-size: 22px; }
-  .btn-primary:hover { filter: none; background: #FFC276; }
   .flow-step, .box, .path-card, .doc { border-radius: 12px; }
   .honest { border-radius: 12px; }
   @media (max-width: 800px) {
@@ -206,7 +205,6 @@
   /* Page-specific light tweaks only; the palette lives in site.css. */
   @media (prefers-color-scheme: light) {
     header.hero { background: radial-gradient(560px 320px at 70% 30%, rgba(176,92,0,.06), transparent 70%); }
-    .stepnum, .flow-step .fn, .box .tag, .box .list, .honest .list, .doc, .mini-row .n { color: #B05C00; }
   }
 </style>
 </head>
@@ -291,7 +289,7 @@
     <h2>The hardware</h2>
     <p class="dim">From your documents, a custom DUT board is designed for your
     microcontroller and goes onto Augur One, the Oracova base board (in fabrication, first
-    article pending).</p>
+    article pending). DUT board designs will be published open source.</p>
     <div class="boxes">
       <div class="box">
         <span class="tag">Oracova base board</span>
@@ -301,13 +299,13 @@
       </div>
       <div class="box">
         <span class="tag">Analog modules</span>
-        <h3>Analog modules</h3>
+        <h3>Four channels per slot</h3>
         <p>Each of the 10 slots takes a high-speed or a medium-speed module, four channels
         each; you populate only the slots your signals need. Unusual signals get a custom
         module.</p>
       </div>
       <div class="box">
-        <span class="tag">Custom DUT + debug probe</span>
+        <span class="tag">Custom DUT board + debug probe</span>
         <h3>Your microcontroller's seat</h3>
         <p>Built for your part, every pin routed to the base board. Your code runs on your
         real silicon, not a substitute part.</p>
@@ -325,8 +323,8 @@
     <span class="stepnum">STEP 3</span>
     <h2>The bring-up</h2>
     <p class="dim" style="margin-bottom:26px">Now the world comes up. An AI agent does the
-    work, with your confirmation along the way; it asks about your hardware and its physics,
-    it does not guess. How long depends on your board: we scope it, with a number, on the
+    work, with your confirmation along the way; it asks about your hardware and its physics
+    rather than guessing. How long depends on your board: we scope it, with a number, on the
     call.</p>
     <div class="grid2">
       <div class="path-card">
@@ -342,7 +340,7 @@
             internal state, behavior compared against the field.</span></div>
           <div class="mini-row"><span class="n">04</span><span class="t">Iterate to golden</span>
             <span class="d">Until your firmware runs on the bench the way it runs in the
-            product. That recording is golden; the suite builds on it.</span></div>
+            product. That run is recorded as golden; the suite builds on it.</span></div>
         </div>
       </div>
       <div class="path-card">
@@ -354,7 +352,7 @@
           <div class="mini-row"><span class="n">02</span><span class="t">Driver + world as a pair</span>
             <span class="d">The firmware driver on the DUT and its counterpart in the
             world, brought up as a pair.</span></div>
-          <div class="mini-row"><span class="n">03</span><span class="t">Each peripheral passes before the next</span>
+          <div class="mini-row"><span class="n">03</span><span class="t">Pass before proceed</span>
             <span class="d">Each peripheral passes on the bench before the next one is
             added.</span></div>
           <div class="mini-row"><span class="n">04</span><span class="t">The suite is the record</span>
@@ -365,9 +363,10 @@
     </div>
     <div class="honest">
       <div class="h">The world does not start from zero</div>
-      <div class="list">BLDC + hall &middot; DC servo &middot; pump &middot; thermal</div>
-      <p class="dim" style="font-size:15px; max-width:none">Models that already run on the
-      bench are reused, so the AI builds only what is unique to your product.</p>
+      <div class="list">gateware buses &middot; capture &middot; fault injection &middot; plant framework</div>
+      <p class="dim" style="font-size:15px; max-width:none">The buses, the capture engine and
+      the fault machinery are already proven on Oracova development hardware. The physics that
+      closes your loop is built for your product, not picked from a shelf.</p>
     </div>
     <div class="strip-title">Where the boundary sits</div>
     <div class="boxes">
@@ -444,6 +443,13 @@
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>

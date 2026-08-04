@@ -111,6 +111,13 @@
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>

@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Augur One: the Oracova bench board</title>
+<title>Augur One: the Oracova base board</title>
 <meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute on one board, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels to the DUT.">
 <link rel="canonical" href="https://oracova.com/product">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oracova">
-<meta property="og:title" content="Augur One: the Oracova bench board">
+<meta property="og:title" content="Augur One: the Oracova base board">
 <meta property="og:description" content="Two compute layers on the board, one cable in, and a supervisor that always brings it back.">
 <meta property="og:url" content="https://oracova.com/product">
 <meta property="og:image" content="https://oracova.com/og.png">
@@ -226,8 +226,7 @@
   @media (max-width: 900px) { .board-shot img { aspect-ratio: 900 / 620; } }
   .cta-pair { display: flex; gap: 10px; flex-wrap: wrap; }
   .panel-cta { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
-    margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border);
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border); }
   .panel-cta p { color: var(--text-dim); margin: 0; }
   .layer { border: 1px solid var(--border); border-radius: 12px; background: var(--surface);
     padding: 22px 24px; margin-top: 12px; }
@@ -267,7 +266,7 @@
     font-size: 14.5px; color: var(--text-dim); max-width: 660px; }
   .callout b { color: var(--text); }
   .tabs button { min-height: 44px; }
-  a.run-link { display: inline-block; padding: 13px 0; }
+  a.run-link { display: inline-block; padding: 13px 0; margin: -13px 0; }
   .spec-h { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
     color: var(--brand); margin: 30px 0 8px; }
   table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
@@ -357,7 +356,7 @@
 
 <div class="wrap">
   <header class="p-hero">
-    <div class="kicker">The bench board</div>
+    <div class="kicker">The base board</div>
     <h1>Augur One</h1>
     <p class="sub">Augur One is everything your firmware expects to find around it: sensors
     that answer, loads that push back, buses that respond, and faults that arrive when the agent
@@ -394,7 +393,7 @@
                srcset="/board-augur-one-800.webp 800w, /board-augur-one-1600.webp 1600w"
                sizes="(max-width: 900px) 100vw, 448px"
                width="1600" height="660" decoding="async"
-               alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten analog module slots, populated in green, and the DUT connectors along the far edge.">
+               alt="CAD render of the Augur One assembly: Ethernet and USB-C at the left edge, the FPGA and real-time MCU across the middle, ten analog module slots populated with green modules, and the DUT connectors along the far edge.">
         </picture>
         <figcaption>CAD render &middot; in fabrication</figcaption>
       </figure>
@@ -412,10 +411,10 @@
       <p class="dim">Your DUT board carries the part under test and whatever it needs to boot.
       The connectors bring it everything else.</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>digital I/O on adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder.</span></div>
+        <div class="ifitem"><b>148</b><span>digital I/O on adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
         <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of the 148, in 10 slots of 4, high-speed or medium-speed</span></div>
-        <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, Kelvin-sensed</span></div>
-        <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB up to 8.19 A on the high range, 31 nA/LSB on the sleep range</span></div>
+        <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, up to 3 A, Kelvin-sensed</span></div>
+        <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB on the run range, 31 nA/LSB on the sleep range</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
         <div class="ifitem"><b>3 x Ethernet</b><span>plus 2 x USB OTG and a Wi-Fi/BLE peer, all reaching the DUT</span></div>
       </div>
@@ -451,7 +450,7 @@
     <div style="padding-top:52px">
       <h2>One cable</h2>
       <p class="dim">Power over Ethernet is standard, 802.3bt Type 4: one run of Cat-6 carries
-      both, so a bench is a switch port. USB-C is the backup link and the recovery path when there
+      power and network, so a bench is a switch port. USB-C is the backup link and the recovery path when there
       is no PoE switch on hand.</p>
       <div class="callout">Benches multiply. One per pull request, one per agent, as many as the
       team runs at once. <b>A rack of one-cable benches is something a lab can operate.</b> A rack
@@ -464,16 +463,21 @@
       power. The board is built around one rule: Ethernet must not drop while something is being
       recovered. So the FPGA and the real-time MCU are always powered and are recovered by reset. Only DUT power is switched.</p>
       <div class="recovery">
-        <div class="rrow"><div class="rw">DUT wedged</div><div class="rf">supervisor cuts and restores DUT power, the case the bench exists to stop you walking over for</div></div>
+        <div class="rrow"><div class="rw">DUT wedged</div><div class="rf">supervisor cuts and restores DUT power: the exact case you used to walk over for</div></div>
         <div class="rrow"><div class="rw">Real-time MCU wedged</div><div class="rf">supervisor asserts its reset line</div></div>
         <div class="rrow"><div class="rw">FPGA misconfigured</div><div class="rf">supervisor pulses PROGRAMN and the FPGA reloads from NOR</div></div>
-        <div class="rrow"><div class="rw">Bitstream corrupt</div><div class="rf">supervisor owns the FPGA's JTAG: SRAM-load a known-good image, or reprogram the config flash through it</div></div>
+        <div class="rrow"><div class="rw">Bitstream corrupt</div><div class="rf">supervisor owns the FPGA's JTAG: it SRAM-loads a known-good image or reprograms the config flash</div></div>
         <div class="rrow"><div class="rw">Switch hangs</div><div class="rf">the one case that drops the link: the supervisor resets the switch and the host reconnects</div></div>
       </div>
       <p class="dim" style="margin-top:16px"><a class="run-link" href="/demo">Watch an agent run a task on the bench</a>.</p>
       <p class="dim" style="margin-top:16px">Neither the FPGA nor the real-time MCU has a power switch
       anywhere on the board, so half-powered states do not exist to get stuck in. That comes from
       the schematic, not from firmware discipline.</p>
+      <h2 style="margin-top:52px">Where your source goes</h2>
+      <p class="dim">Nowhere. The agent runs on the bench computer you supply, inside your
+      network, and your firmware source stays on it. What leaves is the run record: verdicts,
+      captures, and the commit hash each iteration ran against.</p>
+
       <h2 style="margin-top:52px">What runs today</h2>
       <div class="recovery runs-today">
         <div class="rrow"><div class="rw">Closed loop on real silicon</div><div class="rf">running today on Oracova development hardware: BLDC plant and hall encoder against an STM32F411</div></div>
@@ -498,8 +502,18 @@
       <div class="spec-h">DUT interface</div>
       <table class="spec">
         <tr><td>Digital I/O</td><td>148 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
+        <tr><td>Analog in</td><td>On-board ADC channels read back what the DUT drives.
+          Channel counts and rates will be confirmed at first article.</td></tr>
+        <tr><td>Capture</td><td>Internal logic analyzer in fabric, watching the DUT's real pins on the same
+          chip that plays the world. Edge, level or pattern triggered; channel count and capture
+          depth are gateware parameters, sized to your board rather than fixed at manufacture.</td></tr>
+        <tr><td>CAN</td><td>The DUT's TX and RX land in the fabric before a real CAN
+          controller, so the bench sits on the wire itself: bus faults arrive as bus
+          faults, not as scripted mocks.</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
-        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, Kelvin-sensed. Current is sensed on two ranges: 250 &micro;A/LSB up to 8.19 A full scale for normal draw, and 31 nA/LSB on the sleep range for sleep currents. Sleep-range full scale is confirmed at first article.</td></tr>
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, up to 3 A, Kelvin-sensed. Current is sensed on two ranges:
+          250 &micro;A/LSB for normal draw and 31 nA/LSB on the sleep range for sleep currents.
+          Range full scales will be confirmed at first article.</td></tr>
         <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
         <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
         <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
@@ -509,8 +523,9 @@
       <div class="spec-h">Analog</div>
       <table class="spec">
         <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, in addition to the 148 digital pins. Each slot takes a high-speed or a medium-speed module, mixed freely. Populate only the slots you need.</td></tr>
-        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails. For channels the control loop reads at rate.</td></tr>
-        <tr><td>Medium-speed module</td><td>DAC80504 per slot. For channels that move slowly: temperatures, pack voltages, setpoints.</td></tr>
+        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails: 8 MSPS per channel,
+          0 to 5 V including true 0 V. For channels the control loop reads at rate.</td></tr>
+        <tr><td>Medium-speed module</td><td>DAC80504 per slot. For channels that move slowly: temperatures, setpoints, slow sensor outputs.</td></tr>
         <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbor.</td></tr>
       </table>
 
@@ -600,6 +615,13 @@
   b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
   m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>
