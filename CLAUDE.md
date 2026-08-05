@@ -166,6 +166,12 @@ All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
 15. **Temperatures**: legitimate (DAC modules drive analog temps; digital sensors emulated
     in fabric). Sleep-range/ship-mode-drain line added to the BMS card.
 
+### Flight controller in loop: real artifact
+Onboarding's "Running today" box links "See flight controller in loop" to the homepage
+simulator evidence card (`/#simulator`), which is prose. TODO: capture a real
+flight-controller-in-loop artifact (video or scored run of unmodified Betaflight against
+the fabric) and repoint the link at it.
+
 ### Cloudflare zone setting
 Scrape Shield "Email Address Obfuscation" is ON for oracova.com. It rewrites every
 `mailto:` into `/cdn-cgi/l/email-protection#<hex>`, which 404s without JavaScript, and

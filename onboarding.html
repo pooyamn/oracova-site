@@ -68,6 +68,10 @@
   .box .tag.ok { color: var(--pass); }
   .box .tag.off { color: var(--text-dim); }
   .box .list { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+  .box .go { margin-top: 10px; }
+  .box .go a { display: inline-block; padding: 13px 0; margin: -13px 0;
+    font-family: var(--mono); font-size: 13px; color: var(--brand); text-decoration: none; }
+  .box .go a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
   .note { margin-top: 22px; font-family: var(--mono); font-size: 13.5px; color: var(--text-dim); max-width: none; }
 
@@ -379,7 +383,7 @@
       <div class="box">
         <span class="tag ok">Running today</span>
         <h3>The closed loop runs on real silicon, on development hardware</h3>
-        <div class="list">motor commutation &middot; hall fault library &middot; unmodified Betaflight</div>
+        <p class="go"><a href="/#simulator">See flight controller in loop &rarr;</a></p>
       </div>
     </div>
   </div>
