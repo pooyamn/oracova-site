@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orders</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="/site.css">
+<style>
+  body { font-family: var(--mono); }
+  .wrap { max-width: 1600px; margin: 0 auto; padding: 24px; }
+  h1 { font-family: var(--mono); font-size: 20px; margin-bottom: 4px; }
+  .sub { color: var(--text-dim); font-size: 13px; margin-bottom: 22px; }
+
+  .gate { max-width: 420px; margin: 12vh auto; }
+  .gate input { width: 100%; padding: 12px 14px; border-radius: 8px; font-family: var(--mono);
+    font-size: 15px; background: var(--surface); color: var(--text);
+    border: 1px solid var(--border-strong); margin: 12px 0; }
+  .err { color: var(--fail); font-size: 13px; min-height: 18px; }
+
+  .bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface); margin-bottom: 18px; font-size: 13px; }
+  .bar .k { color: var(--text-faint); }
+  .bar .v { color: var(--text); font-weight: 700; }
+  .bar .spacer { flex: 1; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600; padding: 10px 12px;
+    border-bottom: 1px solid var(--border-strong); white-space: nowrap; }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: var(--surface); }
+  .id { font-weight: 700; }
+  .muted { color: var(--text-dim); }
+  .amt { text-align: right; white-space: nowrap; }
+  .cfg { color: var(--text-dim); white-space: nowrap; }
+
+  select, textarea, input[type=text], input[type=number] { font-family: var(--mono); font-size: 12.5px;
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 7px 8px; }
+  select { min-height: 34px; }
+  textarea { width: 100%; min-height: 34px; resize: vertical; }
+
+  .st { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px;
+    letter-spacing: .04em; border: 1px solid var(--border-strong); }
+  .st-reserved { color: var(--brand); }
+  .st-paid, .st-scoped, .st-building { color: var(--text); }
+  .st-shipped { color: var(--pass); border-color: var(--pass); }
+  .st-cancelled, .st-refunded { color: var(--text-faint); }
+
+  .panel { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+    padding: 18px 20px; margin-top: 26px; }
+  .panel h2 { font-size: 15px; margin-bottom: 12px; font-family: var(--mono); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .fld label { display: block; font-size: 11.5px; color: var(--text-faint);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: 5px; }
+  .fld input { width: 100%; }
+  .ok { color: var(--pass); font-size: 12.5px; }
+  .tbl-wrap { overflow-x: auto; scrollbar-gutter: stable; }
+  td:nth-child(2) { white-space: nowrap; }
+  th:first-child, td:first-child { position: sticky; left: 0; background: var(--bg); z-index: 1; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div id="gate" class="gate">
+    <h1>Orders</h1>
+    <div class="sub">Admin token required.</div>
+    <label for="tok" style="display:block;font-size:12.5px;color:var(--text-dim);margin-bottom:5px">Admin token</label>
+    <input id="tok" type="password" placeholder="admin token" autocomplete="current-password">
+    <button class="btn btn-primary" id="go" style="width:100%">Open</button>
+    <p class="err" id="gate-err" role="alert"></p>
+  </div>
+
+  <div id="app" hidden>
+    <h1>Orders</h1>
+    <div class="sub" id="stamp"></div>
+
+    <div class="bar">
+      <span><span class="k">reserved</span> <span class="v" id="c-taken">0</span></span>
+      <span><span class="k">of batch</span> <span class="v" id="c-batch">0</span></span>
+      <span><span class="k">left</span> <span class="v" id="c-left">0</span></span>
+      <span class="k" id="c-status"></span>
+      <span class="spacer"></span>
+      <button class="btn btn-ghost btn-sm" id="refresh">Refresh</button>
+      <button class="btn btn-ghost btn-sm" id="csv">Export CSV</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Order</th><th>When</th><th>Who</th><th>Config</th>
+            <th class="amt">Hardware</th><th>Status</th><th>Ref</th><th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="err" id="err" role="alert"></p>
+
+    <div class="panel">
+      <h2>Prices and settings</h2>
+      <div class="grid" id="cfg"></div>
+      <div style="margin-top:14px; display:flex; gap:10px; align-items:center">
+        <button class="btn btn-primary btn-sm" id="save-cfg">Save changes</button>
+        <span class="ok" id="cfg-ok" role="status"></span>
+      </div>
+      <p class="muted" style="margin-top:10px; font-size:12px">
+        Prices are in dollars here and stored as cents. Changing a price never alters an
+        order that already exists: each one keeps the total it was quoted.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'oracova-admin-token';
+  var token = sessionStorage.getItem(KEY) || '';
+  var el = function (id) { return document.getElementById(id); };
+  var money = function (c) { return '$' + (c / 100).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2}); };
+  var esc = function (s) { return (s == null ? '' : String(s)).replace(/[<>&"']/g, function (c) {
+    return ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'})[c]; }); };
+
+  function api(path, opts) {
+    opts = opts || {};
+    opts.headers = Object.assign({ 'authorization': 'Bearer ' + token }, opts.headers || {});
+    if (opts.body) opts.headers['content-type'] = 'application/json';
+    return fetch('/api/admin/' + path, opts).then(function (r) {
+      return r.json().then(function (b) {
+        if (!r.ok) throw new Error(b.error || ('HTTP ' + r.status));
+        return b;
+      });
+    });
+  }
+
+  var STATUSES = [];
+
+  function drawOrders(d) {
+    STATUSES = d.statuses;
+    el('c-taken').textContent = d.slots_taken;
+    el('c-batch').textContent = d.batch_size;
+    el('c-left').textContent = d.slots_left;
+    el('c-status').textContent = Object.entries(d.by_status)
+      .map(function (e) { return e[0] + ' ' + e[1]; }).join('  ·  ');
+    el('stamp').textContent = d.orders.length + ' orders · loaded ' + new Date().toLocaleString();
+
+    el('rows').innerHTML = d.orders.map(function (o) {
+      var who = esc(o.name || '') + (o.company ? ' <span class="muted">' + esc(o.company) + '</span>' : '');
+      return '<tr data-id="' + esc(o.id) + '">' +
+        '<td class="id">' + esc(o.id) + '</td>' +
+        '<td class="muted">' + esc((o.created_at || '').replace('T', ' ').slice(0, 16)) + '</td>' +
+        '<td>' + (who.trim() ? who + '<br>' : '') +
+          '<a class="muted" href="mailto:' + esc(o.email) + '">' + esc(o.email) + '</a>' +
+          (o.note ? '<br><span class="muted">' + esc(o.note).slice(0, 140) + '</span>' : '') + '</td>' +
+        '<td class="cfg">' + o.benches + ' bench' + (o.benches > 1 ? 'es' : '') +
+          '<br>' + o.fast + ' fast · ' + o.slow + ' slow</td>' +
+        '<td class="amt">' + money(o.hardware_cents) +
+          '<br><span class="muted">dep ' + money(o.deposit_cents) + '</span></td>' +
+        '<td><select data-f="status">' + STATUSES.map(function (s) {
+            return '<option' + (s === o.status ? ' selected' : '') + '>' + s + '</option>';
+          }).join('') + '</select></td>' +
+        '<td><input type="text" data-f="stripe_ref" size="10" value="' + esc(o.stripe_ref || '') + '"></td>' +
+        '<td><textarea data-f="admin_note" rows="1">' + esc(o.admin_note || '') + '</textarea></td>' +
+      '</tr>';
+    }).join('');
+
+    el('rows').querySelectorAll('[data-f]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var tr = input.closest('tr');
+        var patch = { id: tr.getAttribute('data-id') };
+        patch[input.getAttribute('data-f')] = input.value;
+        input.style.borderColor = 'var(--brand)';
+        api('orders', { method: 'PATCH', body: JSON.stringify(patch) })
+          .then(function () { input.style.borderColor = 'var(--pass)'; load(); })
+          .catch(function (e) { input.style.borderColor = 'var(--fail)'; el('err').textContent = e.message; });
+      });
+    });
+  }
+
+  function drawConfig(d) {
+    var rows = d.prices.map(function (p) {
+      return '<div class="fld"><label>' + esc(p.label) + ' ($)</label>' +
+        '<input type="number" step="0.01" min="0" data-price="' + esc(p.key) + '" value="' +
+        (p.cents / 100) + '"></div>';
+    }).concat(d.settings.map(function (s) {
+      return '<div class="fld"><label>' + esc(s.key.replace(/_/g, ' ')) + '</label>' +
+        '<input type="text" data-setting="' + esc(s.key) + '" value="' + esc(s.value) + '"></div>';
+    }));
+    el('cfg').innerHTML = rows.join('');
+  }
+
+  function load() {
+    Promise.all([api('orders'), api('config')])
+      .then(function (r) { drawOrders(r[0]); drawConfig(r[1]); el('err').textContent = ''; })
+      .catch(function (e) {
+        if (/unauthorized/i.test(e.message)) { sessionStorage.removeItem(KEY); location.reload(); }
+        el('err').textContent = e.message;
+      });
+  }
+
+  el('save-cfg').addEventListener('click', function () {
+    var prices = {}, settings = {};
+    el('cfg').querySelectorAll('[data-price]').forEach(function (i) {
+      prices[i.getAttribute('data-price')] = Math.round(parseFloat(i.value || '0') * 100);
+    });
+    el('cfg').querySelectorAll('[data-setting]').forEach(function (i) {
+      settings[i.getAttribute('data-setting')] = i.value;
+    });
+    api('config', { method: 'PUT', body: JSON.stringify({ prices: prices, settings: settings }) })
+      .then(function () {
+        el('cfg-ok').textContent = 'saved';
+        setTimeout(function () { el('cfg-ok').textContent = ''; }, 2500);
+        load();
+      })
+      .catch(function (e) { el('err').textContent = e.message; });
+  });
+
+  el('refresh').addEventListener('click', load);
+
+  el('csv').addEventListener('click', function () {
+    api('orders').then(function (d) {
+      var cols = ['id','created_at','email','name','company','benches','fast','slow',
+                  'hardware_cents','deposit_cents','status','stripe_ref','admin_note','note'];
+      var q = function (v) {
+        var s = String(v == null ? '' : v);
+        // leading = + - @ tab or CR makes a spreadsheet treat the cell as a formula
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+        return '"' + s.replace(/"/g, '""') + '"';
+      };
+      var csv = cols.join(',') + '\n' +
+        d.orders.map(function (o) { return cols.map(function (c) { return q(o[c]); }).join(','); }).join('\n');
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = 'oracova-orders.csv';
+      a.click();
+    });
+  });
+
+  function enter() {
+    el('gate').hidden = true;
+    el('app').hidden = false;
+    load();
+  }
+
+  el('go').addEventListener('click', function () {
+    token = el('tok').value.trim();
+    if (!token) return;
+    api('orders').then(function () { sessionStorage.setItem(KEY, token); enter(); })
+      .catch(function (e) { el('gate-err').textContent = e.message; });
+  });
+  el('tok').addEventListener('keydown', function (e) { if (e.key === 'Enter') el('go').click(); });
+
+  if (token) api('orders').then(enter).catch(function () { sessionStorage.removeItem(KEY); });
+})();
+</script>
+
+</body>
+</html>

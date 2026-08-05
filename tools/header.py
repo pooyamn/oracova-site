@@ -60,6 +60,7 @@ TOKENS = """/* ===== oracova shared stylesheet (tools/header.py -- do not edit b
 
 @media (prefers-color-scheme: light) {
   :root {
+    color-scheme: light;
     --bg: #FAFAF9;
     --surface: #FFFFFF;
     --surface-2: #F5F5F3;
@@ -94,9 +95,13 @@ TOKENS = """/* ===== oracova shared stylesheet (tools/header.py -- do not edit b
   --text-dim: #8E97A3;
   --text-faint: #8E97A3;
   --brand: #FFB454;
+  --brand-ink: #1A1204;
+  --brand-hover: #FFC276;
   --accent: #FFB454;
   --pass: #4ADE80;
   --fail: #F87171;
+  --glow: rgba(255,180,84,.10);
+  --select: rgba(255,180,84,.25);
   --line: rgba(255,255,255,.09);
   --bg-panel: #101216;
   --bg-card: #15171C;
@@ -104,6 +109,8 @@ TOKENS = """/* ===== oracova shared stylesheet (tools/header.py -- do not edit b
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* so native controls, scrollbars and autofill follow the page, not the OS */
+:root { color-scheme: dark; }
 html { scroll-behavior: smooth; scroll-padding-top: 68px; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans);
   font-size: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased; }
@@ -131,6 +138,8 @@ p { text-wrap: pretty; }
 .btn-ghost { background: none; border-color: var(--border-strong); color: var(--text); }
 .btn-ghost:hover { border-color: var(--text-dim); background: rgba(127,127,127,.06); }
 .btn-sm { min-height: 38px; padding: 7px 14px; font-size: 13.5px; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.btn-primary:disabled:hover { background: var(--brand); }
 
 /* The homepage replay and the /demo replay are the same artifact. They used to
    render at two densities, 29px pitch against 22px, with the denser one in
@@ -233,7 +242,7 @@ CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
 # page -> its link set (self-link always omitted)
 # One nav for every page. The current page is marked, never removed.
 NAV = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
-       ('/demo', 'Demo')]
+       ('/demo', 'Demo'), ('/preorder', 'Pre-order')]
 
 # page -> the href that represents it, so we can mark "you are here"
 SELF = {
@@ -241,6 +250,7 @@ SELF = {
     'product.html':    '/product',
     'onboarding.html': '/onboarding',
     'demo.html':       '/demo',
+    'preorder.html':   '/preorder',
     # The 404 carries the chrome too: it is the one page a lost visitor is guaranteed to
     # hit, and it used to be the only page with no way to navigate anywhere.
     '404.html':        None,
@@ -248,10 +258,11 @@ SELF = {
 LINKS = SELF   # apply()/check iterate over the page list
 
 MENU = [('/', 'Home'), ('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
-        ('/demo', 'Demo')]
+        ('/demo', 'Demo'), ('/preorder', 'Pre-order')]
 
 SITEMAP = [
-    ('Product',  [('/product', 'Augur One'), ('/onboarding', 'Board bring-up')]),
+    ('Product',  [('/product', 'Augur One'), ('/onboarding', 'Board bring-up'),
+                  ('/preorder', 'Pre-order')]),
     ('Evidence', [('/demo', 'Watch a run'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),

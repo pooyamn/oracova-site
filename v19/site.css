@@ -48,6 +48,7 @@
 
 @media (prefers-color-scheme: light) {
   :root {
+    color-scheme: light;
     --bg: #FAFAF9;
     --surface: #FFFFFF;
     --surface-2: #F5F5F3;
@@ -82,9 +83,13 @@
   --text-dim: #8E97A3;
   --text-faint: #8E97A3;
   --brand: #FFB454;
+  --brand-ink: #1A1204;
+  --brand-hover: #FFC276;
   --accent: #FFB454;
   --pass: #4ADE80;
   --fail: #F87171;
+  --glow: rgba(255,180,84,.10);
+  --select: rgba(255,180,84,.25);
   --line: rgba(255,255,255,.09);
   --bg-panel: #101216;
   --bg-card: #15171C;
@@ -92,6 +97,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* so native controls, scrollbars and autofill follow the page, not the OS */
+:root { color-scheme: dark; }
 html { scroll-behavior: smooth; scroll-padding-top: 68px; }
 body { background: var(--bg); color: var(--text); font-family: var(--sans);
   font-size: var(--body); line-height: 1.6; -webkit-font-smoothing: antialiased; }
@@ -119,6 +126,8 @@ p { text-wrap: pretty; }
 .btn-ghost { background: none; border-color: var(--border-strong); color: var(--text); }
 .btn-ghost:hover { border-color: var(--text-dim); background: rgba(127,127,127,.06); }
 .btn-sm { min-height: 38px; padding: 7px 14px; font-size: 13.5px; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.btn-primary:disabled:hover { background: var(--brand); }
 
 /* The homepage replay and the /demo replay are the same artifact. They used to
    render at two densities, 29px pitch against 22px, with the denser one in

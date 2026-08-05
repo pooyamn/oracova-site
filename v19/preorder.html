@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-order Augur One</title>
+<meta name="description" content="Augur One is $2,000 per bench plus the analog modules your signals need. One hundred boards in the first batch, shipping Q1 2027. $100 reserves a slot and comes off the price.">
+<link rel="canonical" href="https://oracova.com/preorder">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Oracova">
+<meta property="og:title" content="Pre-order Augur One">
+<meta property="og:description" content="$2,000 per bench plus modules. One hundred boards in the first batch, shipping Q1 2027. $100 reserves a slot and comes off the price.">
+<meta property="og:url" content="https://oracova.com/preorder">
+<meta property="og:image" content="https://oracova.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://oracova.com/og.png">
+<link rel="stylesheet" href="/site.css">
+<style>
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 56px 0 0; }
+  h2 { font-size: 23px; margin-bottom: 12px; }
+  h3 { font-size: 15px; margin-bottom: 6px; }
+  p { max-width: 62ch; }
+  .dim { color: var(--text-dim); }
+  h1, h2, h3, .cfg-total { font-family: var(--mono); }
+
+  header.hero { padding: 64px 0 56px;
+    background: radial-gradient(620px 340px at 72% 20%, var(--glow), transparent 70%); }
+  .hero h1 { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -.03em; margin-bottom: 16px; }
+  .lede { font-size: clamp(16.5px, 2.1vw, 19px); color: var(--text-dim);
+    max-width: 60ch; line-height: 1.6; }
+  .lede b { color: var(--text); font-weight: 700; }
+
+  /* ---------- configurator ---------- */
+  .cfg { display: grid; grid-template-columns: 1fr 380px; gap: 26px; margin-top: 26px;
+    align-items: stretch; }
+  .cfg-controls { display: grid; gap: 0; border: 1px solid var(--border);
+    border-radius: 12px; background: var(--surface); padding: 4px 20px; }
+  .cfg-row { display: grid; grid-template-columns: 1fr auto; gap: 8px 18px;
+    align-items: center; padding: 18px 0; }
+  .cfg-row + .cfg-row { border-top: 1px solid var(--border); }
+  .cfg-row .lbl { font-weight: 600; font-size: 15px; }
+  .cfg-row .per { font-family: var(--mono); font-size: 12px; font-weight: 400;
+    color: var(--text-faint); letter-spacing: .04em; }
+  .cfg-row .unit { grid-column: 1; font-size: 13.5px; color: var(--text-dim); margin-top: 2px; }
+  /* both coordinates, or the definite-row pass places this before the auto-placed
+     label and it lands in column 1 */
+  .stepper { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; gap: 2px; }
+  .stepper button { width: 44px; height: 44px; border-radius: 8px; cursor: pointer;
+    background: none; border: 1px solid var(--border-strong); color: var(--text);
+    font-family: var(--mono); font-size: 17px; line-height: 1; }
+  .stepper button:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .stepper button:disabled { opacity: .55; border-color: var(--border);
+    cursor: not-allowed; }
+  .stepper .val { min-width: 46px; text-align: center; font-family: var(--mono);
+    font-size: 17px; font-weight: 700; }
+  .cfg-say { position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap; }
+  .cfg-cap { font-family: var(--mono); font-size: 12.5px; color: var(--text-faint);
+    padding: 0 0 16px; }
+  .cfg-cap b { color: var(--brand); font-weight: 700; }
+
+  .cfg-out { border: 1px solid var(--border-strong); border-radius: 12px;
+    background: var(--surface-2); padding: 20px 22px; position: sticky; top: 76px;
+    align-self: start; }
+  .cfg-out .ttl { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 14px; }
+  .cfg-line { display: flex; justify-content: space-between; gap: 12px;
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim); padding: 5px 0; }
+  .cfg-line b { color: var(--text); font-weight: 500; }
+  .cfg-rule { border-top: 1px solid var(--border); margin: 12px 0; }
+  .cfg-total { display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 15px; color: var(--text); }
+  .cfg-total .amt { font-size: 30px; font-weight: 700; letter-spacing: -.02em; }
+  .cfg-sub { font-family: var(--mono); font-size: 12.5px; color: var(--text-faint);
+    margin-top: 10px; line-height: 1.6; }
+  .cfg-sub b { color: var(--pass); font-weight: 700; }
+  .cfg-cta { display: block; margin-top: 18px; width: 100%; }
+  .cfg-fine { font-family: var(--mono); font-size: 11.5px; color: var(--text-faint);
+    margin-top: 10px; text-align: center; }
+
+  /* ---------- included / excluded ---------- */
+  .inc { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+  .inc-card { border: 1px solid var(--border); border-radius: 10px; background: var(--surface);
+    padding: 18px 20px; }
+  .inc-card .tag { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em;
+    text-transform: uppercase; display: block; margin-bottom: 8px; }
+  .inc-card .tag.yes { color: var(--pass); }
+  .inc-card .tag.no { color: var(--text-faint); }
+  .inc-card p { font-size: 14.5px; color: var(--text-dim); max-width: none; }
+  .inc-card .amt { font-family: var(--mono); font-size: 15px; color: var(--text);
+    font-weight: 700; display: block; margin-top: 8px; }
+
+  /* ---------- reservation steps ---------- */
+  .steps { display: grid; gap: 0; margin-top: 20px; border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; }
+  .step { display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding: 16px 20px;
+    align-items: baseline; }
+  .step + .step { border-top: 1px solid var(--border); }
+  .step .n { font-family: var(--mono); font-size: 12.5px; color: var(--brand); }
+  .step .t { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+  .step .d { font-size: 14px; color: var(--text-dim); }
+
+  .callout { border: 1px solid var(--border); border-left: 3px solid var(--brand);
+    border-radius: 10px; background: var(--surface); padding: 16px 20px; margin-top: 22px;
+    font-size: 14.5px; color: var(--text-dim); max-width: 660px; }
+  .callout b { color: var(--text); }
+
+  /* ---------- reservation form ---------- */
+  .rsv { border: 1px solid var(--border-strong); border-radius: 12px; background: var(--surface);
+    padding: 20px 22px; margin-top: 24px; max-width: 760px; }
+  .rsv-head { display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px; margin-bottom: 16px; }
+  .rsv-head .ttl { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-faint); }
+  .rsv-head .left { font-family: var(--mono); font-size: 12.5px; color: var(--brand); }
+  .rsv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* [hidden] is display:none at UA weight and loses to the rules above it */
+  .rsv [hidden] { display: none !important; }
+  .fld.wide { grid-column: 1 / -1; }
+  .fld label { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 5px; }
+  .fld .opt { color: var(--text-faint); }
+  .fld input, .fld textarea { width: 100%; padding: 11px 12px; border-radius: 8px;
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--border-strong);
+    font-family: var(--sans); font-size: 14.5px; min-height: 44px; }
+  .fld textarea { resize: vertical; line-height: 1.5; }
+  .fld input:focus-visible, .fld textarea:focus-visible { outline: 2px solid var(--brand);
+    outline-offset: 1px; }
+  .rsv-foot { display: flex; justify-content: space-between; align-items: center;
+    gap: 16px; flex-wrap: wrap; margin-top: 18px; }
+  .rsv-sum { font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .rsv-fine { font-family: var(--mono); font-size: 12px; color: var(--text-faint);
+    margin-top: 12px; max-width: none; line-height: 1.6; }
+  .rsv-msg { font-family: var(--mono); font-size: 13.5px; margin-top: 12px; max-width: none;
+    line-height: 1.6; }
+  .rsv-msg.ok { color: var(--pass); }
+  .rsv-msg.bad { color: var(--fail); }
+  .rsv-msg a { color: var(--brand); }
+
+  @media (max-width: 900px) {
+    .cfg { grid-template-columns: 1fr; }
+    .cfg-out { position: static; }
+    .inc { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .rsv-grid { grid-template-columns: 1fr; }
+    .rsv-foot { flex-direction: column; align-items: stretch; }
+    .rsv-foot .btn { width: 100%; }
+  }
+  @media (max-width: 560px) {
+    section { padding: 44px 0 0; }
+    h2 { font-size: 21px; }
+    .cfg-total .amt { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <noscript><style>@media (max-width: 800px) { .site-nav .nav-burger { display: none !important; } .site-menu { display: block !important; position: static; max-height: none; } }</style></noscript>
+  <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu"><span></span></button>
+    <a class="nav-logo" href="/">oracova<i>_</i></a>
+    <div class="nav-set">
+      <a href="/">Home</a>
+      <a href="/product">Augur One</a>
+      <a href="/onboarding">Board bring-up</a>
+      <a href="/demo">Demo</a>
+      <a href="/preorder" aria-current="page">Pre-order</a>
+      <a class="nav-cta" href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
+    </div>
+  </div>
+</nav>
+<div class="site-menu" id="site-menu">
+    <a href="/">Home</a>
+    <a href="/product">Augur One</a>
+    <a href="/onboarding">Board bring-up</a>
+    <a href="/demo">Demo</a>
+    <a href="/preorder" aria-current="page">Pre-order</a>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Pre-order</div>
+    <h1>Reserve a bench in the first batch.</h1>
+    <p class="lede">Augur One is <b>$2,000 per bench</b> plus the analog modules your signals
+    need. The first batch is <b>100 boards, shipping Q1 2027</b>. The board is in fabrication
+    and the first article is pending, so <b>$100 holds your slot</b>, comes off the price, and
+    is refundable until your board ships.</p>
+  </div>
+</header>
+
+<section id="price">
+  <div class="wrap">
+    <div class="kicker">What it costs</div>
+    <h2>Price your bench.</h2>
+    <p class="dim">A bench is the base board plus modules. Ten slots per board, four analog
+    channels each, high-speed or medium-speed in any mix.</p>
+
+    <div class="cfg">
+      <div class="cfg-controls">
+        <div class="cfg-row">
+          <span class="lbl">Benches</span>
+          <div class="stepper">
+            <button type="button" data-step="bench" data-d="-1" aria-label="one fewer bench">&minus;</button>
+            <span class="val" id="v-bench">1</span>
+            <button type="button" data-step="bench" data-d="1" aria-label="one more bench">+</button>
+          </div>
+          <span class="unit">$2,000 each. One per feature you test in parallel.</span>
+        </div>
+
+        <div class="cfg-row">
+          <span class="lbl">High-speed modules <span class="per">per bench</span></span>
+          <div class="stepper">
+            <button type="button" data-step="fast" data-d="-1" aria-label="one fewer high-speed module">&minus;</button>
+            <span class="val" id="v-fast">4</span>
+            <button type="button" data-step="fast" data-d="1" aria-label="one more high-speed module">+</button>
+          </div>
+          <span class="unit">$100 each. 8 MSPS per channel, for signals the control loop reads at rate.</span>
+        </div>
+
+        <div class="cfg-row">
+          <span class="lbl">Medium-speed modules <span class="per">per bench</span></span>
+          <div class="stepper">
+            <button type="button" data-step="slow" data-d="-1" aria-label="one fewer medium-speed module">&minus;</button>
+            <span class="val" id="v-slow">2</span>
+            <button type="button" data-step="slow" data-d="1" aria-label="one more medium-speed module">+</button>
+          </div>
+          <span class="unit">$50 each. For channels that move slowly: temperatures, setpoints.</span>
+        </div>
+
+        <p class="cfg-say" id="cfg-say" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div class="cfg-cap"><b id="v-used">6</b> of 10 slots used per bench. Populate only what your signals need.</div>
+      </div>
+
+      <div class="cfg-out instrument">
+        <div class="ttl">Your bench</div>
+        <div class="cfg-line"><span>Base board <b id="v-nb">&times;1</b></span><b id="v-base">$2,000</b></div>
+        <div class="cfg-line"><span>High-speed <b id="v-nf">&times;4</b></span><b id="v-fastamt">$400</b></div>
+        <div class="cfg-line"><span>Medium-speed <b id="v-ns">&times;2</b></span><b id="v-slowamt">$100</b></div>
+        <div class="cfg-rule"></div>
+        <div class="cfg-total"><span>Hardware</span><span class="amt" id="v-total">$2,500</span></div>
+        <div class="cfg-sub"><span id="v-ch">24</span> analog channels &middot; 148 digital I/O<br>
+        <b>First year of support included.</b></div>
+        <a class="btn btn-primary cfg-cta" id="reserve-top" href="#reserve">Reserve a slot &middot; $100</a>
+        <div class="cfg-fine">Refundable until your board ships</div>
+      </div>
+    </div>
+
+    <noscript>
+      <p class="callout">The prices above are one example configuration: one bench with four
+      high-speed and two medium-speed modules. With JavaScript on, the total updates as you
+      change it. The rates are fixed either way: $2,000 per base board, $100 per high-speed
+      module, $50 per medium-speed module.</p>
+    </noscript>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">What the price covers</div>
+    <h2>Included, and not.</h2>
+
+    <div class="inc">
+      <div class="inc-card">
+        <span class="tag yes">Included</span>
+        <h3>The first year of support</h3>
+        <p>Direct support from me for a year from the day your board ships: getting your
+        board onto the bench, keeping it there, and whatever the loop turns up.</p>
+        <span class="amt">$1,000 per board per year after that</span>
+      </div>
+      <div class="inc-card">
+        <span class="tag no">Free or quoted</span>
+        <h3>Your DUT board</h3>
+        <p>A small board carrying your microcontroller, routed to the base board. Popular
+        parts get a published design, free and open source. A board for a part that is
+        specific to your product is designed for you, quoted on the call, and stays private.</p>
+        <span class="amt">Open source for popular parts</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="reserve">
+  <div class="wrap">
+    <div class="kicker">How the reservation works</div>
+    <h2>What $100 does.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <span class="n">01</span>
+        <div>
+          <div class="t">You reserve a slot</div>
+          <div class="d">$100, one of 100 in the first batch. It comes off the price of your
+          board and is refundable in full any time before it ships.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">02</span>
+        <div>
+          <div class="t">We scope your board on a call</div>
+          <div class="d">Fifteen minutes, your schematic open. Which modules your signals
+          need, what your DUT board takes, and what the bring-up looks like for your part.
+          You get a number for the parts that are quoted.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">03</span>
+        <div>
+          <div class="t">First article, then your board</div>
+          <div class="d">Augur One is in fabrication now. When the first article passes
+          bring-up, the batch is built and reserved slots ship in order, targeting Q1 2027.</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">04</span>
+        <div>
+          <div class="t">You pay the balance when it ships</div>
+          <div class="d">Nothing else is due until your board is on its way.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout"><b>What could move.</b> The first article is not back yet. If a
+    respin is needed, Q1 2027 moves, and you will hear it from me rather than reading it in
+    a status page. Your $100 is refundable the whole time, including then.</div>
+
+    <form class="rsv" id="rsv">
+      <div class="rsv-head">
+        <span class="ttl">Hold a slot</span>
+        <span class="left" id="slots-left"></span>
+      </div>
+      <div class="rsv-grid">
+        <div class="fld">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" required autocomplete="email"
+                 placeholder="you@company.com">
+        </div>
+        <div class="fld">
+          <label for="f-name">Name <span class="opt">optional</span></label>
+          <input id="f-name" name="name" type="text" autocomplete="name">
+        </div>
+        <div class="fld">
+          <label for="f-company">Company <span class="opt">optional</span></label>
+          <input id="f-company" name="company" type="text" autocomplete="organization">
+        </div>
+        <div class="fld wide">
+          <label for="f-note">What are you testing? <span class="opt">optional</span></label>
+          <textarea id="f-note" name="note" rows="2"
+                    placeholder="Part, bus, and what the loop has to close around."></textarea>
+        </div>
+      </div>
+      <div class="rsv-foot">
+        <div class="rsv-sum" id="rsv-sum">1 bench &middot; 4 high-speed &middot; 2 medium-speed &middot; $2,500</div>
+        <button class="btn btn-primary" type="submit" id="rsv-go">Reserve a slot &middot; $100</button>
+      </div>
+      <p class="rsv-fine">Refundable in full until your board ships, and it comes off the price.
+      Nothing else is due until it is on its way. What you type here is stored on Cloudflare
+      in the EU and the US, used only to hold your slot and talk to you about it, never sold
+      or shared, and deleted whenever you ask:
+      <a href="mailto:pooyamn@gmail.com?subject=Oracova%3A%20delete%20my%20reservation">say the word</a>.</p>
+      <p class="rsv-msg" id="rsv-msg" role="status"></p>
+    </form>
+
+    <noscript><style>
+      .stepper { display: none; }
+      .cfg-row { grid-template-columns: 1fr; }
+      #rsv .rsv-grid, #rsv .rsv-foot, #rsv .rsv-fine { display: none; }
+      #rsv .rsv-head { margin-bottom: 0; }
+    </style></noscript>
+    <noscript>
+      <p class="callout">Reserving a slot needs JavaScript, because the form prices your
+      configuration before it sends it. Without it, email
+      <a href="mailto:pooyamn@gmail.com?subject=Oracova%3A%20reserve%20a%20slot">pooyamn@gmail.com</a>
+      with the modules you need and I will reserve it by hand.</p>
+    </noscript>
+  </div>
+</section>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <h2 class="foot-sr">Site map</h2>
+    <div class="foot-map">
+      <div>
+        <h3>Product</h3>
+        <a href="/product">Augur One</a>
+        <a href="/onboarding">Board bring-up</a>
+        <a href="/preorder">Pre-order</a>
+      </div>
+      <div>
+        <h3>Evidence</h3>
+        <a href="/demo">Watch a run</a>
+        <a href="/#evidence">What it caught</a>
+      </div>
+      <div>
+        <h3>How it works</h3>
+        <a href="/#how">The loop</a>
+        <a href="/#world">What it emulates</a>
+        <a href="/#compare">Against other methods</a>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <a href="mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>
+        <a href="mailto:pooyamn@gmail.com">Email us</a>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>oracova_ &nbsp; AI agents test your firmware on real hardware.</span>
+      <span><a href="mailto:pooyamn@gmail.com">pooyamn@gmail.com</a> &nbsp;&middot;&nbsp; &copy; 2026 Oracova</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var S = { bench: 1, fast: 4, slow: 2 };
+
+  // The same numbers the page ships with in its markup. If /api/pricing answers, these
+  // are replaced; if it does not, the page still prices a bench correctly rather than
+  // showing a blank where the total should be.
+  var CFG = {
+    base: 200000, fast: 10000, slow: 5000, deposit: 10000,
+    slots: 10, channels: 4, maxBenches: 12, open: true, slotsLeft: null, checkout: null
+  };
+
+  var el = function (id) { return document.getElementById(id); };
+  function money(cents) {
+    var d = cents / 100;
+    return '$' + d.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+
+  function summary() {
+    return plural(S.bench, 'bench', 'benches') + ' · ' +
+           S.fast + ' high-speed · ' + S.slow + ' medium-speed · ' + money(total());
+  }
+  function total() {
+    return (CFG.base + S.fast * CFG.fast + S.slow * CFG.slow) * S.bench;
+  }
+
+  function render() {
+    el('v-bench').textContent = S.bench;
+    el('v-fast').textContent = S.fast;
+    el('v-slow').textContent = S.slow;
+    el('v-used').textContent = S.fast + S.slow;
+    el('v-nb').textContent = '×' + S.bench;
+    el('v-nf').textContent = '×' + (S.fast * S.bench);
+    el('v-ns').textContent = '×' + (S.slow * S.bench);
+    el('v-base').textContent = money(CFG.base * S.bench);
+    el('v-fastamt').textContent = money(S.fast * CFG.fast * S.bench);
+    el('v-slowamt').textContent = money(S.slow * CFG.slow * S.bench);
+    el('v-total').textContent = money(total());
+    el('v-ch').textContent = (S.fast + S.slow) * CFG.channels * S.bench;
+    var sum = el('rsv-sum');
+    if (sum) sum.textContent = summary();
+    var say = el('cfg-say');
+    if (say) say.textContent = summary();
+
+    // one slot holds one module of either kind, so the two steppers share a budget
+    document.querySelectorAll('[data-step]').forEach(function (b) {
+      var k = b.getAttribute('data-step'), d = +b.getAttribute('data-d'), next = S[k] + d;
+      b.disabled = next < (k === 'bench' ? 1 : 0)
+                || (k === 'bench' && next > CFG.maxBenches)
+                || (k !== 'bench' && S.fast + S.slow + d > CFG.slots);
+      // keep the keyboard somewhere useful when a limit disables the focused button
+      if (b.disabled && document.activeElement === b) {
+        var sib = b.parentElement.querySelector('[data-step]:not([disabled])');
+        if (sib) sib.focus();
+      }
+    });
+  }
+
+  document.querySelectorAll('[data-step]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.disabled) return;
+      S[b.getAttribute('data-step')] += +b.getAttribute('data-d');
+      render();
+    });
+  });
+  render();
+
+  // ---- live prices and batch state ----------------------------------------
+  fetch('/api/pricing').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.prices) return;
+    CFG.base = d.prices.base;
+    CFG.fast = d.prices.fast;
+    CFG.slow = d.prices.slow;
+    CFG.deposit = d.prices.deposit;
+    CFG.slots = d.slots_per_board;
+    CFG.channels = d.channels_per_module;
+    CFG.maxBenches = d.max_benches;
+    CFG.open = d.open;
+    CFG.slotsLeft = d.slots_left;
+    if (S.fast + S.slow > CFG.slots) { S.fast = Math.min(S.fast, CFG.slots); S.slow = 0; }
+    render();
+
+    var left = el('slots-left');
+    if (left) {
+      left.textContent = d.slots_left + ' of ' + d.batch_size + ' left';
+    }
+    document.querySelectorAll('#rsv-go, #reserve-top').forEach(function (b) {
+      b.textContent = d.open ? 'Reserve a slot · ' + money(CFG.deposit)
+                             : 'First batch fully reserved';
+      if (!d.open && b.tagName === 'A') {
+        b.classList.replace('btn-primary', 'btn-ghost');
+        b.setAttribute('aria-disabled', 'true');
+        b.removeAttribute('href');
+      }
+    });
+    if (!d.open) {
+      var go = el('rsv-go');
+      if (go) { go.disabled = true; go.textContent = 'First batch fully reserved'; }
+      var msg = el('rsv-msg');
+      if (msg) { msg.className = 'rsv-msg'; msg.textContent =
+        'All ' + d.batch_size + ' slots are taken. Email me to go on the list for the second batch.'; }
+    }
+  }).catch(function () { /* keep the shipped numbers */ });
+
+  // ---- reservation ---------------------------------------------------------
+  function collapse(form) {
+    form.querySelector('.rsv-grid').hidden = true;
+    form.querySelector('.rsv-foot').hidden = true;
+    form.querySelector('.rsv-fine').hidden = true;
+  }
+
+  function done(msg, body) {
+    var go = el('rsv-go');
+    go.disabled = true;
+    go.textContent = 'Slot held';
+    collapse(el('rsv'));
+    var ttl = document.querySelector('.rsv-head .ttl');
+    if (ttl) ttl.textContent = 'Slot held';
+    msg.setAttribute('tabindex', '-1');
+    msg.focus();
+    msg.className = 'rsv-msg ok';
+    msg.textContent = '';
+    var head = document.createElement('span');
+    head.textContent = 'Slot held as ';
+    var ref = document.createElement('b');
+    ref.textContent = body.id;
+    msg.append(head, ref, document.createTextNode('. '));
+
+    var link = null;
+    if (body.checkout_url) {
+      try {
+        var u = new URL(body.checkout_url);
+        if (u.protocol === 'https:') {
+          link = document.createElement('a');
+          link.href = u.href;
+          link.textContent = 'continue to checkout';
+        }
+      } catch { link = null; }
+    }
+    if (link) {
+      msg.append(document.createTextNode(
+        'Pay the ' + money(body.deposit_cents) + ' deposit to confirm it: '), link,
+        document.createTextNode('.'));
+    } else {
+      msg.append(document.createTextNode(
+        'I will email you a payment link for the ' + money(body.deposit_cents) +
+        ' deposit. Nothing is charged until you use it.'));
+    }
+  }
+
+  // Reservations are worth more than the plumbing that records them: if the API is
+  // unavailable the configuration goes out as a prefilled email instead of failing.
+  function byEmail(msg) {
+    var body = [
+      'I would like to reserve a slot in the first batch.', '',
+      'Benches: ' + S.bench,
+      'High-speed modules: ' + S.fast,
+      'Medium-speed modules: ' + S.slow,
+      'Hardware: ' + money(total()), '',
+      'Name: ' + el('f-name').value.trim(),
+      'Company: ' + el('f-company').value.trim(),
+      'Testing: ' + el('f-note').value.trim()
+    ].join('\n');
+    var href = 'mailto:pooyamn@gmail.com?subject=' +
+      encodeURIComponent('Oracova: reserve a slot') + '&body=' + encodeURIComponent(body);
+    collapse(el('rsv'));
+    msg.className = 'rsv-msg';
+    msg.innerHTML = 'Reservations are going through email at the moment. ' +
+      '<a href="' + href + '">Send this configuration &rarr;</a> and I will hold your slot ' +
+      'and reply with the deposit link.';
+  }
+
+  var form = el('rsv');
+  if (form) form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = el('rsv-msg'), go = el('rsv-go');
+    var email = el('f-email').value.trim();
+    if (!email) { msg.className = 'rsv-msg bad'; msg.textContent = 'An email is needed to hold the slot.'; return; }
+
+    go.disabled = true;
+    var was = go.textContent;
+    go.textContent = 'Holding your slot...';
+    msg.className = 'rsv-msg';
+    msg.textContent = '';
+
+    fetch('/api/reserve', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        name: el('f-name').value.trim(),
+        company: el('f-company').value.trim(),
+        note: el('f-note').value.trim(),
+        benches: S.bench, fast: S.fast, slow: S.slow
+      })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; })
+              .then(function (b) { return { ok: r.ok, status: r.status, body: b }; });
+    }).then(function (res) {
+      // A validation error is the reader's to fix, so it is shown as written. Anything
+      // else is ours, and the reservation falls back to email rather than dead-ending
+      // on a stack trace: the slot is worth more than the mechanism.
+      if (!res.ok) {
+        if (res.status === 400 || res.status === 409 || res.status === 429) {
+          msg.className = 'rsv-msg bad';
+          msg.textContent = res.body.error || 'That configuration was not accepted.';
+          go.disabled = false; go.textContent = was;
+        } else {
+          byEmail(msg);
+        }
+        return;
+      }
+      done(msg, res.body);
+    }).catch(function () { byEmail(msg); });
+  });
+
+  var top = el('reserve-top');
+  if (top) top.addEventListener('click', function () {
+    setTimeout(function () { var f = el('f-email'); if (f) f.focus(); }, 400);
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
+  if (!b || !m) return;
+  function set(open) { b.setAttribute('aria-expanded', String(open)); m.classList.toggle('open', open);
+    // the panel floats over the page; without this a thumb flick scrolls content behind it
+    document.body.style.overflow = open && window.innerWidth <= 800 ? 'hidden' : ''; }
+  b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+  m.addEventListener('click', function (e) { if (e.target.tagName === 'A') set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  // tapping the page behind the open panel closes it, like every native menu
+  document.addEventListener('pointerdown', function (e) {
+    if (b.getAttribute('aria-expanded') === 'true'
+        && !e.target.closest('.site-nav') && !e.target.closest('.site-menu')) {
+      e.preventDefault(); set(false);
+    }
+  }, true);
+  window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
+})();
+</script>
+</body>
+</html>

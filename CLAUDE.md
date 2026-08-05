@@ -150,8 +150,9 @@ All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
    `SHEET-EDITS-ad3542r-rework.md`). Sensorless FOC itself remains unclaimed until run.
 8. **DUT supply**: the old "up to 8.19 A" was sense full scale, NOT deliverable; real cap
    is ~3 A. Site now says "up to 3 A" and publishes sense resolutions without full scales.
-9. **Open-source DUT designs**: repo coming soon; future-tense sentence restored on
-   onboarding. Add the link when public.
+9. **Open-source DUT designs**: designs for POPULAR parts are published open source and
+   free; a board specific to a customer's product is quoted and stays private. Repo coming
+   soon: add the link when public.
 10. **World model library**: no finished models exist; they will be built per first
     customers. Copy reframed to the proven machinery (buses/capture/fault injection) with
     built-for-your-product as the pitch. Do not reintroduce a model list.
