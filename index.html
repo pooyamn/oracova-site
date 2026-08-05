@@ -517,23 +517,23 @@
     <div class="grid3">
       <div class="card">
         <h3>Motor control</h3>
-        <div class="faults">stuck hall &middot; swapped sectors &middot; skipped sector</div>
-        <p>Commutation and hall-sensor faults on real silicon, running today on Oracova
-        development hardware.</p>
+        <div class="faults">inverter switching &middot; saturation &middot; current ripple</div>
+        <p>The FPGA and real-time MCU have the compute and latency to play your inverter and
+        motor for real. Fast analog plays the current feedback your loop samples, so your
+        fastest loop closes at full rate, at the real control point.</p>
       </div>
       <div class="card">
         <h3>BMS</h3>
-        <div class="faults">cell over-temperature &middot; sensor dropout &middot; protection thresholds</div>
-        <p>Your MCU comes to the bench; the cell monitor is played at its digital interface,
-        cell and thermal physics behind it. Protection logic is tested by reaching the fault,
-        not faking it; the 31 nA/LSB sleep range catches the firmware change that raises
-        ship-mode drain.</p>
+        <div class="faults">internal resistance &middot; imbalance &middot; thermal drift</div>
+        <p>A pack model built for your product, behind a cell monitor emulated at its digital
+        interface. Protection logic trips by reaching the fault, and ship-mode drain is
+        measured at 31 nA resolution.</p>
       </div>
       <div class="card">
         <h3>Power and thermal</h3>
-        <div class="faults">heaters &middot; pumps &middot; converters</div>
-        <p>Closed loops settle, overshoot, and fault against a plant that behaves like the
-        real one.</p>
+        <div class="faults">thermal mass &middot; transport delay &middot; converter ripple</div>
+        <p>A plant model built for your loop's dynamics. Loops settle, overshoot and recover
+        against physics that pushes back, at their real update rate.</p>
       </div>
     </div>
   </div>
