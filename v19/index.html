@@ -482,10 +482,9 @@
     <div class="mini">
       <div class="mini-row">
         <span class="n">01</span>
-        <div class="t">Tests come from the spec, not the code</div>
-        <div class="d">Tests are written <b>from the spec rather than from the
-        implementation</b>, so passing means matching the datasheet, not matching the bug.
-        They run on the bench, not in a mock.</div>
+        <div class="t">The agent builds, the world proves</div>
+        <div class="d">One prompt covers implement and test: the agent writes the driver,
+        flashes real silicon, and reads the world's verdicts.</div>
       </div>
       <div class="mini-row">
         <span class="n">02</span>
@@ -494,6 +493,13 @@
       </div>
       <div class="mini-row">
         <span class="n">03</span>
+        <div class="t">Tests come from the spec, not the code</div>
+        <div class="d">Tests are written <b>from the spec rather than from the
+        implementation</b>, so passing means matching the datasheet, not matching the bug.
+        They run on the bench, not in a mock.</div>
+      </div>
+      <div class="mini-row">
+        <span class="n">04</span>
         <div class="t">Every test keeps running</div>
         <div class="d">Tests and thresholds are files in the test repo, reviewed like code,
         and stay in the suite, so <b>regressions get caught</b> on every future PR.</div>
