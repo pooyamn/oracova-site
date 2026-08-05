@@ -166,6 +166,15 @@ All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
 15. **Temperatures**: legitimate (DAC modules drive analog temps; digital sensors emulated
     in fabric). Sleep-range/ship-mode-drain line added to the BMS card.
 
+### Banked copy (approved lines with no page home yet)
+- The three whys, usable standalone for ads, cold email, the pre-order page:
+  "Credibility is the regressions caught before your customers ever meet them." /
+  "Iteration is cheap when nobody has to watch it." / "One engineer, as many benches as
+  features." (First two are live on the homepage; the set travels together.)
+- The role-inversion hook, deliberately NOT on the site (it gates on copilot-using
+  readers): "Agents already write firmware. Stop being their test bench." and "AI works
+  for you, not you for the AI." Launch post / outreach material.
+
 ### Flight controller in loop: real artifact
 Onboarding's "Running today" box links "See flight controller in loop" to the homepage
 simulator evidence card (`/#simulator`), which is prose. TODO: capture a real
