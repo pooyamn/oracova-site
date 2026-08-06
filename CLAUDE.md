@@ -182,6 +182,12 @@ simulator evidence card (`/#simulator`), which is prose. TODO: capture a real
 flight-controller-in-loop artifact (video or scored run of unmodified Betaflight against
 the fabric) and repoint the link at it.
 
+### Cloudflare zone settings (dashboard only; the API token cannot write zone config)
+- **www.oracova.com is NXDOMAIN** (SEO audit 2026-08-05). Add a proxied CNAME
+  `www -> oracova.com`, then a redirect rule 301 `www.oracova.com/*` ->
+  `https://oracova.com/$1`. HSTS already sends includeSubDomains, so www must come
+  up HTTPS-first, which the proxied record provides.
+
 ### Cloudflare zone setting
 Scrape Shield "Email Address Obfuscation" is ON for oracova.com. It rewrites every
 `mailto:` into `/cdn-cgi/l/email-protection#<hex>`, which 404s without JavaScript, and
