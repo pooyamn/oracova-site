@@ -134,8 +134,8 @@ All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
 
 1. **Test-agent split**: planned, not built. Claim softened to "tests come from the spec,
    not the code". Restore the separate-agent claim when it ships.
-2. **Analog capture**: on-board ADC channels exist; spec row added, counts and rates
-   "confirmed at first article". Publish figures when known.
+2. **Analog capture**: 40 ADC pins (published 2026-08-06, part of the up-to-216 I/O
+   count); rates still "confirmed at first article".
 3. **Logic analyzer**: in fabric, sim-proven (n=0 on silicon, `bench/fpga/cores/la/`).
    Spec row states edge/level/pattern triggers with channels/depth as gateware parameters,
    per Pouya: flexible by need, no fixed caps published.
