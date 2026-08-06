@@ -657,5 +657,16 @@
   window.addEventListener('resize', function () { if (window.innerWidth > 800) set(false); });
 })();
 </script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+})();
+</script>
 </body>
 </html>
