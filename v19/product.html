@@ -487,7 +487,6 @@
         <tr><td>Channels</td><td>Up to 40 &middot; 10 slots x 4 channels &middot; modules mixed freely per slot</td></tr>
         <tr><td>High-speed module</td><td>2 x AD3542R &middot; up to 16 MUPS per DAC, 8 MSPS per channel &middot; 0&ndash;5 V incl. true 0 V &middot; dedicated +7 V / &minus;1.5 V rails</td></tr>
         <tr><td>Low-speed module</td><td>DAC80504 &middot; up to 200 KUPS &middot; temperatures, setpoints, slow sensors</td></tr>
-        <tr><td>Signal integrity</td><td>Per-channel analog-ground return; no analog line adjacent to another</td></tr>
       </table>
 
       <div class="spec-h">Communication and power</div>
@@ -579,6 +578,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
