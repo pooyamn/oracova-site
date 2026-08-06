@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The loop</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root {
+    --bg:#0E0F11; --card:#15161A; --line:rgba(255,255,255,.34);
+    --text:#EDEEF0; --dim:#9DA1A8; --brand:#FFB454; --card2:#1C1E24;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#FAFAF9; --card:#FFFFFF; --line:rgba(20,22,26,.52); --card2:#F4F4F2;
+      --text:#16181D; --dim:#555A63; --brand:#8A4700; color-scheme: light; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:40px 24px; -webkit-font-smoothing:antialiased; }
+
+  .stage { position:relative; width:100%; }
+
+  /* four parts in one line: board, fabric (I/O + world), agent */
+  .row { display:grid; grid-template-columns: 1fr 2.1fr 1fr;
+    gap: clamp(56px, 6vw, 96px); align-items:stretch; }
+
+  .actor { border:1.6px solid var(--brand); border-radius:12px; padding:14px; }
+  .actor.filled { background:var(--card); }
+
+  .chip { background:var(--card2); border:1.2px solid var(--line); border-radius:10px;
+    padding:18px 14px; text-align:center; }
+  .card { background:var(--card); border:1.2px solid var(--line); border-radius:10px;
+    padding:18px 14px; text-align:center; }
+
+  .t  { font-size:15px; font-weight:700; color:var(--text); }
+  .s  { font-size:12px; color:var(--dim); line-height:1.55; margin-top:8px; }
+  .tb { font-size:15px; font-weight:700; color:var(--brand); letter-spacing:.6px; }
+  .tb small { font-size:11px; font-weight:400; letter-spacing:0; color:var(--dim); }
+
+  .dut { display:flex; flex-direction:column; }
+  .dut .chip { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .dut .tb { text-align:center; margin-top:12px; line-height:1.45; }
+  .dut .tb span { white-space:nowrap; }
+
+  /* Augur One: legend riding the top edge, two cards inside */
+  .fab { position:relative; padding:22px 18px 44px; }
+  .fab .leg { position:absolute; top:-8px; left:50%; transform:translateX(-50%);
+    background:var(--bg); padding:0 12px; font-size:12px; font-weight:700;
+    color:var(--brand); letter-spacing:1.2px; white-space:nowrap; }
+  .fab .cols { display:grid; grid-template-columns: 1.3fr 1fr;
+    gap: clamp(48px, 4.5vw, 84px); height:100%; align-items:stretch; }
+  .fab .card { display:flex; flex-direction:column; justify-content:center; }
+
+  .agent { display:flex; flex-direction:column; justify-content:center; text-align:center; }
+  .agent .s { margin-top:10px; }
+
+  /* the wires live in one overlay, in page pixels */
+  svg.wires { position:absolute; inset:0; width:100%; height:100%;
+    overflow:visible; pointer-events:none; }
+  .wires text { font-family:var(--mono); font-size:12px; letter-spacing:1.2px; }
+
+  /* below ~680 one line cannot hold; fall back to the stacked reading */
+  @media (max-width: 680px) {
+    .row { grid-template-columns: 1fr; gap:56px; }
+    .fab { padding-left:36px; }
+    .fab .cols { grid-template-columns: 1fr; gap:48px; }
+    .agent { padding:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage" role="img"
+  aria-label="The loop, left to right: your DUT board with your unmodified firmware on real
+  silicon; Augur One, in fabric, holding an I/O block that emulates every peripheral the part
+  reads and measures what it writes, and a world that advances physics at loop rate; one
+  unbroken ring threads all three, crossing the board/fabric boundary twice. A verdict against
+  fixed thresholds leaves Augur One for the agent, which is yours, not supplied by Oracova; it
+  writes the scenarios, reads the verdicts, and sends the next build back through Augur One,
+  which flashes and resets the part over JTAG or SWD.">
+  <div class="row" id="row">
+
+    <div class="actor filled dut" id="dut">
+      <div class="chip">
+        <div class="t">YOUR FIRMWARE</div>
+        <div class="s">unmodified &#183; real silicon</div>
+      </div>
+      <div class="tb"><span>YOUR</span> <span>D<small>evice</small> U<small>nder</small> T<small>est</small></span> <span>BOARD</span></div>
+    </div>
+
+    <div class="actor fab" id="fab">
+      <div class="leg">AUGUR ONE</div>
+      <div class="cols">
+        <div class="card" id="io">
+          <div class="t">I/O</div>
+          <div class="s">SPI &#183; I2C &#183; USART &#183; USB &#183; CAN &#183; ETHERNET &#183;
+            WI&#8209;FI &#183; BLUETOOTH &#183; ADC &#183; DAC &#183; PWM &#183; GPIO &#183;
+            QUADRATURE</div>
+        </div>
+        <div class="card" id="world">
+          <div class="t">THE WORLD</div>
+          <div class="s">physics, in fabric</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actor agent" id="agent">
+      <div class="tb">AGENT</div>
+      <div class="s">writes scenarios<br>reads verdicts</div>
+    </div>
+
+  </div>
+
+  <svg class="wires" id="wires" aria-hidden="true">
+    <defs>
+      <marker id="mA" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+      </marker>
+      <marker id="mB" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+    </defs>
+    <g id="g"></g>
+  </svg>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  function R(el) {
+    var s = $('stage').getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { l: r.left - s.left, r: r.right - s.left, t: r.top - s.top, b: r.bottom - s.top };
+  }
+  function el(name, attrs, txt) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (txt) e.textContent = txt;
+    return e;
+  }
+  // a shallow S-curve from one box edge to another
+  function curve(g, x0, y0, x1, y1) {
+    var mx = (x0 + x1) / 2;
+    g.appendChild(el('path', { d: 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+      ' C' + mx.toFixed(1) + ' ' + y0.toFixed(1) + ' ' + mx.toFixed(1) + ' ' + y1.toFixed(1) +
+      ' ' + (x1 - 1).toFixed(1) + ' ' + y1.toFixed(1),
+      fill: 'none', stroke: 'var(--dim)', 'stroke-width': 1.2, 'marker-end': 'url(#mA)' }));
+  }
+
+  function vline(g, x, y0, y1, stroke, wdt) {
+    g.appendChild(el('path', { d: 'M' + x.toFixed(1) + ' ' + y0.toFixed(1) +
+      ' V' + y1.toFixed(1), fill: 'none', stroke: stroke, 'stroke-width': wdt,
+      'marker-end': 'url(#' + (stroke === 'var(--brand)' ? 'mB' : 'mA') + ')' }));
+  }
+
+  function drawStacked() {
+    var g = $('g');
+    var dut = R($('dut')), fab = R($('fab')), io = R($('io')),
+        wr = R($('world')), ag = R($('agent'));
+    var q = function (b) { return [b.l + (b.r - b.l) * 0.3, b.l + (b.r - b.l) * 0.7]; };
+    var d2 = q(dut);
+    // the ring, vertically: down the right lane, back up the left
+    vline(g, d2[1], dut.b, io.t - 1, 'var(--dim)', 1.2);
+    vline(g, d2[1], io.b, wr.t - 1, 'var(--dim)', 1.2);
+    vline(g, d2[0], wr.t, io.b + 1, 'var(--dim)', 1.2);
+    vline(g, d2[0], io.t, dut.b + 1, 'var(--dim)', 1.2);
+    // eyes and hands, in the gap between the machine and the agent
+    var e = fab.l + (fab.r - fab.l) * 0.7, h = fab.l + (fab.r - fab.l) * 0.3;
+    vline(g, e, fab.b, ag.t - 1, 'var(--brand)', 1.6);
+    g.appendChild(el('text', { x: e - 12, y: (fab.b + ag.t) / 2 - 6, 'text-anchor': 'end',
+      fill: 'var(--brand)', 'font-weight': 700 }, 'AGENT EYES'));
+    // hands: one straight line from the agent through the machine to the part
+    var xL = fab.l + 18;
+    vline(g, xL, ag.t, dut.b + 1, 'var(--dim)', 1.2);
+    g.appendChild(el('text', { x: xL + 12, y: (fab.b + ag.t) / 2 + 14,
+      fill: 'var(--dim)' }, 'AGENT HANDS'));
+    g.appendChild(el('text', { x: xL + 12, y: (dut.b + fab.t) / 2 + 4,
+      fill: 'var(--dim)' }, 'JTAG/SWD'));
+  }
+
+  function draw() {
+    var g = $('g'); while (g.firstChild) g.removeChild(g.firstChild);
+    if (innerWidth <= 680) { drawStacked(); return; }
+
+    var dut = R($('dut')), fab = R($('fab')), io = R($('io')),
+        wr = R($('world')), ag = R($('agent'));
+
+    // the ring: out along the upper band, back along the lower
+    var hi = io.t + (io.b - io.t) * 0.24, lo = io.t + (io.b - io.t) * 0.76;
+    curve(g, dut.r, hi, io.l, hi);      // board -> I/O
+    curve(g, io.r, hi, wr.l, hi);       // I/O -> world
+    curve(g, wr.l, lo, io.r, lo);       // world -> I/O
+    curve(g, io.l, lo, dut.r, lo);      // I/O -> board
+
+    // the verdict leaves the machine for the agent
+    var ey = fab.t + (fab.b - fab.t) * 0.40, gx = (fab.r + ag.l) / 2;
+    g.appendChild(el('path', { d: 'M' + fab.r + ' ' + ey.toFixed(1) + ' H' + (ag.l - 1),
+      fill: 'none', stroke: 'var(--brand)', 'stroke-width': 1.6, 'marker-end': 'url(#mB)' }));
+    g.appendChild(el('text', { x: gx, y: ey - 26, 'text-anchor': 'middle',
+      fill: 'var(--brand)', 'font-weight': 700 }, 'AGENT'));
+    g.appendChild(el('text', { x: gx, y: ey - 11, 'text-anchor': 'middle',
+      fill: 'var(--brand)', 'font-weight': 700 }, 'EYES'));
+
+    // and the next build goes back through the machine to the part
+    var hy = fab.b - 18;
+    g.appendChild(el('path', { d: 'M' + ag.l + ' ' + hy.toFixed(1) + ' H' + (dut.r + 1),
+      fill: 'none', stroke: 'var(--dim)', 'stroke-width': 1.2, 'marker-end': 'url(#mA)' }));
+    g.appendChild(el('text', { x: gx, y: hy - 26, 'text-anchor': 'middle',
+      fill: 'var(--dim)' }, 'AGENT'));
+    g.appendChild(el('text', { x: gx, y: hy - 11, 'text-anchor': 'middle',
+      fill: 'var(--dim)' }, 'HANDS'));
+    g.appendChild(el('text', { x: fab.l + 16, y: hy - 9, fill: 'var(--dim)' }, 'JTAG/SWD'));
+  }
+
+  new ResizeObserver(draw).observe($('stage'));
+  addEventListener('resize', draw);
+  draw();
+})();
+</script>
+</body>
+</html>

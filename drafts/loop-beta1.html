@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The loop &#183; beta1</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root {
+    --bg:#0E0F11; --card:#15161A; --line:rgba(255,255,255,.14);
+    --text:#EDEEF0; --dim:#9DA1A8; --faint:#7C8088; --brand:#FFB454; --card2:#1C1E24;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#FAFAF9; --card:#FFFFFF; --line:rgba(20,22,26,.18); --card2:#F4F4F2;
+      --text:#16181D; --dim:#555A63; --faint:#6B7078; --brand:#B05C00; color-scheme: light; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono);
+    min-height:100vh; display:grid; place-items:center; padding:48px 24px;
+    -webkit-font-smoothing:antialiased; }
+  .sheet { width:100%; max-width:880px; }
+  h1 { font-size:26px; letter-spacing:-.02em; margin-bottom:10px; }
+  .lede { color:var(--dim); font-size:14px; line-height:1.6; max-width:52ch; margin-bottom:30px; }
+  .lede b { color:var(--text); font-weight:700; }
+  svg { display:block; width:100%; max-width:560px; height:auto; }
+  .foot { color:var(--faint); font-size:10.5px; letter-spacing:.1em; margin-top:26px; }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <h1>The loop</h1>
+  <p class="lede">Your firmware runs unmodified, on its own silicon, and cannot tell that the
+  world around it is generated. <b>Everything it reads is answered in hardware at its own
+  clock; everything it drives is measured at the pins.</b></p>
+
+  <svg viewBox="46 24 508 643" role="img" aria-labelledby="t d">
+    <title id="t">The loop: your board, Augur One in fabric, your agent</title>
+    <desc id="d">A vertical stack of three, threaded by one unbroken ring. On top, your DUT
+    board, with your unmodified firmware on real silicon inside it. Below it, Augur One, in
+    fabric on one clock domain: an I/O block that emulates what the part reads and measures what
+    it writes, and a world that advances physics at loop rate. The ring runs through all
+    of them and crosses the boundary between board and fabric twice: inbound, the signals the
+    firmware reads; outbound, the actuators it writes. From the measurement, a verdict against
+    fixed thresholds leaves Augur One with no AI in the checker, and reaches the agent at the
+    bottom of the stack. The agent is yours, not supplied by Oracova; it writes the scenarios,
+    reads the verdicts, and sends the next build back up to the board.</desc>
+
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+      </marker>
+      <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+      <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--faint)"/>
+      </marker>
+    </defs>
+
+    <!-- everything inside this outline is Augur One; its top edge is the boundary -->
+    <rect x="70" y="190" width="460" height="311" rx="14" fill="none"
+          stroke="var(--brand)" stroke-width="1.2" stroke-dasharray="3 4" opacity=".85"/>
+    <text x="100" y="216" fill="var(--brand)" font-size="12" font-weight="700" letter-spacing="1.2">AUGUR ONE</text>
+    <text x="100" y="234" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">IN FABRIC</text>
+
+    <!-- the ring is unbroken on purpose: the loop never opens -->
+    <ellipse cx="300" cy="290" rx="110" ry="155" fill="none" stroke="var(--line)" stroke-width="1.4"/>
+
+    <!-- direction, marked between the stations rather than on them -->
+    <path d="M387.5 196 A110 155 0 0 1 400.8 228" fill="none" stroke="var(--dim)" stroke-width="1.4" marker-end="url(#a)"/>
+    <path d="M401.4 350 A110 155 0 0 1 386.9 385" fill="none" stroke="var(--dim)" stroke-width="1.4" marker-end="url(#a)"/>
+    <path d="M213.1 385 A110 155 0 0 1 198.6 350" fill="none" stroke="var(--dim)" stroke-width="1.4" marker-end="url(#a)"/>
+    <path d="M199.2 228 A110 155 0 0 1 212.5 196" fill="none" stroke="var(--dim)" stroke-width="1.4" marker-end="url(#a)"/>
+
+    <!-- in fabric: both ends of the wire in one block, and the world under it -->
+    <rect x="100" y="258" width="400" height="64" rx="9" fill="var(--card)" stroke="var(--line)" stroke-width="1.4"/>
+    <text x="300" y="286" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">I/O</text>
+    <text x="300" y="307" text-anchor="middle" fill="var(--dim)" font-size="11.5">emulated in &#183; measured out</text>
+
+    <rect x="100" y="413" width="400" height="64" rx="9" fill="var(--card)" stroke="var(--line)" stroke-width="1.4"/>
+    <text x="300" y="441" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">THE WORLD</text>
+    <text x="300" y="462" text-anchor="middle" fill="var(--dim)" font-size="11.5">physics, in fabric</text>
+
+    <!-- top of the stack: the board, and inside it the part running your build -->
+    <rect x="70" y="40" width="460" height="100" rx="12" fill="var(--card)" stroke="var(--brand)" stroke-width="1.6"/>
+    <text x="90" y="63" fill="var(--brand)" font-size="13.5" font-weight="700" letter-spacing=".6">YOUR DUT BOARD</text>
+    <rect x="180" y="72" width="240" height="54" rx="8" fill="var(--card2)" stroke="var(--line)" stroke-width="1.2"/>
+    <text x="300" y="94" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700">YOUR FIRMWARE</text>
+    <text x="300" y="114" text-anchor="middle" fill="var(--dim)" font-size="11.5">unmodified &#183; real silicon</text>
+
+    <!-- what the ring carries across the boundary, in the lede's own words -->
+    <text x="200" y="166" text-anchor="end" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">IT READS</text>
+    <text x="200" y="182" text-anchor="end" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">SIGNALS</text>
+    <text x="400" y="166" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">IT WRITES</text>
+    <text x="400" y="182" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">ACTUATORS</text>
+
+    <!-- the one thing that leaves the machine -->
+    <path d="M430 501 V571" fill="none" stroke="var(--brand)" stroke-width="1.6" marker-end="url(#ab)"/>
+    <text x="418" y="530" text-anchor="end" fill="var(--brand)" font-size="10.5" letter-spacing="1.2">VERDICT</text>
+    <text x="418" y="546" text-anchor="end" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">NO AI IN THE CHECKER</text>
+
+    <!-- bottom of the stack: not our software -->
+    <rect x="70" y="571" width="460" height="76" rx="12" fill="none"
+          stroke="var(--brand)" stroke-width="1.4" stroke-dasharray="7 5"/>
+    <text x="90" y="601" fill="var(--brand)" font-size="13.5" font-weight="700" letter-spacing=".6">AGENT</text>
+    <text x="510" y="600" text-anchor="end" fill="var(--faint)" font-size="9.5" letter-spacing="1">YOURS &#183; WE SUPPORT IT</text>
+    <text x="90" y="625" fill="var(--dim)" font-size="11.5">writes the scenarios &#183; reads the verdicts</text>
+
+    <!-- the outer loop closes through the machine: Augur One is what puts the build on the part -->
+    <path d="M85 571 V140" fill="none" stroke="var(--faint)" stroke-width="1.3"
+          stroke-dasharray="5 4" marker-end="url(#af)"/>
+    <text x="99" y="536" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">NEXT BUILD</text>
+    <text x="99" y="552" fill="var(--faint)" font-size="10.5" letter-spacing="1.2">FLASH &#183; RESET</text>
+  </svg>
+
+  <p class="foot">AUGUR ONE IS IN FABRICATION &#183; WHAT RUNS TODAY RUNS ON ORACOVA DEVELOPMENT HARDWARE</p>
+</div>
+</body>
+</html>

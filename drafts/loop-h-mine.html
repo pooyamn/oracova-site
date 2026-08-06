@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The loop &#183; horizontal</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root {
+    --bg:#0E0F11; --card:#15161A; --line:rgba(255,255,255,.34);
+    --text:#EDEEF0; --dim:#9DA1A8; --brand:#FFB454; --card2:#1C1E24;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#FAFAF9; --card:#FFFFFF; --line:rgba(20,22,26,.52); --card2:#F4F4F2;
+      --text:#16181D; --dim:#555A63; --brand:#8A4700; color-scheme: light; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:40px 24px; -webkit-font-smoothing:antialiased; }
+  .fig { width:100%; }
+  svg { display:block; width:100%; height:auto; font-family:var(--mono); }
+  .t  { font-size:15px; font-weight:700; fill:var(--text); }
+  .tb { font-size:15px; font-weight:700; fill:var(--brand); letter-spacing:.6px; }
+  .s  { font-size:12px; fill:var(--dim); }
+  .g  { font-weight:400; fill:var(--dim); letter-spacing:0; }
+  .w  { font-size:12px; fill:var(--dim); letter-spacing:1.2px; }
+  .wb { font-size:12px; font-weight:700; fill:var(--brand); letter-spacing:1.2px; }
+  .card  { fill:var(--card);  stroke:var(--line); stroke-width:1.2; }
+  .card2 { fill:var(--card2); stroke:var(--line); stroke-width:1.2; }
+  .own   { fill:none; stroke:var(--brand); stroke-width:1.6; }
+  .ownf  { fill:var(--card); stroke:var(--brand); stroke-width:1.6; }
+  .ring, .wire { fill:none; stroke:var(--dim); stroke-width:1.2; }
+  .out   { fill:none; stroke:var(--brand); stroke-width:1.6; }
+  .knock { fill:var(--bg); }
+</style>
+</head>
+<body>
+<div class="fig" id="fig">
+  <svg id="svg" viewBox="0 0 1200 242" role="img" aria-labelledby="ttl dsc">
+    <title id="ttl">The loop, left to right: your board, I/O, the world, your agent</title>
+    <desc id="dsc">Four columns in one line. Your DUT board, with your unmodified firmware on
+    real silicon inside it. Then an I/O block that emulates every peripheral the part reads and
+    measures what it writes, then a world that advances physics at loop rate; both sit inside
+    Augur One, in fabric on one clock domain, and the boundary between board and fabric runs
+    between the first and second columns. One unbroken ring threads the first three columns:
+    out along the top, back along the bottom. The fourth column is the agent, which is yours and
+    not supplied by Oracova. A verdict against fixed thresholds leaves Augur One for the agent,
+    and the agent sends the next build back through Augur One, which flashes and resets the part
+    over JTAG or SWD.</desc>
+
+    <defs>
+      <marker id="mA" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+      </marker>
+      <marker id="mB" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+    </defs>
+
+    <rect id="frame" class="own" rx="12"/>
+
+    <path id="arc0" class="ring" marker-end="url(#mA)"/>
+    <path id="arc1" class="ring" marker-end="url(#mA)"/>
+    <path id="arc2" class="ring" marker-end="url(#mA)"/>
+    <path id="arc3" class="ring" marker-end="url(#mA)"/>
+
+    <rect id="legknock" class="knock"/>
+    <text id="leg" class="wb" text-anchor="middle" dx="0.6">AUGUR ONE</text>
+
+    <rect id="io" class="card" rx="10"/>
+    <text id="ioT" class="t" text-anchor="middle">I/O</text>
+    <text id="io0" class="s" text-anchor="middle">SPI &#183; I2C &#183; USART</text>
+    <text id="io1" class="s" text-anchor="middle">USB &#183; CAN &#183; ETHERNET</text>
+    <text id="io2" class="s" text-anchor="middle">WI-FI &#183; BLUETOOTH</text>
+    <text id="io3" class="s" text-anchor="middle">ADC &#183; DAC &#183; PWM</text>
+    <text id="io4" class="s" text-anchor="middle">GPIO &#183; QUADRATURE</text>
+
+    <rect id="world" class="card" rx="10"/>
+    <text id="wT" class="t" text-anchor="middle">THE WORLD</text>
+    <text id="wS" class="s" text-anchor="middle">physics, in fabric</text>
+
+    <rect id="board" class="ownf" rx="12"/>
+    <text id="bT" class="tb">YOUR D<tspan class="g">evice</tspan> U<tspan class="g">nder</tspan> T<tspan class="g">est</tspan> BOARD</text>
+    <rect id="chip" class="card2" rx="10"/>
+    <text id="cT" class="t" text-anchor="middle">YOUR FIRMWARE</text>
+    <text id="cS" class="s" text-anchor="middle">unmodified &#183; real silicon</text>
+
+    <rect id="agent" class="own" rx="12"/>
+    <text id="aT" class="tb">AGENT</text>
+    <text id="aS" class="s">writes scenarios</text>
+    <text id="aS2" class="s">reads verdicts</text>
+
+    <path id="eyes" class="out" marker-end="url(#mB)"/>
+    <text id="eyesL1" class="wb" text-anchor="middle">AGENT EYES</text>
+    
+
+    <path id="hands" class="wire" marker-end="url(#mA)"/>
+    <text id="handsL" class="w" text-anchor="middle">AGENT HANDS</text>
+    <text id="jtagL" class="w">JTAG/SWD</text>
+  </svg>
+</div>
+
+<script>
+(function () {
+  var CAP15 = 11.19, CAP12 = 8.95;
+  var $ = function (id) { return document.getElementById(id); };
+  function set(el, a) { for (var k in a) el.setAttribute(k, a[k]); }
+  function box(id, x, y, w, h) { set($(id), { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h) }); }
+
+  function arc(cx, cy, rx, ry, x0, x1, lower) {
+    // sample the ellipse between two x positions, on the upper or lower half
+    var n = 16, d = '', s = lower ? 1 : -1;
+    var t0 = Math.acos(Math.max(-1, Math.min(1, (x0 - cx) / rx)));
+    var t1 = Math.acos(Math.max(-1, Math.min(1, (x1 - cx) / rx)));
+    for (var i = 0; i <= n; i++) {
+      var t = t0 + (t1 - t0) * i / n;
+      d += (i ? 'L' : 'M') + (cx + rx * Math.cos(t)).toFixed(2) + ' ' +
+           (cy + s * ry * Math.sin(t)).toFixed(2) + ' ';
+    }
+    return d;
+  }
+
+  function draw() {
+    var W = Math.round($('fig').clientWidth);
+    if (!W) return;
+
+    // four equal columns in one line
+    var g = Math.max(28, Math.min(56, Math.round(0.03 * W)));
+    var g3 = Math.max(100, g);            // room for the verdict label
+    var col = (W - 2 - 2 * g - g3) / 4;
+    var x1 = 1, x2 = x1 + col + g, x3 = x2 + col + g, x4 = x3 + col + g3;
+
+    var fy = 2, fh = 236, cy = fy + 110, H = fy + fh + 4;
+    var ioY = 32, ioH = 160, boxY = 37, boxH = 150, corr = 214;
+    var ry = 62, cx = x2 + col / 2, rx = col + g;
+
+    $('svg').setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    box('frame', x2 - g / 2, fy, col * 2 + 2 * g, fh);
+    box('board', x1, boxY, col, boxH);
+    box('io', x2, ioY, col, ioH);
+    box('world', x3, boxY, col, boxH);
+    box('agent', x4, boxY, col, boxH);
+
+    // the ring: out along the top, back along the bottom, hidden behind the blocks
+    $('arc0').setAttribute('d', arc(cx, cy, rx, ry, x1 + col, x2 - 4, false));
+    $('arc1').setAttribute('d', arc(cx, cy, rx, ry, x2 + col, x3 - 4, false));
+    $('arc2').setAttribute('d', arc(cx, cy, rx, ry, x3, x2 + col + 4, true));
+    $('arc3').setAttribute('d', arc(cx, cy, rx, ry, x2, x1 + col + 4, true));
+
+    // I/O: title then five lines
+    var p = (ioH - (CAP15 + 23 + 4 * 18)) / 2, y = ioY + p + CAP15, mx = x2 + col / 2;
+    set($('ioT'), { x: mx, y: y });
+    for (var j = 0; j < 5; j++) { y += j ? 18 : 23; set($('io' + j), { x: mx, y: y }); }
+
+    p = (boxH - (CAP15 + 23)) / 2; y = boxY + p + CAP15;
+    set($('wT'), { x: x3 + col / 2, y: y }); set($('wS'), { x: x3 + col / 2, y: y + 23 });
+
+    // agent: title left, two lines under it
+    p = (boxH - (CAP15 + 23 + 18)) / 2; y = boxY + p + CAP15;
+    set($('aT'), { x: x4 + 22, y: y });
+    set($('aS'), { x: x4 + 22, y: y + 23 });
+    set($('aS2'), { x: x4 + 22, y: y + 41 });
+
+    // board: title, then the chip
+    var chipH = 70;
+    p = (boxH - (CAP15 + 14 + chipH)) / 2;
+    var bt = boxY + p + CAP15, chipY = bt + 14, chipX = x1 + 20, chipW = col - 40;
+    var bT = $('bT');
+    bT.style.fontSize = '15px';
+    set(bT, { x: chipX, y: bt });
+    var over = bT.getComputedTextLength() - chipW;
+    if (over > 0) bT.style.fontSize = Math.max(11, 15 * chipW / bT.getComputedTextLength()).toFixed(2) + 'px';
+    box('chip', chipX, chipY, chipW, chipH);
+    var q = (chipH - (CAP15 + 23)) / 2, cy2 = chipY + q + CAP15, cmx = chipX + chipW / 2;
+    set($('cT'), { x: cmx, y: cy2 }); set($('cS'), { x: cmx, y: cy2 + 23 });
+
+    // the verdict leaves the machine for the agent, straight across the gutter
+    $('eyes').setAttribute('d', 'M' + (x3 + col) + ' ' + cy + ' H' + (x4 - 2));
+    var gx = x3 + col + g3 / 2;
+    set($('eyesL1'), { x: gx, y: cy - 14 });
+
+    // and the next build goes back through the machine to the part
+    var hx = x4 + col / 2;
+    $('hands').setAttribute('d', 'M' + hx + ' ' + (boxY + boxH) + ' V' + corr +
+                                 ' H' + (x1 + col / 2) + ' V' + (boxY + boxH + 2));
+    set($('handsL'), { x: (x2 + x3 + col) / 2, y: corr - 8 });
+    set($('jtagL'), { x: x1 + col / 2 + 14, y: corr - 8 });
+
+    // the legend rides the top edge of the frame
+    var lgx = x2 - g / 2 + (col * 2 + 2 * g) / 2;
+    set($('leg'), { x: lgx, y: fy + 4.5 + CAP12 / 2 });
+    box('legknock', lgx - 44, fy - 3, 88, 15);
+  }
+
+  var rt;
+  addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(draw, 60); });
+  draw();
+})();
+</script>
+</body>
+</html>

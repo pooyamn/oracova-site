@@ -46,11 +46,11 @@
     letter-spacing: -0.01em; margin-bottom: 28px; max-width: 52ch;
   }
   .hero .hero-second em { font-style: normal; color: var(--brand); font-weight: 600; }
-  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
   @media (max-width: 560px) {
     header.hero { padding: 40px 0 40px; }
     .hero .hero-second { font-size: 15.5px; margin-bottom: 18px; }
-    .cta-row { gap: 10px; margin-bottom: 24px; }
+    .cta-row { gap: 10px; margin-top: 22px; }
     .cta-row .btn { padding: 9px 15px; font-size: 13.5px; }
   }
 
@@ -172,6 +172,8 @@
   .card .faults { min-height: 2.6em; font-family: var(--mono); font-size: 11.5px; color: var(--brand); margin-bottom: 8px; opacity: .9; }
   .note { margin-top: 20px; font-size: 13.5px; color: var(--text-dim); max-width: 68ch; line-height: 1.6; }
   .next-step { margin-top: 18px; }
+  .cmp .hl a { color: var(--brand); text-decoration: none; }
+  .cmp .hl a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .next-step a { display: inline-block; padding: 13px 0; margin: -13px 0;
     font-family: var(--mono); font-size: 14px; color: var(--brand); text-decoration: none; }
   .next-step a:hover { text-decoration: underline; text-underline-offset: 3px; }
@@ -352,6 +354,51 @@
 
 
 
+  /* ---------- the loop diagram, above the terminal in the same instrument ---------- */
+  .loopfig {
+    --lf-card: var(--surface); --lf-card2: #1C1E24;
+    --lf-line: rgba(255,255,255,.34);
+    font-family: var(--mono);
+    position: relative; margin: 0 0 22px;
+    border: 1px solid var(--border-strong); border-radius: 14px;
+    background: var(--bg-panel); padding: 30px 26px 26px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.3);
+  }
+  .lf-row { display: grid; grid-template-columns: 1fr 2.1fr 1fr;
+    gap: clamp(48px, 5vw, 84px); align-items: stretch; }
+  .lf-actor { border: 1.6px solid var(--brand); border-radius: 12px; padding: 12px; }
+  .lf-actor.lf-filled { background: var(--lf-card); }
+  .lf-chip { background: var(--lf-card2); border: 1.2px solid var(--lf-line);
+    border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .lf-card { background: var(--lf-card); border: 1.2px solid var(--lf-line);
+    border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .lf-t  { font-size: 14px; font-weight: 700; color: var(--text); }
+  .lf-s  { font-size: 12px; color: var(--text-dim); line-height: 1.55; margin-top: 7px; }
+  .lf-tb { font-size: 14px; font-weight: 700; color: var(--brand); letter-spacing: .6px; }
+  .lf-tb small { font-size: 11px; font-weight: 400; letter-spacing: 0; color: var(--text-dim); }
+  .lf-dut { display: flex; flex-direction: column; }
+  .lf-dut .lf-chip { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .lf-dut .lf-tb { text-align: center; margin-top: 10px; line-height: 1.45; }
+  .lf-dut .lf-tb span { white-space: nowrap; }
+  .lf-fab { position: relative; padding: 20px 16px 40px; }
+  .lf-fab .lf-leg { position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    background: var(--bg-panel); padding: 0 12px; font-size: 12px; font-weight: 700;
+    color: var(--brand); letter-spacing: 1.2px; white-space: nowrap; }
+  .lf-fab .lf-cols { display: grid; grid-template-columns: 1.3fr 1fr;
+    gap: clamp(40px, 4vw, 72px); height: 100%; align-items: stretch; }
+  .lf-fab .lf-card { display: flex; flex-direction: column; justify-content: center; }
+  .lf-agent { display: flex; flex-direction: column; justify-content: center;
+    text-align: center; }
+  svg.lf-wires { position: absolute; inset: 0; width: 100%; height: 100%;
+    overflow: visible; pointer-events: none; }
+  .lf-wires text { font-family: var(--mono); font-size: 12px; letter-spacing: 1.2px; }
+
+  @media (max-width: 700px) {
+    .loopfig { padding: 22px 14px 18px; margin-bottom: 16px; border-radius: 12px; }
+    .lf-row { grid-template-columns: 1fr; gap: 52px; }
+    .lf-fab { padding-left: 34px; }
+    .lf-fab .lf-cols { grid-template-columns: 1fr; gap: 44px; }
+  }
 </style>
 </head>
 <body>
@@ -384,9 +431,56 @@
     <div class="kicker">An automated test bench for firmware</div>
     <h1>AI agents test your firmware on real&nbsp;hardware.</h1>
     <div class="hero-second">A hundred iterations, unattended. You review <em>the one that passed</em>.</div>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="/onboarding">See your board on the bench</a>
-    </div>
+      <figure class="loopfig instrument" id="lf-stage" role="img"
+        aria-label="The loop, left to right: your DUT board with your unmodified firmware on
+        real silicon; Augur One, in fabric, holding an I/O block that emulates every peripheral
+        the part reads and measures what it writes, and a world that advances physics at loop
+        rate; one unbroken ring threads all three, crossing the board/fabric boundary twice.
+        A verdict against fixed thresholds leaves Augur One for the agent, which is yours, not
+        supplied by Oracova; it writes the scenarios, reads the verdicts, and sends the next
+        build back through Augur One, which flashes and resets the part over JTAG or SWD.">
+        <div class="lf-row">
+          <div class="lf-actor lf-filled lf-dut" id="lf-dut">
+            <div class="lf-chip">
+              <div class="lf-t">YOUR FIRMWARE</div>
+              <div class="lf-s">unmodified &#183; real silicon</div>
+            </div>
+            <div class="lf-tb"><span>YOUR</span> <span>D<small>evice</small> U<small>nder</small> T<small>est</small></span> <span>BOARD</span></div>
+          </div>
+          <div class="lf-actor lf-fab" id="lf-fab">
+            <div class="lf-leg">AUGUR ONE</div>
+            <div class="lf-cols">
+              <div class="lf-card" id="lf-io">
+                <div class="lf-t">I/O</div>
+                <div class="lf-s">SPI &#183; I2C &#183; USART &#183; USB &#183; CAN &#183;
+                  ETHERNET &#183; WI&#8209;FI &#183; BLUETOOTH &#183; ADC &#183; DAC &#183;
+                  PWM &#183; GPIO &#183; QUADRATURE</div>
+              </div>
+              <div class="lf-card" id="lf-world">
+                <div class="lf-t">THE WORLD</div>
+                <div class="lf-s">physics, in fabric</div>
+              </div>
+            </div>
+          </div>
+          <div class="lf-actor lf-agent" id="lf-agent">
+            <div class="lf-tb">AGENT</div>
+            <div class="lf-s">writes scenarios<br>reads verdicts</div>
+          </div>
+        </div>
+        <svg class="lf-wires" aria-hidden="true">
+          <defs>
+            <marker id="lfA" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+                    markerWidth="9" markerHeight="9" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-dim)"/>
+            </marker>
+            <marker id="lfB" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+                    markerWidth="9" markerHeight="9" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+            </marker>
+          </defs>
+          <g id="lf-g"></g>
+        </svg>
+      </figure>
     <div class="video-frame instrument">
       <div class="bench-replay instrument">
         <div class="bench-head">
@@ -472,6 +566,9 @@
       <div class="run-stats instrument">
         <span><b>gyro driver implemented &middot; DMA-accelerated &middot; tested</b></span><span>8 iterations</span><span class="stat-key">1 h 12 min unattended</span>
       </div>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/onboarding">See your board on the bench</a>
     </div>
   </div>
 </header>
@@ -609,7 +706,7 @@
         <tr><td>a bench per PR</td><td class="y hl">yes</td><td class="n">no</td><td class="y">yes</td><td class="n">no</td></tr>
         <tr><td>runs on real silicon</td><td class="y hl">yes</td><td class="y">yes</td><td class="n">no</td><td class="y">yes</td></tr>
         <tr><td>faults on the chip</td><td class="y hl">by physics</td><td class="dim">hand-wired</td><td class="n">in a model</td><td class="dim">scripted</td></tr>
-        <tr><td>entry cost</td><td class="hl dim">a DUT board + bring-up</td><td class="dim">engineer-hours</td><td class="dim">"free"</td><td class="dim">$9,900+</td></tr>
+        <tr><td>entry cost</td><td class="hl dim"><a href="/preorder">$2,000 a bench &rarr;</a></td><td class="dim">engineer-hours</td><td class="dim">"free"</td><td class="dim">$9,900+</td></tr>
       </table>
     </div>
     </div>
@@ -617,7 +714,7 @@
     <p class="note">Running today on Oracova development hardware: STM32F411 under test, a BLDC
     + hall fault library, unmodified Betaflight in closed loop at 8 kHz. Augur One puts all of it on
     one board and is in fabrication.</p>
-    <p class="next-step"><a href="/onboarding">See your board on the bench &rarr;</a></p>
+    <p class="next-step"><a href="/preorder">Price your bench &rarr;</a></p>
   </div>
 </section>
 
@@ -957,6 +1054,91 @@
   }, { passive: true });
   document.body.classList.add('cmpm');
   fill();
+})();
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var stage = $('lf-stage');
+  if (!stage) return;
+
+  function R(node) {
+    var s = stage.getBoundingClientRect(), r = node.getBoundingClientRect();
+    return { l: r.left - s.left, r: r.right - s.left, t: r.top - s.top, b: r.bottom - s.top };
+  }
+  function el(name, attrs, txt) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (txt) e.textContent = txt;
+    return e;
+  }
+  function curve(g, x0, y0, x1, y1) {
+    var mx = (x0 + x1) / 2;
+    g.appendChild(el('path', { d: 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+      ' C' + mx.toFixed(1) + ' ' + y0.toFixed(1) + ' ' + mx.toFixed(1) + ' ' + y1.toFixed(1) +
+      ' ' + (x1 - 1).toFixed(1) + ' ' + y1.toFixed(1),
+      fill: 'none', stroke: 'var(--text-dim)', 'stroke-width': 1.2, 'marker-end': 'url(#lfA)' }));
+  }
+  function vline(g, x, y0, y1, stroke, wdt) {
+    g.appendChild(el('path', { d: 'M' + x.toFixed(1) + ' ' + y0.toFixed(1) +
+      ' V' + y1.toFixed(1), fill: 'none', stroke: stroke, 'stroke-width': wdt,
+      'marker-end': 'url(#' + (stroke === 'var(--brand)' ? 'lfB' : 'lfA') + ')' }));
+  }
+
+  function draw() {
+    var g = $('lf-g'); while (g.firstChild) g.removeChild(g.firstChild);
+    var dut = R($('lf-dut')), fab = R($('lf-fab')), io = R($('lf-io')),
+        wr = R($('lf-world')), ag = R($('lf-agent'));
+
+    if (innerWidth <= 700) {
+      // stacked: the ring as vertical lanes, hands as one straight line to the part
+      var q3 = dut.l + (dut.r - dut.l) * 0.3, q7 = dut.l + (dut.r - dut.l) * 0.7;
+      vline(g, q7, dut.b, io.t - 1, 'var(--text-dim)', 1.2);
+      vline(g, q7, io.b, wr.t - 1, 'var(--text-dim)', 1.2);
+      vline(g, q3, wr.t, io.b + 1, 'var(--text-dim)', 1.2);
+      vline(g, q3, io.t, dut.b + 1, 'var(--text-dim)', 1.2);
+      var e = fab.l + (fab.r - fab.l) * 0.7;
+      vline(g, e, fab.b, ag.t - 1, 'var(--brand)', 1.6);
+      g.appendChild(el('text', { x: e - 12, y: (fab.b + ag.t) / 2 - 6, 'text-anchor': 'end',
+        fill: 'var(--brand)', 'font-weight': 700 }, 'AGENT EYES'));
+      var xL = fab.l + 17;
+      vline(g, xL, ag.t, dut.b + 1, 'var(--text-dim)', 1.2);
+      g.appendChild(el('text', { x: xL + 12, y: (fab.b + ag.t) / 2 + 14,
+        fill: 'var(--text-dim)' }, 'AGENT HANDS'));
+      g.appendChild(el('text', { x: xL + 12, y: (dut.b + fab.t) / 2 + 4,
+        fill: 'var(--text-dim)' }, 'JTAG/SWD'));
+      return;
+    }
+
+    // one line: the ring out along the upper band and back along the lower
+    var hi = io.t + (io.b - io.t) * 0.24, lo = io.t + (io.b - io.t) * 0.76;
+    curve(g, dut.r, hi, io.l, hi);
+    curve(g, io.r, hi, wr.l, hi);
+    curve(g, wr.l, lo, io.r, lo);
+    curve(g, io.l, lo, dut.r, lo);
+
+    var ey = fab.t + (fab.b - fab.t) * 0.40, gx = (fab.r + ag.l) / 2;
+    g.appendChild(el('path', { d: 'M' + fab.r + ' ' + ey.toFixed(1) + ' H' + (ag.l - 1),
+      fill: 'none', stroke: 'var(--brand)', 'stroke-width': 1.6, 'marker-end': 'url(#lfB)' }));
+    g.appendChild(el('text', { x: gx, y: ey - 26, 'text-anchor': 'middle',
+      fill: 'var(--brand)', 'font-weight': 700 }, 'AGENT'));
+    g.appendChild(el('text', { x: gx, y: ey - 11, 'text-anchor': 'middle',
+      fill: 'var(--brand)', 'font-weight': 700 }, 'EYES'));
+
+    var hy = fab.b - 16;
+    g.appendChild(el('path', { d: 'M' + ag.l + ' ' + hy.toFixed(1) + ' H' + (dut.r + 1),
+      fill: 'none', stroke: 'var(--text-dim)', 'stroke-width': 1.2, 'marker-end': 'url(#lfA)' }));
+    g.appendChild(el('text', { x: gx, y: hy - 26, 'text-anchor': 'middle',
+      fill: 'var(--text-dim)' }, 'AGENT'));
+    g.appendChild(el('text', { x: gx, y: hy - 11, 'text-anchor': 'middle',
+      fill: 'var(--text-dim)' }, 'HANDS'));
+    g.appendChild(el('text', { x: fab.l + 16, y: hy - 9,
+      fill: 'var(--text-dim)' }, 'JTAG/SWD'));
+  }
+
+  new ResizeObserver(draw).observe(stage);
+  addEventListener('resize', draw);
+  draw();
 })();
 </script>
 <script>

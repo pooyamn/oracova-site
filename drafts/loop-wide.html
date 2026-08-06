@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The loop &#183; responsive</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root {
+    --bg:#0E0F11; --card:#15161A; --line:rgba(255,255,255,.34);
+    --text:#EDEEF0; --dim:#9DA1A8; --faint:#7C8088; --brand:#FFB454; --card2:#1C1E24;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#FAFAF9; --card:#FFFFFF; --line:rgba(20,22,26,.52); --card2:#F4F4F2;
+      --text:#16181D; --dim:#555A63; --faint:#6B7078; --brand:#8A4700; color-scheme: light; }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--mono);
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:32px 20px; -webkit-font-smoothing:antialiased; }
+  .fig { width:100%; max-width:1240px; }
+  svg { display:block; width:100%; height:auto; margin:0 auto; font-family:var(--mono); }
+  .t  { font-size:15px; font-weight:700; fill:var(--text); }
+  .tb { font-size:15px; font-weight:700; fill:var(--brand); letter-spacing:.6px; }
+  .s  { font-size:12px; fill:var(--dim); }
+  .g  { font-size:11px; font-weight:400; fill:var(--dim); letter-spacing:0; }
+  .w  { font-size:12px; fill:var(--dim); letter-spacing:1.2px; }
+  .wb { font-size:12px; font-weight:700; fill:var(--brand); letter-spacing:1.2px; }
+  .card  { fill:var(--card);  stroke:var(--line);  stroke-width:1.2; }
+  .card2 { fill:var(--card2); stroke:var(--line);  stroke-width:1.2; }
+  .own   { fill:none; stroke:var(--brand); stroke-width:1.6; }
+  .ownf  { fill:var(--card); stroke:var(--brand); stroke-width:1.6; }
+  .ring  { fill:none; stroke:var(--dim); stroke-width:1.2; }
+  .wire  { fill:none; stroke:var(--dim); stroke-width:1.2; }
+  .out   { fill:none; stroke:var(--brand); stroke-width:1.6; }
+  .knock { fill:var(--bg); }
+</style>
+</head>
+<body>
+<div class="fig" id="fig">
+  <svg id="svg" viewBox="0 0 360 640" role="img" aria-labelledby="ttl dsc">
+    <title id="ttl">The loop: your board, Augur One in fabric, your agent</title>
+    <desc id="dsc">One unbroken ring threads your DUT board, an I/O block that emulates every
+    peripheral the part reads and measures what it writes, and a world that advances physics at
+    loop rate. I/O and the world sit inside Augur One, in fabric on one clock domain; the ring
+    crosses the boundary between board and fabric twice. The agent, which is yours and not
+    supplied by Oracova, reads a verdict against fixed thresholds from Augur One and sends the
+    next build back up through Augur One, which flashes and resets the part over JTAG or SWD.
+    On wide screens the same diagram lays out left to right; on narrow screens it stacks.</desc>
+
+    <defs>
+      <marker id="mA" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+      </marker>
+      <marker id="mB" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse"
+              markerWidth="9" markerHeight="9" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="var(--brand)"/>
+      </marker>
+    </defs>
+
+    <rect id="frame" class="own" rx="12"/>
+
+    <path id="arc0" class="ring" marker-end="url(#mA)"/>
+    <path id="arc1" class="ring" marker-end="url(#mA)"/>
+    <path id="arc2" class="ring" marker-end="url(#mA)"/>
+    <path id="arc3" class="ring" marker-end="url(#mA)"/>
+
+    <rect id="legknock" class="knock"/>
+    <text id="leg" class="wb" text-anchor="middle" dx="0.6">AUGUR ONE</text>
+
+    <rect id="io" class="card" rx="10"/>
+    <text id="ioT" class="t" text-anchor="middle">I/O</text>
+    <text id="io0" class="s" text-anchor="middle">SPI &#183; I2C &#183; USART</text>
+    <text id="io1" class="s" text-anchor="middle">USB &#183; CAN &#183; ETHERNET</text>
+    <text id="io2" class="s" text-anchor="middle">WI-FI &#183; BLUETOOTH</text>
+    <text id="io3" class="s" text-anchor="middle">ADC &#183; DAC &#183; PWM</text>
+    <text id="io4" class="s" text-anchor="middle">GPIO &#183; QUADRATURE</text>
+
+    <rect id="world" class="card" rx="10"/>
+    <text id="wT" class="t" text-anchor="middle">THE WORLD</text>
+    <text id="wS" class="s" text-anchor="middle">physics, in fabric</text>
+
+    <rect id="board" class="ownf" rx="12"/>
+    <text id="bT" class="tb">YOUR D<tspan class="g">evice</tspan> U<tspan class="g">nder</tspan> T<tspan class="g">est</tspan> BOARD</text>
+    <rect id="chip" class="card2" rx="10"/>
+    <text id="cT" class="t" text-anchor="middle">YOUR FIRMWARE</text>
+    <text id="cS" class="s" text-anchor="middle">unmodified &#183; real silicon</text>
+
+    <path id="eyes" class="out" marker-end="url(#mB)"/>
+    <text id="eyesL" class="wb" text-anchor="end">AGENT EYES</text>
+
+    <rect id="agent" class="own" rx="12"/>
+    <text id="aT" class="tb">AGENT</text>
+    <text id="aS" class="s">writes scenarios &#183; reads verdicts</text>
+
+    <path id="hands" class="wire" marker-end="url(#mA)"/>
+    <text id="handsL" class="w">AGENT HANDS</text>
+    <text id="jtagL" class="w">JTAG/SWD</text>
+  </svg>
+</div>
+
+<script>
+(function () {
+  var CAP15 = 11.19, CAP12 = 8.95, WIDE_AT = 860;
+
+  // --- the two layouts. every value is a number, so one can be lerped into the other ---
+  function tall(W) {
+    W = Math.min(W, 420);
+    var bh = 112, ih = 160, wh = 70, ah = 80, pad = 30, inset = 36;
+    var by = 2, fy = by + bh + 54, iy = fy + pad, wy = iy + ih + 40,
+        fh = pad + ih + 40 + wh + pad, ay = fy + fh + 54;
+    var cardX = inset, cardW = W - 2 * inset;
+    var cy = ((by + bh - 20) + (wy + wh / 2)) / 2, ry = (wy + wh / 2) - cy;
+    var rx = 0.33 * (W - 2), cx = W / 2;
+    return {
+      W: W, H: ay + ah + 2,
+      bx: 1, by: by, bw: W - 2, bh: bh,
+      fx: 1, fy: fy, fw: W - 2, fh: fh,
+      ix: cardX, iy: iy, iw: cardW, ih: ih,
+      wx: cardX, wy: wy, ww: cardW, wh: wh,
+      ax: 1, ay: ay, aw: W - 2, ah: ah,
+      cx: cx, cy: cy, rx: rx, ry: ry,
+      eX: W - 70, eY0: fy + fh, eY1: ay,
+      hX: 20, hY0: ay, hCY: fy + fh - 27, hEX: 20, hEY: by + bh,
+      eLX: W - 82, eLY: fy + fh + 30,
+      hLX: 34, hLY: fy + fh + 30,
+      jLX: 34, jLY: by + bh + 28,
+      lgX: W / 2, lgY: fy + 4.5,
+      arcs: ringTall(cx, cy, rx, ry, by + bh, iy, iy + ih, wy)
+    };
+  }
+
+  function wide(W) {
+    var bh = 136, ih = 160, wh = 128, ah = 80;
+    var bw = Math.max(290, 0.30 * W), bx = 1;
+    var fx = bx + bw + 40, fw = W - 1 - fx;
+    var ww = Math.max(200, Math.min(320, 0.34 * (fw - 60)));
+    var wx = W - 31 - ww;
+    var lx = bx + bw - 40, rxE = wx + 0.45 * ww;
+    var cx = (lx + rxE) / 2, rx = (rxE - lx) / 2, ry = 65;
+    var iw = 190, ix = cx - iw / 2;
+    var fy = 2, fh = 220, cy = fy + fh / 2;
+    var iy = cy - ih / 2, wy = cy - wh / 2, by = cy - bh / 2;
+    var ay = fy + fh + 42;
+    return {
+      W: W, H: ay + ah + 2,
+      bx: bx, by: by, bw: bw, bh: bh,
+      fx: fx, fy: fy, fw: fw, fh: fh,
+      ix: ix, iy: iy, iw: iw, ih: ih,
+      wx: wx, wy: wy, ww: ww, wh: wh,
+      ax: 1, ay: ay, aw: W - 2, ah: ah,
+      cx: cx, cy: cy, rx: rx, ry: ry,
+      eX: wx + ww / 2, eY0: fy + fh, eY1: ay,
+      hX: cx - 40, hY0: ay, hCY: fy + fh - 15, hEX: bx + bw / 2, hEY: by + bh,
+      eLX: wx + ww / 2 - 12, eLY: fy + fh + 26,
+      hLX: cx - 26, hLY: fy + fh + 26,
+      jLX: bx + bw / 2 + 15, jLY: by + bh + 26,
+      lgX: fx + fw / 2, lgY: fy + 4.5,
+      arcs: ringWide(cx, cy, rx, ry, bx + bw, ix, ix + iw, wx)
+    };
+  }
+
+  // angles on the ellipse, clockwise. tall: board on top, world at the bottom.
+  function ringTall(cx, cy, rx, ry, bB, iT, iB, wT) {
+    var A = function (y) { return Math.asin(clamp((y - cy) / ry)) * 180 / Math.PI; };
+    return [A(bB), A(iT), A(iB), A(wT),
+            180 - A(wT), 180 - A(iB), 180 - A(iT), 180 - A(bB)];
+  }
+  // wide: board on the left, world on the right. same ring, a quarter turn round.
+  function ringWide(cx, cy, rx, ry, bR, iL, iR, wL) {
+    var A = function (x) { return Math.acos(clamp((x - cx) / rx)) * 180 / Math.PI; };
+    return [-A(bR), -A(iL), -A(iR), -A(wL),
+            A(wL), A(iR), A(iL), A(bR)];
+  }
+  function clamp(v) { return v < -1 ? -1 : v > 1 ? 1 : v; }
+
+  // --- draw ---
+  var $ = function (id) { return document.getElementById(id); };
+  function set(el, a) { for (var k in a) el.setAttribute(k, a[k]); }
+  function box(id, x, y, w, h) { set($(id), { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h) }); }
+
+  function arcPath(cx, cy, rx, ry, t0, t1) {
+    var r0 = t0 * Math.PI / 180, r1 = t1 * Math.PI / 180;
+    // pull the head back off the box edge it points at
+    var R = Math.sqrt(Math.pow(rx * Math.sin(r1), 2) + Math.pow(ry * Math.cos(r1), 2)) || 1;
+    r1 -= Math.sign(r1 - r0) * (4 / R);
+    var n = 20, d = '';
+    for (var i = 0; i <= n; i++) {
+      var t = r0 + (r1 - r0) * i / n;
+      d += (i ? 'L' : 'M') + (cx + rx * Math.cos(t)).toFixed(2) + ' ' + (cy + ry * Math.sin(t)).toFixed(2) + ' ';
+    }
+    return d;
+  }
+
+  function render(L) {
+    var W = L.W;
+    $('svg').setAttribute('viewBox', '0 0 ' + W.toFixed(1) + ' ' + L.H.toFixed(1));
+    $('svg').style.maxWidth = W.toFixed(1) + 'px';
+
+    box('frame', L.fx, L.fy, L.fw, L.fh);
+    box('io', L.ix, L.iy, L.iw, L.ih);
+    box('world', L.wx, L.wy, L.ww, L.wh);
+    box('board', L.bx, L.by, L.bw, L.bh);
+    box('agent', L.ax, L.ay, L.aw, L.ah);
+
+    for (var i = 0; i < 4; i++)
+      $('arc' + i).setAttribute('d', arcPath(L.cx, L.cy, L.rx, L.ry, L.arcs[i * 2], L.arcs[i * 2 + 1]));
+
+    // I/O: title then five lines, optically centred
+    var p = (L.ih - (CAP15 + 23 + 4 * 18)) / 2, y = L.iy + p + CAP15, mx = L.ix + L.iw / 2;
+    set($('ioT'), { x: mx, y: y });
+    for (var j = 0; j < 5; j++) { y += j ? 18 : 23; set($('io' + j), { x: mx, y: y }); }
+
+    p = (L.wh - (CAP15 + 23)) / 2; y = L.wy + p + CAP15; mx = L.wx + L.ww / 2;
+    set($('wT'), { x: mx, y: y }); set($('wS'), { x: mx, y: y + 23 });
+
+    p = (L.ah - (CAP15 + 23)) / 2; y = L.ay + p + CAP15;
+    set($('aT'), { x: L.ax + 24, y: y }); set($('aS'), { x: L.ax + 24, y: y + 23 });
+
+    // board: title, then the chip
+    var chipH = 70;
+    p = (L.bh - (CAP15 + 14 + chipH)) / 2;
+    var bt = L.by + p + CAP15, chipY = bt + 14, chipX = L.bx + 24, chipW = L.bw - 48;
+    set($('bT'), { x: chipX, y: bt });
+    box('chip', chipX, chipY, chipW, chipH);
+    var q = (chipH - (CAP15 + 23)) / 2, cy2 = chipY + q + CAP15, cmx = chipX + chipW / 2;
+    set($('cT'), { x: cmx, y: cy2 }); set($('cS'), { x: cmx, y: cy2 + 23 });
+
+    $('eyes').setAttribute('d', 'M' + L.eX + ' ' + L.eY0 + ' V' + L.eY1);
+    set($('eyesL'), { x: L.eLX, y: L.eLY });
+
+    $('hands').setAttribute('d', 'M' + L.hX + ' ' + L.hY0 + ' V' + L.hCY +
+                                 ' H' + L.hEX + ' V' + (L.hEY + 2));
+    set($('handsL'), { x: L.hLX, y: L.hLY });
+    set($('jtagL'), { x: L.jLX, y: L.jLY });
+
+    set($('leg'), { x: L.lgX, y: L.lgY + CAP12 / 2 });
+    box('legknock', L.lgX - 44, L.lgY - 7.5, 88, 15);
+  }
+
+  // --- morph ---
+  var cur = null, anim = null;
+  function lerp(a, b, u) {
+    var o = {};
+    for (var k in a) {
+      if (k === 'arcs') { o.arcs = a.arcs.map(function (v, i) { return v + (b.arcs[i] - v) * u; }); }
+      else o[k] = a[k] + (b[k] - a[k]) * u;
+    }
+    return o;
+  }
+
+  function apply(animate) {
+    var W = Math.round($('fig').clientWidth);
+    if (!W) return;
+    var target = W >= WIDE_AT ? wide(W) : tall(W);
+    if (!cur || !animate) { cur = target; render(cur); return; }
+    var from = cur, t0 = performance.now(), D = 520;
+    cancelAnimationFrame(anim);
+    (function step(now) {
+      var u = Math.min(1, (now - t0) / D);
+      var e = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      cur = lerp(from, target, e);
+      render(cur);
+      if (u < 1) anim = requestAnimationFrame(step);
+    })(t0);
+  }
+
+  var wasWide = null, rt;
+  function onResize() {
+    var W = Math.round($('fig').clientWidth);
+    var isWide = W >= WIDE_AT;
+    var flip = wasWide !== null && isWide !== wasWide;
+    wasWide = isWide;
+    apply(flip && !matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+  addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(onResize, 60); });
+  onResize();
+})();
+</script>
+</body>
+</html>

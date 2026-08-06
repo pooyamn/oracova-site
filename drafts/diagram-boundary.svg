@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 486" width="900" height="486"
+     role="img" aria-labelledby="bt bd" font-family="ui-monospace, SF Mono, Menlo, Consolas, monospace">
+  <title id="bt">The physical boundary: every verdict is measured at the pins</title>
+  <desc id="bd">In fabric, one clock domain: sensor emulation is the chip at its own protocol
+  and timing, a plant advances the world at loop rate turning commands into the next sensor
+  values, and command capture decodes the actuator pins rather than reading memory. A fault
+  injector drives specified, repeatable faults into the plant mid-run. Below the physical
+  boundary sits the device under test running unmodified firmware on real silicon: the
+  oracle. Emulated device wires cross the boundary into the part, and its measured response
+  crosses back out on the actuator pins. Every verdict is measured at that boundary.</desc>
+
+  <style>
+    .band  { fill: var(--d-band, #101216); stroke: var(--d-line, #23262D); stroke-width: 1; }
+    .card  { fill: var(--d-card, #15161A); stroke: var(--d-line, #2A2C31); stroke-width: 1; }
+    .dut   { fill: var(--d-dut, #16181D); stroke: var(--d-brand, #FFB454); stroke-width: 1.5; }
+    .flt   { fill: none; stroke: var(--d-fail, #F87171); stroke-width: 1.3; stroke-dasharray: 6 5; }
+    .ttl   { fill: var(--d-text, #EDEEF0); font-size: 14.5px; font-weight: 700; }
+    .sub   { fill: var(--d-dim, #9DA1A8); font-size: 12px; }
+    .tag   { fill: var(--d-faint, #7C8088); font-size: 10.5px; letter-spacing: .1em; }
+    .brand { fill: var(--d-brand, #FFB454); }
+    .fail  { fill: var(--d-fail, #F87171); }
+    .wire  { stroke: var(--d-dim, #9DA1A8); stroke-width: 1.4; fill: none; }
+    .meas  { stroke: var(--d-brand, #FFB454); stroke-width: 1.6; fill: none; }
+    .fwire { stroke: var(--d-fail, #F87171); stroke-width: 1.3; fill: none; stroke-dasharray: 6 5; }
+    .bnd   { stroke: var(--d-brand, #FFB454); stroke-width: 1.5; stroke-dasharray: 8 6; }
+  </style>
+
+  <defs>
+    <marker id="aN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--d-dim, #9DA1A8)"/></marker>
+    <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--d-brand, #FFB454)"/></marker>
+    <marker id="aF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--d-fail, #F87171)"/></marker>
+  </defs>
+
+  <rect fill="var(--d-bg, #0E0F11)" x="0" y="0" width="900" height="486"/>
+
+  <!-- the fabric band -->
+  <rect class="band" x="34" y="42" width="832" height="256" rx="12"/>
+  <text class="ttl brand" x="54" y="70" font-size="15.5">AUGUR ONE</text>
+  <text class="tag" x="172" y="70">IN FABRIC &#183; ONE CLOCK DOMAIN &#183; NOTHING REAL-TIME CROSSES A BUS</text>
+
+  <rect class="card" x="56" y="96" width="216" height="98" rx="9"/>
+  <text class="ttl" x="76" y="124">Sensor emulation</text>
+  <text class="sub" x="76" y="148">is the chip, at its own</text>
+  <text class="sub" x="76" y="167">protocol and timing</text>
+
+  <rect class="card" x="340" y="96" width="216" height="98" rx="9"/>
+  <text class="ttl" x="360" y="124">Plant</text>
+  <text class="sub" x="360" y="148">advances the world at</text>
+  <text class="sub" x="360" y="167">loop rate</text>
+
+  <rect class="card" x="624" y="96" width="216" height="98" rx="9"/>
+  <text class="ttl" x="644" y="124">Command capture</text>
+  <text class="sub" x="644" y="148">decodes actuator pins,</text>
+  <text class="sub" x="644" y="167">not memory</text>
+
+  <path class="wire" d="M624 148 L564 148" marker-end="url(#aN)"/>
+  <text class="tag" x="562" y="136">COMMANDS</text>
+  <path class="wire" d="M340 148 L280 148" marker-end="url(#aN)"/>
+  <text class="tag" x="288" y="136">STATE</text>
+
+  <rect class="flt" x="340" y="216" width="216" height="62" rx="9"/>
+  <text class="ttl fail" x="360" y="242">Fault injector</text>
+  <text class="sub" x="360" y="262">specified &#183; repeatable</text>
+  <path class="fwire" d="M448 216 L448 198" marker-end="url(#aF)"/>
+
+  <!-- the boundary that decides everything -->
+  <line class="bnd" x1="34" y1="332" x2="866" y2="332"/>
+  <text class="tag brand" x="34" y="322">PHYSICAL BOUNDARY &#8212; EVERY VERDICT IS MEASURED HERE</text>
+
+  <!-- the part itself -->
+  <rect class="dut" x="140" y="358" width="560" height="92" rx="10"/>
+  <text class="ttl brand" x="168" y="390" font-size="15.5">YOUR DUT BOARD</text>
+  <text class="sub" x="168" y="413">device under test &#183; your microcontroller</text>
+  <text class="sub" x="168" y="435">unmodified firmware on real silicon: <tspan class="brand" font-weight="700">the oracle</tspan></text>
+
+  <!-- what crosses it -->
+  <path class="wire" d="M164 194 L164 352" marker-end="url(#aN)" marker-start="url(#aN)"/>
+  <text class="tag" x="176" y="244">EMULATED</text>
+  <text class="tag" x="176" y="260">DEVICE WIRES</text>
+  <text class="tag" x="176" y="280">firmware reads</text>
+  <text class="tag" x="176" y="296">and writes</text>
+
+  <path class="meas" d="M700 404 L756 404 L756 198" marker-end="url(#aB)"/>
+  <text class="tag brand" x="766" y="250">MEASURED</text>
+  <text class="tag brand" x="766" y="266">RESPONSE</text>
+  <text class="tag" x="766" y="286">actuator pins</text>
+
+  <text class="tag" x="34" y="478">AUGUR ONE IS IN FABRICATION &#183; WHAT RUNS TODAY RUNS ON ORACOVA DEVELOPMENT HARDWARE</text>
+</svg>
