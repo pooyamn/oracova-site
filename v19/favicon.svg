@@ -4,6 +4,6 @@
        o is a stroked ellipse (mono bold o is taller than wide);
        bar = o width + 6, centred, sharp corners: the cursor. -->
   <rect width="64" height="64" rx="12" fill="#0a0e12"/>
-  <ellipse cx="32" cy="26" rx="9.25" ry="11.25" fill="none" stroke="#d7dee6" stroke-width="7.5"/>
+  <ellipse cx="32" cy="26" rx="10" ry="11.5" fill="none" stroke="#d7dee6" stroke-width="6.5"/>
   <rect x="16" y="47" width="32" height="6" fill="#ffb454"/>
 </svg>
