@@ -163,7 +163,7 @@
   "@type": "Product",
   "name": "Augur One",
   "brand": { "@type": "Brand", "name": "Oracova" },
-  "description": "Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels.",
+  "description": "Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with up to 216 digital I/O and 40 analog channels.",
   "image": "https://oracova.com/board-augur-one-1600.webp",
   "url": "https://oracova.com/preorder",
   "offers": {
@@ -220,7 +220,7 @@
     <div class="kicker">What it costs</div>
     <h2>Price your bench.</h2>
     <p class="dim">A bench is the base board plus modules. Ten slots per board, four analog
-    channels each, high-speed or medium-speed in any mix.</p>
+    channels each, high-speed or low-speed in any mix.</p>
 
     <div class="cfg">
       <div class="cfg-controls">
@@ -245,11 +245,11 @@
         </div>
 
         <div class="cfg-row">
-          <span class="lbl">Medium-speed modules <span class="per">per bench</span></span>
+          <span class="lbl">Low-speed modules <span class="per">per bench</span></span>
           <div class="stepper">
-            <button type="button" data-step="slow" data-d="-1" aria-label="one fewer medium-speed module">&minus;</button>
+            <button type="button" data-step="slow" data-d="-1" aria-label="one fewer low-speed module">&minus;</button>
             <span class="val" id="v-slow">2</span>
-            <button type="button" data-step="slow" data-d="1" aria-label="one more medium-speed module">+</button>
+            <button type="button" data-step="slow" data-d="1" aria-label="one more low-speed module">+</button>
           </div>
           <span class="unit">$50 each. For channels that move slowly: temperatures, setpoints.</span>
         </div>
@@ -262,10 +262,10 @@
         <div class="ttl">Your bench</div>
         <div class="cfg-line"><span>Base board <b id="v-nb">&times;1</b></span><b id="v-base">$2,000</b></div>
         <div class="cfg-line"><span>High-speed <b id="v-nf">&times;4</b></span><b id="v-fastamt">$400</b></div>
-        <div class="cfg-line"><span>Medium-speed <b id="v-ns">&times;2</b></span><b id="v-slowamt">$100</b></div>
+        <div class="cfg-line"><span>Low-speed <b id="v-ns">&times;2</b></span><b id="v-slowamt">$100</b></div>
         <div class="cfg-rule"></div>
         <div class="cfg-total"><span>Hardware</span><span class="amt" id="v-total">$2,500</span></div>
-        <div class="cfg-sub"><span id="v-ch">24</span> analog channels &middot; 148 digital I/O<br>
+        <div class="cfg-sub"><span id="v-ch">24</span> analog channels &middot; up to 216 digital I/O<br>
         <b>First year of support included.</b></div>
         <a class="btn btn-primary cfg-cta" id="reserve-top" href="#reserve">Reserve a slot &middot; $100</a>
         <div class="cfg-fine">Refundable until your board ships</div>
@@ -274,9 +274,9 @@
 
     <noscript>
       <p class="callout">The prices above are one example configuration: one bench with four
-      high-speed and two medium-speed modules. With JavaScript on, the total updates as you
+      high-speed and two low-speed modules. With JavaScript on, the total updates as you
       change it. The rates are fixed either way: $2,000 per base board, $100 per high-speed
-      module, $50 per medium-speed module.</p>
+      module, $50 per low-speed module.</p>
     </noscript>
   </div>
 </section>
@@ -377,7 +377,7 @@
         </div>
       </div>
       <div class="rsv-foot">
-        <div class="rsv-sum" id="rsv-sum">1 bench &middot; 4 high-speed &middot; 2 medium-speed &middot; $2,500</div>
+        <div class="rsv-sum" id="rsv-sum">1 bench &middot; 4 high-speed &middot; 2 low-speed &middot; $2,500</div>
         <button class="btn btn-primary" type="submit" id="rsv-go">Reserve a slot &middot; $100</button>
       </div>
       <p class="rsv-fine">Refundable in full until your board ships, and it comes off the price.
@@ -458,7 +458,7 @@
 
   function summary() {
     return plural(S.bench, 'bench', 'benches') + ' · ' +
-           S.fast + ' high-speed · ' + S.slow + ' medium-speed · ' + money(total());
+           S.fast + ' high-speed · ' + S.slow + ' low-speed · ' + money(total());
   }
   function total() {
     return (CFG.base + S.fast * CFG.fast + S.slow * CFG.slow) * S.bench;
@@ -596,7 +596,7 @@
       'I would like to reserve a slot in the first batch.', '',
       'Benches: ' + S.bench,
       'High-speed modules: ' + S.fast,
-      'Medium-speed modules: ' + S.slow,
+      'Low-speed modules: ' + S.slow,
       'Hardware: ' + money(total()), '',
       'Name: ' + el('f-name').value.trim(),
       'Company: ' + el('f-company').value.trim(),
@@ -674,6 +674,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>

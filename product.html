@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Augur One: the Oracova base board</title>
-<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels.">
+<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with up to 216 digital I/O and 40 analog channels.">
 <link rel="canonical" href="https://oracova.com/product">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -370,7 +370,7 @@
       <div class="iface top3">
         <div class="ifitem"><b>210 x 130 mm</b><span>one base board</span></div>
         <div class="ifitem"><b>One Cat-6</b><span>power and network</span></div>
-        <div class="ifitem"><b>148 I/O + up to 40 analog</b><span>to the DUT</span></div>
+        <div class="ifitem"><b>up to 216 I/O + 40 analog</b><span>to the DUT</span></div>
       </div>
 
     </div>
@@ -380,8 +380,8 @@
       <p class="dim">Your DUT board carries the part under test and whatever it needs to boot.
       The connectors bring it everything else.</p>
       <div class="iface">
-        <div class="ifitem"><b>148</b><span>digital I/O on adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
-        <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of the 148, in 10 slots of 4, high-speed or medium-speed</span></div>
+        <div class="ifitem"><b>up to 216</b><span>digital I/O across 4 adjustable 1.2&ndash;3.3 V rails, 40 of them ADC pins. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
+        <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of those, in 10 slots of 4, high-speed or low-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, up to 3 A, Kelvin-sensed</span></div>
         <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB on the run range, 31 nA/LSB on the sleep range</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
@@ -468,9 +468,9 @@
 
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>148 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
-        <tr><td>Analog in</td><td>On-board ADC channels read back what the DUT drives.
-          Channel counts and rates will be confirmed at first article.</td></tr>
+        <tr><td>Digital I/O</td><td>Up to 216 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail, 40 of them ADC pins. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
+        <tr><td>Analog in</td><td>The 40 ADC pins read back what the DUT drives.
+          Rates will be confirmed at first article.</td></tr>
         <tr><td>Capture</td><td>Internal logic analyzer in fabric, watching the DUT's real pins on the same
           chip that plays the world. Edge, level or pattern triggered; channel count and capture
           depth are gateware parameters, sized to your board rather than fixed at manufacture.</td></tr>
@@ -489,10 +489,10 @@
 
       <div class="spec-h">Analog</div>
       <table class="spec">
-        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, in addition to the 148 digital pins. Each slot takes a high-speed or a medium-speed module, mixed freely. Populate only the slots you need.</td></tr>
-        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails: 8 MSPS per channel,
+        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, in addition to the digital pins. Each slot takes a high-speed or a low-speed module, mixed freely. Populate only the slots you need.</td></tr>
+        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails: up to 16 MUPS per DAC, 8 MSPS per channel,
           0 to 5 V including true 0 V. For channels the control loop reads at rate.</td></tr>
-        <tr><td>Medium-speed module</td><td>DAC80504 per slot. For channels that move slowly: temperatures, setpoints, slow sensor outputs.</td></tr>
+        <tr><td>Low-speed module</td><td>DAC80504 per slot, up to 200 KUPS. For channels that move slowly: temperatures, setpoints, slow sensor outputs.</td></tr>
         <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbor.</td></tr>
       </table>
 
@@ -583,6 +583,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
