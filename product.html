@@ -461,7 +461,7 @@
       <div class="spec-h">Compute</div>
       <table class="spec">
         <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
-        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU, unused today: headroom for physics too expensive to integrate directly.</td></tr>
+        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU for physics acceleration: world models too expensive to integrate directly.</td></tr>
         <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
         <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE test peer.</td></tr>
       </table>
@@ -583,6 +583,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
