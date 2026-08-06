@@ -236,8 +236,7 @@ CSS = """
 /* ===== end canonical site chrome ===== */
 """
 
-CTA = ('<a class="nav-cta" href="mailto:pooyamn@gmail.com'
-       '?subject=Oracova%3A%2015%20minutes">Book 15 minutes</a>')
+CTA = ''
 
 # page -> its link set (self-link always omitted)
 # One nav for every page. The current page is marked, never removed.
@@ -266,8 +265,7 @@ SITEMAP = [
     ('Evidence', [('/demo', 'Watch a run'), ('/#evidence', 'What it caught')]),
     ('How it works', [('/#how', 'The loop'), ('/#world', 'What it emulates'),
                       ('/#compare', 'Against other methods')]),
-    ('Contact',  [('mailto:pooyamn@gmail.com?subject=Oracova%3A%2015%20minutes', 'Book 15 minutes'),
-                  ('mailto:pooyamn@gmail.com', 'Email us')]),
+    ('Contact',  [('mailto:pooyamn@gmail.com', 'Email us')]),
 ]
 
 def markup(page):
@@ -289,7 +287,7 @@ def markup(page):
             ' aria-label="Menu" aria-expanded="false" aria-controls="site-menu">'
             '<span></span></button>\n'
             '    <a class="nav-logo" href="/">oracova<i>_</i></a>\n'
-            '    <div class="nav-set">\n%s\n      %s\n'
+            '    <div class="nav-set">\n%s%s\n'
             '    </div>\n  </div>\n</nav>\n'
             '<div class="site-menu" id="site-menu">\n%s\n</div>' % (links, CTA, menu))
 
@@ -431,6 +429,9 @@ def apply(path, page):
     s = re.sub(r'<footer[^>]*>.*?</footer>', lambda m: footer_markup(), s, count=1, flags=re.S)
     s = re.sub(r'<script>\n\(function \(\) \{\n  var b = document\.getElementById\(.nav-burger.\).*?</script>\n',
                '', s, flags=re.S)
+    # the analytics block appended after the nav script must also be stripped, else
+    # every run stacks another loader and pageviews get counted N times
+    s = re.sub(r'<script>\n// GoatCounter.*?</script>\n', '', s, flags=re.S)
     s = s.replace('</body>', SCRIPT + '\n</body>', 1)
     pathlib.Path(path).write_text(s)
     return hashlib.sha256((SHEET + markup(page)).encode()).hexdigest()[:12]
