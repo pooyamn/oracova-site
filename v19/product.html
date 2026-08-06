@@ -460,47 +460,43 @@
     <div style="padding-top:30px" id="spec">
       <div class="spec-h">Compute</div>
       <table class="spec">
-        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F. Protocol, capture, fault injection.</td></tr>
-        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55. Physics and plant state. Carries an NPU for physics acceleration: world models too expensive to integrate directly.</td></tr>
-        <tr><td>Supervisor</td><td>STM32H563. Recovery and DUT power.</td></tr>
-        <tr><td>Wireless peer</td><td>ESP32-C5. Wi-Fi and Bluetooth LE test peer.</td></tr>
+        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F &middot; protocol, capture, fault injection</td></tr>
+        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55 + NPU &middot; physics and plant state, NPU for physics acceleration</td></tr>
+        <tr><td>Supervisor</td><td>STM32H563 &middot; recovery, DUT power control</td></tr>
+        <tr><td>Wireless peer</td><td>ESP32-C5 &middot; Wi-Fi, Bluetooth LE</td></tr>
       </table>
 
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>Up to 216 pins across 4 banks, each bank on its own adjustable 1.2&ndash;3.3 V rail. 40 of the pins are dual-role: GPIO or ADC, chosen per pin. Driven from gateware, so any pin can be SPI, I2C, UART, CAN, PWM, an encoder channel, or whatever protocol your part speaks.</td></tr>
-        <tr><td>Analog in</td><td>The 40 dual-role pins, switched to ADC, read back what the
-          DUT drives. Rates will be confirmed at first article.</td></tr>
-        <tr><td>Capture</td><td>Internal logic analyzer in fabric, watching the DUT's real pins on the same
-          chip that plays the world. Edge, level or pattern triggered; channel count and capture
-          depth are gateware parameters, sized to your board rather than fixed at manufacture.</td></tr>
-        <tr><td>CAN</td><td>The DUT's TX and RX land in the fabric before a real CAN
-          controller, so the bench sits on the wire itself: bus faults arrive as bus
-          faults, not as scripted mocks.</td></tr>
-        <tr><td>Debug</td><td>SWD or JTAG, driven from the FPGA onto any DUT I/O pin. No fixed debug pinout to design around.</td></tr>
-        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable, up to 3 A, Kelvin-sensed. Current sense on two ranges:
-          250 &micro;A/LSB for normal draw, 31 nA/LSB for sleep currents.
-          Range full scales will be confirmed at first article.</td></tr>
-        <tr><td>Ethernet to the DUT</td><td>3 x gigabit, 4-pair MDI</td></tr>
-        <tr><td>USB to the DUT</td><td>2 x USB 2.0 OTG, with software-controlled attach</td></tr>
-        <tr><td>Wireless to the DUT</td><td>ESP32-C5 test peer on board: Wi-Fi and Bluetooth LE. The bench is the other end of the link, so pairing, association and dropped connections are all things a test can do on purpose.</td></tr>
-        <tr><td>DUT self-ID</td><td>11 straps read at power-up: 4 bits of board revision, 4 bits of capability flags, 3 bits selecting the supply the board expects. An unprogrammed board reads all ones and the bench treats it as unknown rather than powering it.</td></tr>
+        <tr><td>Digital I/O</td><td>Up to 216 pins &middot; 4 banks &middot; per-bank adjustable rail, 1.2&ndash;3.3 V</td></tr>
+        <tr><td>Pin functions</td><td>Gateware-defined: SPI, I2C, UART, CAN, PWM, quadrature encoder, GPIO</td></tr>
+        <tr><td>Analog in</td><td>40 pins, dual-role GPIO/ADC, selected per pin &middot; rates confirmed at first article</td></tr>
+        <tr><td>Logic analyzer</td><td>In fabric, on the DUT pins &middot; edge, level or pattern trigger &middot; channels and depth are gateware parameters</td></tr>
+        <tr><td>CAN</td><td>DUT TX/RX enter the fabric ahead of a real CAN controller; bus faults are injected on the wire</td></tr>
+        <tr><td>Debug</td><td>SWD or JTAG from the FPGA, on any DUT I/O pin</td></tr>
+        <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable &middot; up to 3 A &middot; Kelvin-sensed</td></tr>
+        <tr><td>Current sense</td><td>Dual-range: 250 &micro;A/LSB run, 31 nA/LSB sleep &middot; full scales confirmed at first article</td></tr>
+        <tr><td>Ethernet to DUT</td><td>3 x 1000BASE-T, 4-pair MDI</td></tr>
+        <tr><td>USB to DUT</td><td>2 x USB 2.0 OTG &middot; software-controlled attach</td></tr>
+        <tr><td>Wireless to DUT</td><td>On-board test peer (ESP32-C5): Wi-Fi, Bluetooth LE &middot; pairing, association and link loss scriptable</td></tr>
+        <tr><td>DUT self-ID</td><td>11 straps at power-up: 4-bit revision, 4-bit capability, 3-bit supply select &middot; all-ones reads as unknown, board not powered</td></tr>
       </table>
 
-      <div class="spec-h">Analog</div>
+      <div class="spec-h">Analog out</div>
       <table class="spec">
-        <tr><td>Channels</td><td>Up to 40, as 10 slots of 4, in addition to the digital pins. Each slot takes a high-speed or a low-speed module, mixed freely. Populate only the slots you need.</td></tr>
-        <tr><td>High-speed module</td><td>2 x AD3542R per slot, on dedicated +7 V and -1.5 V rails: up to 16 MUPS per DAC, 8 MSPS per channel,
-          0 to 5 V including true 0 V. For channels the control loop reads at rate.</td></tr>
-        <tr><td>Low-speed module</td><td>DAC80504 per slot, up to 200 KUPS. For channels that move slowly: temperatures, setpoints, slow sensor outputs.</td></tr>
-        <tr><td>Signal integrity</td><td>Every analog channel is flanked by its own analog-ground return. No analog line has an analog neighbor.</td></tr>
+        <tr><td>Channels</td><td>Up to 40 &middot; 10 slots x 4 channels &middot; modules mixed freely per slot</td></tr>
+        <tr><td>High-speed module</td><td>2 x AD3542R &middot; up to 16 MUPS per DAC, 8 MSPS per channel &middot; 0&ndash;5 V incl. true 0 V &middot; dedicated +7 V / &minus;1.5 V rails</td></tr>
+        <tr><td>Low-speed module</td><td>DAC80504 &middot; up to 200 KUPS &middot; temperatures, setpoints, slow sensors</td></tr>
+        <tr><td>Signal integrity</td><td>Per-channel analog-ground return; no analog line adjacent to another</td></tr>
       </table>
 
-      <div class="spec-h">Communication</div>
+      <div class="spec-h">Communication and power</div>
       <table class="spec">
-        <tr><td>Gigabit Ethernet</td><td>Power and network on one cable. 802.3bt Type 4 PoE.</td></tr>
+        <tr><td>Uplink</td><td>Gigabit Ethernet &middot; 802.3bt Type 4 PoE &middot; power and network on one cable</td></tr>
         <tr><td>USB-C</td><td>Backup link and recovery</td></tr>
+        <tr><td>Form factor</td><td>210 x 130 mm, one base board</td></tr>
       </table>
+
       <p class="dim" style="margin-top:24px; font-size:13.5px">Interface figures are counted from
       the built netlist rather than a block diagram. Converter figures come from the parts named
       above.</p>
@@ -583,6 +579,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
