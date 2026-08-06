@@ -419,8 +419,8 @@
     <div style="padding-top:52px">
       <h2>One cable</h2>
       <p class="dim">Power over Ethernet is standard, 802.3bt Type 4: one run of Cat-6 carries
-      power and network, so a bench is a switch port. USB-C is the backup link and the recovery path when there
-      is no PoE switch on hand.</p>
+      power and network, so a bench is a switch port. USB-C is the backup link, the recovery path,
+      and an alternative power input when there is no PoE switch on hand.</p>
       <div class="callout"><b>One engineer, as many benches as features.</b></div>
     </div>
 
@@ -492,7 +492,7 @@
       <div class="spec-h">Communication and power</div>
       <table class="spec">
         <tr><td>Uplink</td><td>Gigabit Ethernet &middot; 802.3bt Type 4 PoE &middot; power and network on one cable</td></tr>
-        <tr><td>USB-C</td><td>Backup link and recovery</td></tr>
+        <tr><td>USB-C</td><td>Backup link, recovery, and alternative power input</td></tr>
         <tr><td>Form factor</td><td>210 x 130 mm, one base board</td></tr>
       </table>
 
@@ -578,6 +578,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
