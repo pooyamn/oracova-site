@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- geometry, not font metrics. one grid:
+       content = o(26x30) + gap(6) + bar(6) = 42 tall -> margins 11.
+       o is a stroked ellipse (mono bold o is taller than wide);
+       bar = o width + 6, centred, sharp corners: the cursor. -->
   <rect width="64" height="64" rx="12" fill="#0a0e12"/>
-  <text x="32" y="44" font-family="ui-monospace,Menlo,monospace" font-size="46" font-weight="700" text-anchor="middle" fill="#d7dee6">o</text>
-  <rect x="17" y="50" width="30" height="6" rx="3" fill="#ffb454"/>
+  <ellipse cx="32" cy="26" rx="9.25" ry="11.25" fill="none" stroke="#d7dee6" stroke-width="7.5"/>
+  <rect x="16" y="47" width="32" height="6" fill="#ffb454"/>
 </svg>
