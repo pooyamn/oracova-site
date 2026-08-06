@@ -2,3 +2,7 @@
 # /runs/bldc-hall-fault-demo until v19; keep bookmarks and shared links alive
 # instead of 404ing them.
 /runs/*  /#evidence  301
+
+# One canonical host. www exists only to 301 here; matching on the absolute URL
+# leaves oracova.com and the pages.dev alias untouched.
+https://www.oracova.com/*  https://oracova.com/:splat  301
