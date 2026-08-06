@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pre-order Augur One</title>
-<meta name="description" content="Augur One is $2,000 per bench plus the analog modules your signals need. One hundred boards in the first batch, shipping Q1 2027. $100 reserves a slot and comes off the price.">
+<title>Pre-order Augur One &middot; $2,000 per bench &middot; Oracova</title>
+<meta name="description" content="Augur One is $2,000 per bench plus the analog modules your signals need. One hundred boards, shipping Q1 2027. $100 reserves a slot and comes off the price.">
 <link rel="canonical" href="https://oracova.com/preorder">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -13,6 +13,9 @@
 <meta property="og:description" content="$2,000 per bench plus modules. One hundred boards in the first batch, shipping Q1 2027. $100 reserves a slot and comes off the price.">
 <meta property="og:url" content="https://oracova.com/preorder">
 <meta property="og:image" content="https://oracova.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Oracova: an automated test bench for firmware">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://oracova.com/og.png">
 <link rel="stylesheet" href="/site.css">
@@ -154,6 +157,27 @@
     .cfg-total .amt { font-size: 26px; }
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Augur One",
+  "brand": { "@type": "Brand", "name": "Oracova" },
+  "description": "Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels.",
+  "image": "https://oracova.com/board-augur-one-1600.webp",
+  "url": "https://oracova.com/preorder",
+  "offers": {
+    "@type": "Offer",
+    "url": "https://oracova.com/preorder",
+    "price": "2000.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/PreOrder",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availabilityStarts": "2027-01-01",
+    "seller": { "@type": "Organization", "name": "Oracova", "url": "https://oracova.com/" }
+  }
+}
+</script>
 </head>
 <body>
 
@@ -650,6 +674,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>

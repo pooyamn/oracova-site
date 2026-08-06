@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Augur One: the Oracova base board</title>
-<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute on one board, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels to the DUT.">
+<meta name="description" content="Augur One is the Oracova base board: FPGA fabric and real-time compute, PoE powered, remotely recoverable, with 148 digital I/O and up to 40 analog channels.">
 <link rel="canonical" href="https://oracova.com/product">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:type" content="website">
@@ -13,6 +13,9 @@
 <meta property="og:description" content="Two compute layers on the board, one cable in, and a supervisor that always brings it back.">
 <meta property="og:url" content="https://oracova.com/product">
 <meta property="og:image" content="https://oracova.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Oracova: an automated test bench for firmware">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://oracova.com/og.png">
 <link rel="stylesheet" href="/site.css">
@@ -580,6 +583,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>

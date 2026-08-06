@@ -9,3 +9,9 @@
 # but a stray index would be worse than the robots.txt line that advertises the path.
 /admin
   X-Robots-Tag: noindex, nofollow
+
+# The production alias on pages.dev serves a full duplicate of the site; only
+# oracova.com should be indexable. Preview deploys get this header from
+# Cloudflare automatically, the production alias does not.
+https://oracova-site.pages.dev/*
+  X-Robots-Tag: noindex

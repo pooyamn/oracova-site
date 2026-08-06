@@ -13,6 +13,9 @@
 <meta property="og:description" content="A hundred iterations, unattended. You review the one that passed. Real chip, emulated world, injected faults, verdicts from fixed thresholds.">
 <meta property="og:url" content="https://oracova.com/">
 <meta property="og:image" content="https://oracova.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Oracova: an automated test bench for firmware">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Oracova. AI agents test your firmware on real hardware.">
 <meta name="twitter:description" content="A hundred iterations, unattended. You review the one that passed.">
@@ -400,6 +403,28 @@
     .lf-fab .lf-cols { grid-template-columns: 1fr; gap: 44px; }
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://oracova.com/#org",
+      "name": "Oracova",
+      "url": "https://oracova.com/",
+      "email": "pooyamn@gmail.com",
+      "description": "Oracova builds AI-run hardware-in-the-loop test benches: real chip, emulated world, injected faults, deterministic verdicts on every change."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://oracova.com/#website",
+      "url": "https://oracova.com/",
+      "name": "Oracova",
+      "publisher": { "@id": "https://oracova.com/#org" }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -1150,6 +1175,28 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+})();
+</script>
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 <script>
