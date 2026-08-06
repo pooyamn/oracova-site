@@ -550,6 +550,7 @@
           link = document.createElement('a');
           link.href = u.href;
           link.textContent = 'continue to checkout';
+          link.addEventListener('click', function () { if (window.gcEvent) gcEvent('checkout-click'); });
         }
       } catch { link = null; }
     }
@@ -618,16 +619,19 @@
       // on a stack trace: the slot is worth more than the mechanism.
       if (!res.ok) {
         if (res.status === 400 || res.status === 409 || res.status === 429) {
+          if (window.gcEvent) gcEvent('reserve-rejected');
           msg.className = 'rsv-msg bad';
           msg.textContent = res.body.error || 'That configuration was not accepted.';
           go.disabled = false; go.textContent = was;
         } else {
+          if (window.gcEvent) gcEvent('reserve-email-fallback');
           byEmail(msg);
         }
         return;
       }
+      if (window.gcEvent) gcEvent('reserve-ok');
       done(msg, res.body);
-    }).catch(function () { byEmail(msg); });
+    }).catch(function () { if (window.gcEvent) gcEvent('reserve-email-fallback'); byEmail(msg); });
   });
 
   var top = el('reserve-top');
@@ -637,6 +641,17 @@
 })();
 </script>
 
+<script>
+// GoatCounter, production host only: previews and local copies never pollute the count
+(function () {
+  if (location.hostname !== 'oracova.com') return;
+  var s = document.createElement('script');
+  s.async = true;
+  s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
+  s.src = 'https://gc.zgo.at/count.js';
+  document.head.appendChild(s);
+})();
+</script>
 <script>
 (function () {
   var b = document.getElementById('nav-burger'), m = document.getElementById('site-menu');
@@ -666,6 +681,17 @@
   s.dataset.goatcounter = 'https://oracova.goatcounter.com/count';
   s.src = 'https://gc.zgo.at/count.js';
   document.head.appendChild(s);
+  // named events ride the same pipe; safe no-op when the counter is absent
+  window.gcEvent = function (name) {
+    try { if (window.goatcounter && goatcounter.count)
+      goatcounter.count({ path: name, title: location.pathname, event: true });
+    } catch (e) {}
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+    if (!a) return;
+    gcEvent(a.href.indexOf('15%20minutes') >= 0 ? 'book-15' : 'email-click');
+  }, true);
 })();
 </script>
 </body>
