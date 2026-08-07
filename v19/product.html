@@ -466,7 +466,7 @@
       <table class="spec">
         <tr><td>Digital I/O</td><td>Up to 216 pins &middot; 4 banks &middot; per-bank adjustable rail, 1.2&ndash;3.3 V</td></tr>
         <tr><td>Pin functions</td><td>Gateware-defined: SPI, I2C, UART, CAN, PWM, quadrature encoder, GPIO</td></tr>
-        <tr><td>Analog in</td><td>40 pins, dual-role GPIO/ADC, selected per pin &middot; rates confirmed at first article</td></tr>
+        <tr><td>Analog in</td><td>40 pins, dual-role GPIO/ADC, selected per pin &middot; 4 x ADC on the STM32N657, per its datasheet spec</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG from the FPGA, on any DUT I/O pin</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable &middot; up to 3 A &middot; Kelvin-sensed</td></tr>
         <tr><td>Current sense</td><td>Dual-range: 250 &micro;A/LSB run, 31 nA/LSB sleep &middot; full scales confirmed at first article</td></tr>
@@ -479,8 +479,8 @@
       <div class="spec-h">Analog out</div>
       <table class="spec">
         <tr><td>Channels</td><td>Up to 40 &middot; 10 slots x 4 channels &middot; modules mixed freely per slot</td></tr>
-        <tr><td>High-speed module</td><td>2 x AD3542R &middot; up to 16 MUPS per DAC, 8 MSPS per channel &middot; 0&ndash;5 V incl. true 0 V &middot; dedicated +7 V / &minus;1.5 V rails</td></tr>
-        <tr><td>Low-speed module</td><td>DAC80504 &middot; up to 200 KUPS &middot; temperatures, setpoints, slow sensors</td></tr>
+        <tr><td>High-speed DAC module</td><td>2 x AD3542R &middot; up to 16 MUPS per DAC, 8 MSPS per channel &middot; 0&ndash;5 V incl. true 0 V &middot; dedicated +7 V / &minus;1.5 V rails</td></tr>
+        <tr><td>Low-speed DAC module</td><td>DAC80504 &middot; up to 200 KUPS &middot; temperatures, setpoints, slow sensors</td></tr>
       </table>
 
       <div class="spec-h">Communication and power</div>
