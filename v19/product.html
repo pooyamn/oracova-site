@@ -10,7 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Oracova">
 <meta property="og:title" content="Augur One: the Oracova base board">
-<meta property="og:description" content="Two compute layers on the board, one cable in, and a supervisor that always brings it back.">
+<meta property="og:description" content="Two compute layers on the board, one cable in, and a supervisor built to bring it back.">
 <meta property="og:url" content="https://oracova.com/product">
 <meta property="og:image" content="https://oracova.com/og.png">
 <meta property="og:image:width" content="1200">
@@ -56,51 +56,10 @@
   @media (max-height: 860px) and (min-width: 561px) {
     header.hero { padding: 48px 0 48px; }
   }
-  @media (prefers-reduced-motion: reduce) { .cursor::after { animation: none; content: none; } }
-  .bl { color: var(--text-dim); white-space: pre-wrap; padding-left: 9ch; text-indent: -9ch; }
-  .bl b { color: var(--text); font-weight: 500; }
-  .bl .k { color: var(--accent); }
-  .bl .pass { color: var(--pass); font-weight: 700; }
-  .bl .fail { color: var(--fail); font-weight: 700; }
-  .bench-log .bl { border-radius: 4px; margin: -2px -8px; padding: 2px 8px 2px calc(8px + 9ch); }
-  .bench-ctl { display: flex; align-items: center; gap: 12px; }
-  .bench-ctl button { min-height: 44px; display: inline-flex; align-items: center;
-    background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 7px;
-    color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; padding: 8px 13px; cursor: pointer; }
-  .bench-ctl button:hover { border-color: var(--accent); color: var(--accent); }
-  .bench-ctl a { color: var(--accent); text-decoration: none; display: inline-block; padding: 12px 4px; margin: -12px -4px; }
-  .bench-ctl a:hover { text-decoration: underline; }
-  @media (max-width: 560px) {
-    .bench-foot > span:first-child { display: none; }
-  }
-  .mini-row .n { font-family: var(--mono); font-size: 12.5px; color: var(--brand); }
-  .mini-row .t { font-weight: 600; font-size: 15.5px; color: var(--text); letter-spacing: -.01em; }
-  .mini-row .d { font-size: 14.5px; color: var(--text-dim); }
-  .mini-row .d b { color: var(--text); font-weight: 600; }
-  @media (max-width: 700px) {
-    .mini-row { grid-template-columns: 44px 1fr; }
-    .mini-row .d { grid-column: 2; }
-  }
   .card .faults { font-family: var(--mono); font-size: 11.5px; color: var(--brand); margin-bottom: 8px; opacity: .9; }
   a.run-link { color: inherit; text-decoration: underline;
     text-decoration-color: rgba(255,180,84,.4); text-underline-offset: 3px; }
   a.run-link:hover { color: var(--brand); text-decoration-color: var(--brand); }
-  .ev { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
-  .ev .ev-head { display: grid; gap: 5px; }
-  .ev .tag { font-size: 11.5px; font-weight: 600; color: var(--text-faint); letter-spacing: .09em; text-transform: uppercase; }
-  .ev .claim { font-weight: 600; font-size: 16px; color: var(--text); letter-spacing: -.01em; }
-  .ev .nums { margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
-  .ev .v-fail { color: var(--fail); font-family: var(--mono); font-weight: 700; }
-  .cmp .y { color: var(--pass); font-weight: 600; }
-  .cmp .n { color: var(--fail); font-weight: 600; }
-  .cmp .dim { color: var(--text-dim); font-weight: 400; }
-  .tbl-hint, .table-hint { display: none; font-family: var(--mono); font-size: 11.5px; color: var(--text-faint); margin: 6px 0; }
-  @media (max-width: 700px) { .cmp-outer::after { opacity: .9; } .table-hint { display: block; } }
-  @media (max-width: 560px) { .cmp { font-size: 12px; } .cmp th, .cmp td { padding: 9px 10px; } }
-  .founder-cta .btn { width: 100%; margin-top: 14px; }
-  @media (max-width: 800px) {
-    .grid3 { grid-template-columns: 1fr; }
-  }
   /* ---------- system light theme ---------- */
   /* Page-specific light tweaks only; the palette lives in site.css. */
   @media (prefers-color-scheme: light) {
@@ -116,32 +75,20 @@
   h2 { font-size: 23px; letter-spacing: -0.02em; }
   h3 { font-size: 15px; }
   .kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em; }
-  .mini-row .t { font-size: 14.5px; }
   /* ---------- instrument-readout pass ---------- */
   section { padding: 56px 0 0; }
   section::before { content: ""; display: block; height: 1px; margin-bottom: 44px;
     background: var(--border); }
-  .run-stats { display: flex; gap: 8px 22px; flex-wrap: wrap; align-items: baseline;
-    font-family: var(--mono); font-size: 12px; color: var(--text-faint);
-    padding: 12px 4px 0; letter-spacing: .02em; }
-  .run-stats b { color: var(--pass); font-weight: 700; }
   .card:hover .faults { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .card:hover { transform: none; } }
   @media (max-width: 800px) { section { padding: 48px 0 0; } section::before { margin-bottom: 32px; } }
-  @media (max-width: 700px) {
-    body.cmpm .cmp-outer, body.cmpm #compare .table-hint { display: none; }
-  }
-  @media (min-width: 701px) { .cmp-mobile { display: none !important; } }
   .cx-l .q { font-size: 11.5px; color: var(--text-faint); margin-bottom: 3px; }
   .cx-l .a { font-size: 14px; font-weight: 600; color: var(--text); }
-  @media (prefers-reduced-motion: reduce) { .cx-ind { transition: none; } }
   .cx-r .y { color: var(--pass); font-weight: 600; }
   .cx-r .n { color: var(--fail); font-weight: 600; }
   .cx-r .dim, .cx-r { color: var(--text-dim); }
   .cx-l .y { color: var(--pass); }
   .cx-l .n { color: var(--fail); }
-  .cm-fade.out { opacity: 0; }
-  @media (prefers-reduced-motion: reduce) { .cm-fade { transition: none; } }
   @media (max-width: 800px) {
     nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: #0E0F11;
       position: fixed; top: 0; left: 0; right: 0; }
@@ -249,54 +196,12 @@
     table.spec tr { display: block; border-top: 1px solid var(--border); padding: 6px 0; }
     table.spec tr:first-child { border-top: 0; }
   }
-  .statusgrid { margin-top: 18px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .srow { display: grid; grid-template-columns: 1fr 190px; gap: 14px; padding: 13px 18px; font-size: 14px; }
-  .srow + .srow { border-top: 1px solid var(--border); }
-  .srow .st { color: var(--text-dim); }
-  .srow .sv { font-family: var(--mono); font-size: 12.5px; }
-  .sv.proven { color: var(--pass); }
-  .sv.pending { color: var(--text-faint); }
-  @media (max-width: 700px) { .srow { grid-template-columns: 1fr; gap: 4px; } }
 
-  .foot-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
-  .foot-nav a { padding: 10px 0; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  @media (max-width: 700px) {
+    .panel-cta { grid-template-columns: 1fr; }
+    .cta-pair { width: 100%; }
+    .cta-pair .btn { width: 100%; justify-content: center; }
+  }
 </style>
 <noscript><style>.panel[hidden] { display: block !important; } .tabs { display: none; }</style></noscript>
 </head>
@@ -376,12 +281,12 @@
       <p class="dim">Your DUT board carries the part under test and whatever it needs to boot.
       The connectors bring it everything else.</p>
       <div class="iface">
-        <div class="ifitem"><b>up to 216</b><span>digital I/O across 4 adjustable 1.2&ndash;3.3 V rails. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
+        <div class="ifitem"><b>up to 216</b><span>digital I/O across 4 adjustable 1.2&ndash;3.3 V banks. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
         <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of those, in 10 slots of 4, high-speed or low-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply</span></div>
         <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB on the run range, 31 nA/LSB on the sleep range</span></div>
         <div class="ifitem"><b>SWD or JTAG</b><span>onto any I/O pin. No fixed debug pinout to design around.</span></div>
-        <div class="ifitem"><b>2 x Ethernet</b><span>plus 2 x USB OTG and a Wi-Fi/BLE peer, all reaching the DUT</span></div>
+        <div class="ifitem"><b>2x Ethernet</b><span>plus 2x USB OTG and a Wi-Fi/BLE peer, all reaching the DUT</span></div>
       </div>
       <div class="callout">We meet your board at the controller boundary. Your power stage stays
       off the bench, and your firmware still sees the signals it would see in the product.</div>
@@ -456,7 +361,7 @@
     <div style="padding-top:30px" id="spec">
       <div class="spec-h">Compute</div>
       <table class="spec">
-        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F &middot; protocol, capture, fault injection</td></tr>
+        <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F &middot; protocol, bus capture, fault injection</td></tr>
         <tr><td>Real-time MCU</td><td>STM32N657 &middot; Cortex-M55 &middot; NPU for physics acceleration</td></tr>
         <tr><td>Supervisor</td><td>STM32H563 &middot; recovery, DUT power</td></tr>
         <tr><td>Wireless peer</td><td>ESP32-C5 &middot; Wi-Fi, Bluetooth LE</td></tr>
@@ -491,7 +396,7 @@
       </table>
 
       <p class="dim" style="margin-top:24px; font-size:13.5px">Interface figures are counted from
-      the built netlist rather than a block diagram. Converter figures come from the parts named
+      the built netlist rather than a block diagram. DAC figures come from the parts named
       above.</p>
     </div>
   </section>
