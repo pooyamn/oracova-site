@@ -376,7 +376,7 @@
       <p class="dim">Your DUT board carries the part under test and whatever it needs to boot.
       The connectors bring it everything else.</p>
       <div class="iface">
-        <div class="ifitem"><b>up to 216</b><span>digital I/O across 4 adjustable 1.2&ndash;3.3 V rails, 40 of them GPIO or ADC, your choice per pin. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
+        <div class="ifitem"><b>up to 216</b><span>digital I/O across 4 adjustable 1.2&ndash;3.3 V rails. Any pin can be SPI, I2C, UART, CAN, PWM or an encoder channel.</span></div>
         <div class="ifitem"><b>+ up to 40</b><span>analog channels on top of those, in 10 slots of 4, high-speed or low-speed</span></div>
         <div class="ifitem"><b>1.8&ndash;5 V</b><span>DUT supply, up to 3 A, Kelvin-sensed</span></div>
         <div class="ifitem"><b>Dual-range</b><span>current sense: 250 &micro;A/LSB on the run range, 31 nA/LSB on the sleep range</span></div>
@@ -466,7 +466,7 @@
       <table class="spec">
         <tr><td>Digital I/O</td><td>Up to 216 pins &middot; 4 banks &middot; per-bank adjustable rail, 1.2&ndash;3.3 V</td></tr>
         <tr><td>Pin functions</td><td>Gateware-defined: SPI, I2C, UART, CAN, PWM, quadrature encoder, GPIO</td></tr>
-        <tr><td>Analog from DUT</td><td>40 pins, dual-role GPIO/ADC, selected per pin &middot; 4 x ADC, 12-bit, up to 5 MSPS</td></tr>
+        <tr><td>Analog from DUT</td><td>4 ADC pins on the real-time MCU &middot; 12-bit, up to 5 MSPS</td></tr>
         <tr><td>Debug</td><td>SWD or JTAG from the FPGA, on any DUT I/O pin</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable &middot; up to 3 A &middot; Kelvin-sensed</td></tr>
         <tr><td>Current sense</td><td>Dual-range: 250 &micro;A/LSB run, 31 nA/LSB sleep &middot; full scales confirmed at first article</td></tr>
