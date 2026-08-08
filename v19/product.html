@@ -457,37 +457,37 @@
       <div class="spec-h">Compute</div>
       <table class="spec">
         <tr><td>FPGA</td><td>Lattice ECP5 LFE5U-85F &middot; protocol, capture, fault injection</td></tr>
-        <tr><td>Real-time MCU</td><td>STM32N657, Cortex-M55 + NPU &middot; physics and plant state, NPU for physics acceleration</td></tr>
-        <tr><td>Supervisor</td><td>STM32H563 &middot; recovery, DUT power control</td></tr>
+        <tr><td>Real-time MCU</td><td>STM32N657 &middot; Cortex-M55 &middot; NPU for physics acceleration</td></tr>
+        <tr><td>Supervisor</td><td>STM32H563 &middot; recovery, DUT power</td></tr>
         <tr><td>Wireless peer</td><td>ESP32-C5 &middot; Wi-Fi, Bluetooth LE</td></tr>
       </table>
 
       <div class="spec-h">DUT interface</div>
       <table class="spec">
-        <tr><td>Digital I/O</td><td>Up to 216 pins &middot; 4 banks &middot; per-bank adjustable rail, 1.2&ndash;3.3 V</td></tr>
-        <tr><td>Pin functions</td><td>Gateware-defined: SPI, I2C, UART, CAN, PWM, quadrature encoder, GPIO</td></tr>
-        <tr><td>Analog from DUT</td><td>4 ADC pins on the real-time MCU &middot; 12-bit, up to 5 MSPS</td></tr>
-        <tr><td>Debug</td><td>SWD or JTAG from the FPGA, on any DUT I/O pin</td></tr>
+        <tr><td>Digital I/O</td><td>Up to 216 pins &middot; 4 banks &middot; 1.2&ndash;3.3 V per bank</td></tr>
+        <tr><td>Pin functions</td><td>Gateware-defined &middot; SPI, I2C, UART, CAN, PWM, quadrature, GPIO</td></tr>
+        <tr><td>Analog from DUT</td><td>4 x 12-bit &middot; 5 MSPS</td></tr>
+        <tr><td>Debug</td><td>SWD / JTAG &middot; any DUT I/O pin</td></tr>
         <tr><td>DUT supply</td><td>1.8&ndash;5 V adjustable &middot; up to 3 A &middot; Kelvin-sensed</td></tr>
-        <tr><td>Current sense</td><td>Dual-range: 250 &micro;A/LSB run, 31 nA/LSB sleep &middot; full scales confirmed at first article</td></tr>
-        <tr><td>Ethernet to DUT</td><td>3 x 1000BASE-T, 4-pair MDI</td></tr>
-        <tr><td>USB to DUT</td><td>2 x USB 2.0 OTG &middot; software-controlled attach</td></tr>
-        <tr><td>Wireless to DUT</td><td>On-board test peer (ESP32-C5): Wi-Fi, Bluetooth LE &middot; pairing, association and link loss scriptable</td></tr>
-        <tr><td>DUT self-ID</td><td>11 straps at power-up: 4-bit revision, 4-bit capability, 3-bit supply select &middot; all-ones reads as unknown, board not powered</td></tr>
+        <tr><td>Current sense</td><td>Dual-range &middot; 250 &micro;A/LSB run &middot; 31 nA/LSB sleep</td></tr>
+        <tr><td>Ethernet to DUT</td><td>3 x 1000BASE-T &middot; 4-pair MDI</td></tr>
+        <tr><td>USB to DUT</td><td>2 x USB 2.0 OTG &middot; software attach/detach</td></tr>
+        <tr><td>Wireless to DUT</td><td>Wi-Fi &middot; Bluetooth LE &middot; scriptable link faults</td></tr>
+        <tr><td>DUT self-ID</td><td>11 straps &middot; revision, capability, supply select &middot; unknown boards stay unpowered</td></tr>
       </table>
 
       <div class="spec-h">Analog to DUT</div>
       <table class="spec">
-        <tr><td>Channels</td><td>Up to 40 &middot; 10 slots x 4 channels &middot; modules mixed freely per slot</td></tr>
-        <tr><td>High-speed DAC module</td><td>2 x AD3542R &middot; up to 16 MUPS per DAC, 8 MSPS per channel &middot; 0&ndash;5 V incl. true 0 V &middot; dedicated +7 V / &minus;1.5 V rails</td></tr>
-        <tr><td>Low-speed DAC module</td><td>DAC80504 &middot; up to 200 KUPS &middot; temperatures, setpoints, slow sensors</td></tr>
+        <tr><td>Channels</td><td>Up to 40 &middot; 10 slots x 4 &middot; any module mix</td></tr>
+        <tr><td>High-speed DAC module</td><td>2 x AD3542R &middot; 16 MUPS/DAC &middot; 8 MSPS/ch &middot; 0&ndash;5 V incl. true 0 V</td></tr>
+        <tr><td>Low-speed DAC module</td><td>DAC80504 &middot; 200 kUPS</td></tr>
       </table>
 
       <div class="spec-h">Communication and power</div>
       <table class="spec">
-        <tr><td>Uplink</td><td>Gigabit Ethernet &middot; 802.3bt Type 4 PoE &middot; power and network on one cable</td></tr>
-        <tr><td>USB-C</td><td>Backup link, recovery, and alternative power input</td></tr>
-        <tr><td>Form factor</td><td>210 x 130 mm, one base board</td></tr>
+        <tr><td>Uplink</td><td>Gigabit Ethernet &middot; PoE 802.3bt Type 4</td></tr>
+        <tr><td>USB-C</td><td>Backup link &middot; recovery &middot; alternate power input</td></tr>
+        <tr><td>Form factor</td><td>210 x 130 mm</td></tr>
       </table>
 
       <p class="dim" style="margin-top:24px; font-size:13.5px">Interface figures are counted from
