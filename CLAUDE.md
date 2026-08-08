@@ -149,7 +149,9 @@ All 15 were put to Pouya one by one; the copy now reflects the answers. Record:
 7. **Analog figures**: high-speed module 8 MSPS/channel, 0-5 V incl. true 0 V (from
    `SHEET-EDITS-ad3542r-rework.md`). Sensorless FOC itself remains unclaimed until run.
 8. **DUT supply**: the old "up to 8.19 A" was sense full scale, NOT deliverable; real cap
-   is ~3 A. Site now says "up to 3 A" and publishes sense resolutions without full scales.
+   is ~3 A. As of 2026-08-07 the site states voltage only (1.8-5 V adjustable, no current
+   figure, no "Kelvin-sensed") per Pouya; sense resolutions published without full scales.
+   Do not re-add a current cap unverified.
 9. **Open-source DUT designs**: designs for POPULAR parts are published open source and
    free; a board specific to a customer's product is quoted and stays private. Repo coming
    soon: add the link when public.
